@@ -16,6 +16,7 @@ class DatabaseManager {
   async connect() {
     try {
       const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/";
+      console.log("MongoDB URI:", mongoURI); // Debug log
 
       const options = {
         useNewUrlParser: true,

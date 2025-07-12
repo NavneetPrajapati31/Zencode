@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const databaseManager = require("./config/database");
+const authRoutes = require("./routes/auth");
+const protectedRoutes = require("./routes/protected");
 
 // Load environment variables
 dotenv.config();
@@ -22,6 +24,8 @@ app.get("/", (req, res) => {
 });
 
 // API Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/protected", protectedRoutes);
 app.get("/api/test", (req, res) => {
   res.json({ message: "API is working!" });
 });
