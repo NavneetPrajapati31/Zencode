@@ -6,7 +6,9 @@ const authRoutes = require("./routes/auth");
 const protectedRoutes = require("./routes/protected");
 
 // Load environment variables
-dotenv.config();
+require("dotenv").config({ path: __dirname + "/.env" });
+console.log("TEST_ENV:", process.env.TEST_ENV); // Debug: should print 'hello' if .env is loaded
+console.log("TEST_ENV:", process.env.TEST_ENV); // Add this for testing
 
 const app = express();
 
@@ -54,6 +56,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
+  console.log("TEST_ENV:", process.env.TEST_ENV);
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(
     `📊 Health check available at http://localhost:${PORT}/api/health`
