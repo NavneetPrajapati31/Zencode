@@ -1,11 +1,14 @@
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import { Button } from "./components/ui/button";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
     <>
-      <p className="bg-blue-500 text-white">adjasnd</p>
-      <Button className="!bg-amber-300 text-red-600">click</Button>
+      <BrowserRouter>
+        <LandingPage />
+      </BrowserRouter>
     </>
   );
 }
