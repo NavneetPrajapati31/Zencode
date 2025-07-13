@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Code2, Github, Mail } from "lucide-react";
 import { authAPI } from "@/utils/api";
+import { AuthContext } from "@/components/auth-context";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +25,7 @@ export default function SignIn() {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,7 +43,7 @@ export default function SignIn() {
         userId: formData.userId,
         password: formData.password,
       });
-      localStorage.setItem("token", result.token);
+      await login(result.token);
       navigate("/problems");
     } catch (err) {
       setError(err.message || "Login failed.");

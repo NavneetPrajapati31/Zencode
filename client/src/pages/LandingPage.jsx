@@ -66,21 +66,25 @@ export default function LandingPage() {
           </Link>
         </nav>
         <div className="flex gap-2 items-center">
-          <Button
-            className="hidden sm:flex !bg-blue-500 !text-white font-medium"
-            tabIndex={0}
-            aria-label="Sign In"
-          >
-            Sign In
-          </Button>
-          <Button
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-            tabIndex={0}
-            aria-label="Get Started"
-            endContent={<ChevronRight className="w-4 h-4" />}
-          >
-            Get Started
-          </Button>
+          <Link to={"/signin"}>
+            <Button
+              className="hidden sm:flex !bg-blue-500 !text-white font-medium"
+              tabIndex={0}
+              aria-label="Sign In"
+            >
+              Sign In
+            </Button>
+          </Link>
+          <Link to={"/signup"}>
+            <Button
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+              tabIndex={0}
+              aria-label="Get Started"
+              endContent={<ChevronRight className="w-4 h-4" />}
+            >
+              Get Started
+            </Button>
+          </Link>
         </div>
       </header>
 

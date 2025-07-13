@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -14,12 +14,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Code2, Search, Trophy, Clock, Users } from "lucide-react";
 import { problemsAPI } from "@/utils/api";
+import { AuthContext } from "@/components/auth-context";
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const { isAuthenticated, loading: authLoading } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      navigate("/signin");
+    }
+  }, [authLoading, isAuthenticated, navigate]);
 
   useEffect(() => {
     fetchProblems();
@@ -56,7 +65,7 @@ export default function ProblemsPage() {
     }
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-white">Loading problems...</div>

@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { userAPI, authAPI } from "@/utils/api";
 
 const AuthContext = createContext();
 
@@ -9,49 +10,46 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      verifyToken(token);
+      fetchUserProfile();
     } else {
       setLoading(false);
     }
   }, []);
 
-  const verifyToken = async (token) => {
+  const fetchUserProfile = async () => {
     try {
-      const response = await fetch("/api/auth/verify", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        localStorage.removeItem("token");
-      }
-    } catch (error) {
-      console.error("Token verification failed:", error);
+      const userData = await userAPI.getProfile();
+      setUser(userData);
+    } catch {
       localStorage.removeItem("token");
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
-  const login = (userData, token) => {
+  const login = async (token) => {
     localStorage.setItem("token", token);
-    setUser(userData);
+    await fetchUserProfile();
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await authAPI.logout().catch(() => {});
     localStorage.removeItem("token");
     setUser(null);
   };
+
+  const isAuthenticated = !!user;
 
   const value = {
     user,
     login,
     logout,
     loading,
+    isAuthenticated,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
+export { AuthContext };

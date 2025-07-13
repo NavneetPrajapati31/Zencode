@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Code2, Github, Mail, Check, X } from "lucide-react";
 import { authAPI } from "@/utils/api";
+import { AuthContext } from "@/components/auth-context";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
