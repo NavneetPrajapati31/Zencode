@@ -41,34 +41,29 @@ export const authAPI = {
       method: "POST",
       body: JSON.stringify(credentials),
     }),
-  verify: () => apiCall("/auth/verify"),
-  logout: () => apiCall("/auth/logout", { method: "POST" }),
 };
 
 // Problems API calls
 export const problemsAPI = {
   getAll: () => apiCall("/problems"),
   getById: (id) => apiCall(`/problems/${id}`),
-  submit: (problemId, code, language) =>
-    apiCall("/problems/submit", {
+  create: (problemData) =>
+    apiCall("/problems", {
       method: "POST",
-      body: JSON.stringify({ problemId, code, language }),
+      body: JSON.stringify(problemData),
     }),
-};
-
-// User API calls
-export const userAPI = {
-  getProfile: () => apiCall("/user/profile"),
-  updateProfile: (userData) =>
-    apiCall("/user/profile", {
+  update: (id, problemData) =>
+    apiCall(`/problems/${id}`, {
       method: "PUT",
-      body: JSON.stringify(userData),
+      body: JSON.stringify(problemData),
     }),
-  getSubmissions: () => apiCall("/user/submissions"),
+  delete: (id) =>
+    apiCall(`/problems/${id}`, {
+      method: "DELETE",
+    }),
 };
 
-// Leaderboard API calls
-export const leaderboardAPI = {
-  getGlobal: () => apiCall("/leaderboard"),
-  getByProblem: (problemId) => apiCall(`/leaderboard/problem/${problemId}`),
+// Protected API calls (for user info, etc.)
+export const protectedAPI = {
+  getProtected: () => apiCall("/protected"),
 };

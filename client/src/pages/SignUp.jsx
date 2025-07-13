@@ -91,22 +91,17 @@ export default function SignUp() {
     formData.confirmPassword !== "";
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen bg-black flex items-center justify-center p-6">
+      <div className="w-full max-w-lg space-y-8">
         {/* Logo and Header */}
         <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="bg-blue-600 p-3 rounded-xl">
-              <Code2 className="h-8 w-8 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-white">Join our community</h1>
+          <p className="text-3xl font-bold text-white">Join our community</p>
           <p className="text-gray-400 mt-2">Create your coding account today</p>
         </div>
 
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center text-white">
+            <CardTitle className="!text-xl text-center text-white">
               Create account
             </CardTitle>
             <CardDescription className="text-center text-gray-400">
@@ -118,14 +113,14 @@ export default function SignUp() {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+                className="!bg-gray-800 !border-gray-700 !text-white"
               >
                 <Github className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
               <Button
                 variant="outline"
-                className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+                className="!bg-gray-800 !border-gray-700 !text-white"
               >
                 <Mail className="mr-2 h-4 w-4" />
                 Google
@@ -232,7 +227,7 @@ export default function SignUp() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-gray-400 hover:text-white"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-gray-400 hover:text-white"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -349,7 +344,7 @@ export default function SignUp() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-gray-400 hover:text-white"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-gray-400 hover:text-white"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -404,7 +399,7 @@ export default function SignUp() {
 
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full !bg-blue-600 !hover:bg-blue-700 !text-white"
                 disabled={!isPasswordValid || !doPasswordsMatch}
               >
                 Create account

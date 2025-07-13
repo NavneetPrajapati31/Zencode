@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Code2, Search, Trophy, Clock, Users } from "lucide-react";
 import { problemsAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
@@ -21,7 +22,32 @@ export default function ProblemsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const { isAuthenticated, loading: authLoading } = useContext(AuthContext);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState({
+    name: "",
+    statement: "",
+    difficulty: "easy",
+  });
+  const [addLoading, setAddLoading] = useState(false);
+  const [addError, setAddError] = useState("");
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    id: "",
+    title: "",
+    description: "",
+    difficulty: "Easy",
+  });
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const [deleteId, setDeleteId] = useState(null);
+  const {
+    isAuthenticated,
+    loading: authLoading,
+    user,
+    logout,
+  } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,12 +74,15 @@ export default function ProblemsPage() {
 
   const filteredProblems = problems.filter(
     (problem) =>
-      problem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      problem.statement.toLowerCase().includes(searchTerm.toLowerCase())
+      (problem.title &&
+        problem.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (problem.description &&
+        problem.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const getDifficultyColor = (difficulty) => {
-    switch (difficulty?.toLowerCase()) {
+    if (!difficulty) return "bg-gray-500";
+    switch (difficulty.toLowerCase()) {
       case "easy":
         return "bg-green-500";
       case "medium":
@@ -63,6 +92,97 @@ export default function ProblemsPage() {
       default:
         return "bg-gray-500";
     }
+  };
+
+  const handleOpenAddModal = () => {
+    setAddForm({ name: "", statement: "", difficulty: "easy" });
+    setAddError("");
+    setShowAddModal(true);
+  };
+  const handleCloseAddModal = () => setShowAddModal(false);
+
+  const handleAddInputChange = (e) => {
+    const { name, value } = e.target;
+    setAddForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddProblem = async (e) => {
+    e.preventDefault();
+    setAddLoading(true);
+    setAddError("");
+    try {
+      await problemsAPI.create({
+        title: addForm.name,
+        description: addForm.statement,
+        difficulty:
+          addForm.difficulty.charAt(0).toUpperCase() +
+          addForm.difficulty.slice(1).toLowerCase(),
+      });
+      setShowAddModal(false);
+      fetchProblems();
+    } catch (err) {
+      setAddError(err.message || "Failed to add problem.");
+    } finally {
+      setAddLoading(false);
+    }
+  };
+
+  const handleOpenEditModal = (problem) => {
+    setEditForm({
+      id: problem._id,
+      title: problem.title,
+      description: problem.description,
+      difficulty: problem.difficulty,
+    });
+    setEditError("");
+    setShowEditModal(true);
+  };
+  const handleCloseEditModal = () => setShowEditModal(false);
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditProblem = async (e) => {
+    e.preventDefault();
+    setEditLoading(true);
+    setEditError("");
+    try {
+      await problemsAPI.update(editForm.id, {
+        title: editForm.title,
+        description: editForm.description,
+        difficulty:
+          editForm.difficulty.charAt(0).toUpperCase() +
+          editForm.difficulty.slice(1).toLowerCase(),
+      });
+      setShowEditModal(false);
+      fetchProblems();
+    } catch (err) {
+      setEditError(err.message || "Failed to update problem.");
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  const handleDeleteProblem = async (id) => {
+    setDeleteLoading(true);
+    setDeleteError("");
+    try {
+      await problemsAPI.delete(id);
+      setDeleteId(null);
+      fetchProblems();
+    } catch (err) {
+      setDeleteError(err.message || "Failed to delete problem.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const isAuthor = (problem) => {
+    if (!user) return false;
+    if (!problem.createdBy) return false;
+    return (problem.createdBy._id || problem.createdBy) === user.id;
   };
 
   if (loading || authLoading) {
@@ -81,22 +201,22 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="bg-black border-b border-gray-800">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <div className="bg-blue-600 p-2 rounded-lg mr-3">
-                <Code2 className="h-6 w-6 text-white" />
+                <Code2 className="h-4 w-4 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white">Online Judge</h1>
+              <h1 className="!text-lg font-bold text-white">Online Judge</h1>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="items-center space-x-4 hidden md:flex">
               <Link to="/leaderboard">
                 <Button
                   variant="outline"
-                  className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+                  className="!bg-gray-900 !border-gray-800 text-white hover:text-white"
                 >
                   <Trophy className="mr-2 h-4 w-4" />
                   Leaderboard
@@ -105,18 +225,260 @@ export default function ProblemsPage() {
               <Link to="/profile">
                 <Button
                   variant="outline"
-                  className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+                  className="!bg-gray-900 !border-gray-800 text-white hover:text-white"
                 >
                   Profile
                 </Button>
               </Link>
+              {isAuthenticated && (
+                <Button
+                  className="!bg-gray-900 text-white hover:text-white"
+                  onClick={handleOpenAddModal}
+                  aria-label="Add Problem"
+                >
+                  + Add Problem
+                </Button>
+              )}
+              {isAuthenticated && (
+                <Button
+                  className="!bg-gray-900  text-white hover:text-white"
+                  onClick={() => {
+                    logout();
+                    navigate("/signin");
+                  }}
+                  aria-label="Logout"
+                >
+                  Logout
+                </Button>
+              )}
             </div>
           </div>
         </div>
       </header>
 
+      {/* Add Problem Modal */}
+      {showAddModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <button
+              onClick={handleCloseAddModal}
+              className="absolute top-3 right-3 text-gray-400 hover:text-white"
+              aria-label="Close"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleCloseAddModal();
+              }}
+            >
+              ×
+            </button>
+            <h2 className="text-xl font-bold text-white mb-4">
+              Add New Problem
+            </h2>
+            <form onSubmit={handleAddProblem} className="space-y-4">
+              <div>
+                <Label htmlFor="name" className="text-white">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={addForm.name}
+                  onChange={handleAddInputChange}
+                  className="bg-gray-800 border-gray-700 text-white"
+                  required
+                  aria-label="Problem Name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="statement" className="text-white">
+                  Statement
+                </Label>
+                <textarea
+                  id="statement"
+                  name="statement"
+                  value={addForm.statement}
+                  onChange={handleAddInputChange}
+                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2 min-h-[80px]"
+                  required
+                  aria-label="Problem Statement"
+                />
+              </div>
+              <div>
+                <Label htmlFor="difficulty" className="text-white">
+                  Difficulty
+                </Label>
+                <select
+                  id="difficulty"
+                  name="difficulty"
+                  value={addForm.difficulty}
+                  onChange={handleAddInputChange}
+                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2"
+                  required
+                  aria-label="Difficulty"
+                >
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+              {addError && (
+                <div className="text-red-500 text-sm">{addError}</div>
+              )}
+              <Button
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                disabled={addLoading}
+                aria-label="Submit New Problem"
+              >
+                {addLoading ? "Adding..." : "Add Problem"}
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Problem Modal */}
+      {showEditModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <button
+              onClick={handleCloseEditModal}
+              className="absolute top-3 right-3 text-gray-400 hover:text-white"
+              aria-label="Close"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleCloseEditModal();
+              }}
+            >
+              ×
+            </button>
+            <h2 className="text-xl font-bold text-white mb-4">Edit Problem</h2>
+            <form onSubmit={handleEditProblem} className="space-y-4">
+              <div>
+                <Label htmlFor="edit-title" className="text-white">
+                  Name
+                </Label>
+                <Input
+                  id="edit-title"
+                  name="title"
+                  type="text"
+                  value={editForm.title}
+                  onChange={handleEditInputChange}
+                  className="bg-gray-800 border-gray-700 text-white"
+                  required
+                  aria-label="Problem Name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-description" className="text-white">
+                  Statement
+                </Label>
+                <textarea
+                  id="edit-description"
+                  name="description"
+                  value={editForm.description}
+                  onChange={handleEditInputChange}
+                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2 min-h-[80px]"
+                  required
+                  aria-label="Problem Statement"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-difficulty" className="text-white">
+                  Difficulty
+                </Label>
+                <select
+                  id="edit-difficulty"
+                  name="difficulty"
+                  value={editForm.difficulty}
+                  onChange={handleEditInputChange}
+                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2"
+                  required
+                  aria-label="Difficulty"
+                >
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </div>
+              {editError && (
+                <div className="text-red-500 text-sm">{editError}</div>
+              )}
+              <Button
+                type="submit"
+                className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
+                disabled={editLoading}
+                aria-label="Submit Edit Problem"
+              >
+                {editLoading ? "Saving..." : "Save Changes"}
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteId && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bg-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
+            <button
+              onClick={() => setDeleteId(null)}
+              className="absolute top-3 right-3 text-gray-400 hover:text-white"
+              aria-label="Close"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") setDeleteId(null);
+              }}
+            >
+              ×
+            </button>
+            <h2 className="text-xl font-bold text-white mb-4">
+              Delete Problem
+            </h2>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete this problem? This action cannot
+              be undone.
+            </p>
+            {deleteError && (
+              <div className="text-red-500 text-sm mb-2">{deleteError}</div>
+            )}
+            <div className="flex gap-4">
+              <Button
+                className="bg-gray-700 hover:bg-gray-800 text-white flex-1"
+                onClick={() => setDeleteId(null)}
+                disabled={deleteLoading}
+                aria-label="Cancel Delete"
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white flex-1"
+                onClick={() => handleDeleteProblem(deleteId)}
+                disabled={deleteLoading}
+                aria-label="Confirm Delete"
+              >
+                {deleteLoading ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Stats */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -127,7 +489,7 @@ export default function ProblemsPage() {
                 placeholder="Search problems..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                className="pl-10 bg-gray-900 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
               />
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
@@ -154,10 +516,12 @@ export default function ProblemsPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-white text-lg mb-2">
-                      {problem.name}
+                      {problem.title}
                     </CardTitle>
                     <CardDescription className="text-gray-400 line-clamp-3">
-                      {problem.statement.substring(0, 150)}...
+                      {problem.description &&
+                        problem.description.substring(0, 150)}
+                      ...
                     </CardDescription>
                   </div>
                   {problem.difficulty && (
@@ -170,6 +534,26 @@ export default function ProblemsPage() {
                     </Badge>
                   )}
                 </div>
+                {isAuthor(problem) && (
+                  <div className="flex gap-2 mt-2">
+                    <Button
+                      size="sm"
+                      className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                      onClick={() => handleOpenEditModal(problem)}
+                      aria-label="Edit Problem"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      onClick={() => setDeleteId(problem._id)}
+                      aria-label="Delete Problem"
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">

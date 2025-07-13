@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { userAPI, authAPI } from "@/utils/api";
+import { protectedAPI } from "@/utils/api";
 
 const AuthContext = createContext();
 
@@ -18,8 +18,8 @@ export function AuthProvider({ children }) {
 
   const fetchUserProfile = async () => {
     try {
-      const userData = await userAPI.getProfile();
-      setUser(userData);
+      const userData = await protectedAPI.getProtected();
+      setUser(userData.user || null);
     } catch {
       localStorage.removeItem("token");
       setUser(null);
@@ -34,7 +34,6 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    await authAPI.logout().catch(() => {});
     localStorage.removeItem("token");
     setUser(null);
   };
