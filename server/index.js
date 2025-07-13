@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const databaseManager = require("./config/database");
 const authRoutes = require("./routes/auth");
 const protectedRoutes = require("./routes/protected");
+const problemRoutes = require("./routes/problem");
 
 // Load environment variables
 require("dotenv").config({ path: __dirname + "/.env" });
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/protected", protectedRoutes);
+app.use("/api/problems", problemRoutes);
 app.get("/api/test", (req, res) => {
   res.json({ message: "API is working!" });
 });
