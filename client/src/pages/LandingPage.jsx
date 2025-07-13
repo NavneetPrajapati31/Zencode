@@ -29,7 +29,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Navbar */}
-      <Navbar className="backdrop-blur-md">
+      <Navbar className="backdrop-blur-md py-4">
         <NavbarBrand>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
@@ -41,7 +41,7 @@ export default function LandingPage() {
           </div>
         </NavbarBrand>
 
-        <NavbarContent className="hidden sm:flex gap-8" justify="center">
+        <NavbarContent className="hidden md:flex gap-8" justify="center">
           <NavbarItem>
             <Link
               to="#features"
@@ -100,19 +100,19 @@ export default function LandingPage() {
       <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-6 bg-blue-900/30 text-blue-300 border-blue-700 hover:bg-blue-900/50">
+            <Badge className="mb-6 bg-blue-900/30 text-blue-300 border-blue-700 hover:bg-blue-900/50 p-2">
               <Star className="w-3 h-3 mr-1" />
               Trusted by 50,000+ developers worldwide
             </Badge>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 ">
               Master Coding Through
-              <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent pb-2">
                 Competitive Programming
               </span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               Join the ultimate online judge platform where developers compete,
               learn, and grow. Solve challenging problems, participate in
               contests, and climb the global leaderboard.
@@ -122,7 +122,7 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                endContent={<Play className="w-5 h-5" />}
+                endContent={<Play className="w-3 h-3" />}
               >
                 Start Coding Now
               </Button>
