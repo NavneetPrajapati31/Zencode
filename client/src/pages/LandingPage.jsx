@@ -1,13 +1,6 @@
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Button,
-  Card,
-  CardBody,
-} from "@heroui/react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Code2,
   Trophy,
@@ -29,72 +22,67 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-black">
       {/* Navbar */}
-      <Navbar className="backdrop-blur-md py-4">
-        <NavbarBrand>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Code2 className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              CodeArena
-            </span>
+      <header className="backdrop-blur-md py-4 w-full flex items-center justify-between px-4 sm:px-8">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <Code2 className="w-5 h-5 text-white" />
           </div>
-        </NavbarBrand>
-
-        <NavbarContent className="hidden md:flex gap-8" justify="center">
-          <NavbarItem>
-            <Link
-              to="#features"
-              className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
-            >
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link
-              to="#competitions"
-              className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
-            >
-              Competitions
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link
-              to="#practice"
-              className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
-            >
-              Practice
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link
-              to="#leaderboard"
-              className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
-            >
-              Leaderboard
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
-
-        <NavbarContent justify="end">
-          <NavbarItem className="hidden sm:flex">
-            <Button
-              variant="light"
-              className="text-gray-300 hover:text-blue-400 font-medium"
-            >
-              Sign In
-            </Button>
-          </NavbarItem>
-          <NavbarItem>
-            <Button
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-              endContent={<ChevronRight className="w-4 h-4" />}
-            >
-              Get Started
-            </Button>
-          </NavbarItem>
-        </NavbarContent>
-      </Navbar>
+          <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            CodeArena
+          </span>
+        </div>
+        <nav className="hidden md:flex gap-8" aria-label="Main navigation">
+          <Link
+            to="#features"
+            className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
+            tabIndex={0}
+            aria-label="Features"
+          >
+            Features
+          </Link>
+          <Link
+            to="#competitions"
+            className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
+            tabIndex={0}
+            aria-label="Competitions"
+          >
+            Competitions
+          </Link>
+          <Link
+            to="#practice"
+            className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
+            tabIndex={0}
+            aria-label="Practice"
+          >
+            Practice
+          </Link>
+          <Link
+            to="#leaderboard"
+            className="text-gray-300 hover:text-blue-400 transition-colors font-medium"
+            tabIndex={0}
+            aria-label="Leaderboard"
+          >
+            Leaderboard
+          </Link>
+        </nav>
+        <div className="flex gap-2 items-center">
+          <Button
+            className="hidden sm:flex !bg-blue-500 !text-white font-medium"
+            tabIndex={0}
+            aria-label="Sign In"
+          >
+            Sign In
+          </Button>
+          <Button
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+            tabIndex={0}
+            aria-label="Get Started"
+            endContent={<ChevronRight className="w-4 h-4" />}
+          >
+            Get Started
+          </Button>
+        </div>
+      </header>
 
       {/* Hero Section */}
       <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-black">
@@ -122,14 +110,18 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                tabIndex={0}
+                aria-label="Start Coding Now"
                 endContent={<Play className="w-3 h-3" />}
               >
                 Start Coding Now
               </Button>
               <Button
                 size="lg"
-                variant="bordered"
+                variant="outline"
                 className="border-gray-600 text-gray-300 font-semibold px-8 py-3 hover:bg-gray-800 transition-all duration-300"
+                tabIndex={0}
+                aria-label="View Competitions"
               >
                 View Competitions
               </Button>
@@ -185,7 +177,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800/30">
-              <CardBody className="p-0">
+              <CardContent className="p-0">
                 <div className="w-12 h-12 bg-blue-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Code2 className="w-6 h-6 text-blue-600" />
                 </div>
@@ -196,11 +188,11 @@ export default function LandingPage() {
                   Advanced code editor with syntax highlighting,
                   auto-completion, and real-time error detection
                 </p>
-              </CardBody>
+              </CardContent>
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-800/30">
-              <CardBody className="p-0">
+              <CardContent className="p-0">
                 <div className="w-12 h-12 bg-purple-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Trophy className="w-6 h-6 text-purple-600" />
                 </div>
@@ -211,11 +203,11 @@ export default function LandingPage() {
                   Participate in real-time coding contests and compete with
                   developers worldwide
                 </p>
-              </CardBody>
+              </CardContent>
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-green-900/20 to-emerald-900/20 border border-green-800/30">
-              <CardBody className="p-0">
+              <CardContent className="p-0">
                 <div className="w-12 h-12 bg-green-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Shield className="w-6 h-6 text-green-600" />
                 </div>
@@ -226,11 +218,11 @@ export default function LandingPage() {
                   Docker-based sandboxed environment ensures safe and isolated
                   code execution
                 </p>
-              </CardBody>
+              </CardContent>
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-orange-900/20 to-red-900/20 border border-orange-800/30">
-              <CardBody className="p-0">
+              <CardContent className="p-0">
                 <div className="w-12 h-12 bg-orange-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Zap className="w-6 h-6 text-orange-600" />
                 </div>
@@ -241,11 +233,11 @@ export default function LandingPage() {
                   Get immediate results with detailed test case analysis and
                   performance metrics
                 </p>
-              </CardBody>
+              </CardContent>
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-teal-900/20 to-cyan-900/20 border border-teal-800/30">
-              <CardBody className="p-0">
+              <CardContent className="p-0">
                 <div className="w-12 h-12 bg-teal-800/50 rounded-xl flex items-center justify-center mb-4">
                   <TrendingUp className="w-6 h-6 text-teal-600" />
                 </div>
@@ -256,11 +248,11 @@ export default function LandingPage() {
                   Monitor your improvement with detailed analytics and
                   performance insights
                 </p>
-              </CardBody>
+              </CardContent>
             </Card>
 
             <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-violet-900/20 to-purple-900/20 border border-violet-800/30">
-              <CardBody className="p-0">
+              <CardContent className="p-0">
                 <div className="w-12 h-12 bg-violet-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Globe className="w-6 h-6 text-violet-600" />
                 </div>
@@ -271,7 +263,7 @@ export default function LandingPage() {
                   Connect with developers worldwide and learn from the best in
                   the community
                 </p>
-              </CardBody>
+              </CardContent>
             </Card>
           </div>
         </div>
