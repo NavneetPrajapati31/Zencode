@@ -1,9 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
-const { stderr } = require("process");
 
-const outputPath = path.join(__dirname, "outputs");
+const outputPath = path.join(__dirname, "../outputs");
 
 if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
@@ -29,4 +28,4 @@ const executeCpp = async (filePath) => {
   });
 };
 
-module.exports = executeCpp;
+module.exports = { executeCpp };
