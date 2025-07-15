@@ -85,6 +85,15 @@ export default function LandingPage() {
               Get Started
             </Button>
           </Link>
+          <Link to={"/compiler"}>
+            <Button
+              className="hidden sm:flex !bg-blue-500 !text-white font-medium"
+              tabIndex={0}
+              aria-label="Go to Code Runner"
+            >
+              Try Online Code Runner
+            </Button>
+          </Link>
         </div>
       </header>
 

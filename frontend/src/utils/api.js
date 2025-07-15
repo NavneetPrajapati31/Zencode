@@ -67,3 +67,19 @@ export const problemsAPI = {
 export const protectedAPI = {
   getProtected: () => apiCall("/protected"),
 };
+
+// Compiler API calls
+export const compilerAPI = {
+  runCode: async ({ language, code }) => {
+    const response = await fetch("http://localhost:8000/compiler", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ language, code }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Code execution failed");
+    }
+    return data;
+  },
+};
