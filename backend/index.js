@@ -1,13 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const databaseManager = require("./config/database");
 const authRoutes = require("./routes/auth");
 const protectedRoutes = require("./routes/protected");
 const problemRoutes = require("./routes/problem");
+const dotenv = require("dotenv");
+dotenv.config();
 
-// Load environment variables
-require("dotenv").config({ path: __dirname + "/.env" });
 console.log("TEST_ENV:", process.env.TEST_ENV); // Debug: should print 'hello' if .env is loaded
 console.log("TEST_ENV:", process.env.TEST_ENV); // Add this for testing
 

@@ -3,6 +3,8 @@ const cors = require("cors");
 const app = express();
 const generateFile = require("./generateFile");
 const executeCpp = require("./executeCpp");
+const dotenv = require("dotenv");
+dotenv.config();
 
 app.use(cors());
 app.use(express.json());
@@ -34,4 +36,5 @@ app.post("/run", async (req, res) => {
 
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
+  console.log(process.env.TEST_ENV);
 });

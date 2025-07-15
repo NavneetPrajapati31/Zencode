@@ -15,7 +15,7 @@ class DatabaseManager {
    */
   async connect() {
     try {
-      console.log("All ENV:", process.env); // Debug log
+      // console.log("All ENV:", process.env);
       const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/";
       console.log("MongoDB URI:", mongoURI); // Debug log
 
