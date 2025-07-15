@@ -28,7 +28,7 @@ const runners = {
   js: executeJavascript,
 };
 
-app.post("/run", async (req, res) => {
+app.post("/compiler", async (req, res) => {
   const { language = "cpp", code } = req.body;
 
   if (code === undefined) {

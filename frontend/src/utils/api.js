@@ -78,7 +78,11 @@ export const compilerAPI = {
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error || "Code execution failed");
+      throw new Error(
+        typeof data.error === "string"
+          ? data.error
+          : JSON.stringify(data.error || "Code execution failed", null, 2)
+      );
     }
     return data;
   },

@@ -3,3 +3,11 @@
   margin: 0 auto;
   text-align: center;
 }
+
+/* Remove background and border from PrismJS operator tokens */
+.token.operator {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
