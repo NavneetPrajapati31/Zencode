@@ -2,52 +2,50 @@
 
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Code2, Search, Trophy, Clock, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Search,
+  ArrowUpDown,
+  Filter,
+  Shuffle,
+  CheckCircle,
+  LayoutDashboard,
+  Folder,
+  X,
+} from "lucide-react";
 import { problemsAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
+
+const getDifficultyColor = (difficulty) => {
+  switch (difficulty) {
+    case "Easy":
+      return "text-green-400";
+    case "Med.":
+    case "Medium":
+      return "text-yellow-400";
+    case "Hard":
+      return "text-red-400";
+    default:
+      return "text-gray-400";
+  }
+};
+
+const ProgressBar = () => (
+  <div className="flex space-x-0.5">
+    {Array.from({ length: 10 }).map((_, i) => (
+      <div key={i} className="w-1 h-4 bg-gray-500 rounded-sm" />
+    ))}
+  </div>
+);
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [addForm, setAddForm] = useState({
-    name: "",
-    statement: "",
-    difficulty: "easy",
-  });
-  const [addLoading, setAddLoading] = useState(false);
-  const [addError, setAddError] = useState("");
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editForm, setEditForm] = useState({
-    id: "",
-    title: "",
-    description: "",
-    difficulty: "Easy",
-  });
-  const [editLoading, setEditLoading] = useState(false);
-  const [editError, setEditError] = useState("");
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [deleteError, setDeleteError] = useState("");
-  const [deleteId, setDeleteId] = useState(null);
-  const {
-    isAuthenticated,
-    loading: authLoading,
-    user,
-    logout,
-  } = useContext(AuthContext);
+  const { isAuthenticated, loading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +60,7 @@ export default function ProblemsPage() {
 
   const fetchProblems = async () => {
     setError("");
+    setLoading(true);
     try {
       const data = await problemsAPI.getAll();
       setProblems(data);
@@ -72,6 +71,11 @@ export default function ProblemsPage() {
     }
   };
 
+  // For demo: treat problems with percentage >= 50 as solved
+  const isSolved = (problem) => problem.solved || problem.percentage >= 50;
+  const solvedCount = problems.filter(isSolved).length;
+  const totalCount = problems.length;
+
   const filteredProblems = problems.filter(
     (problem) =>
       (problem.title &&
@@ -80,511 +84,142 @@ export default function ProblemsPage() {
         problem.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const getDifficultyColor = (difficulty) => {
-    if (!difficulty) return "bg-gray-500";
-    switch (difficulty.toLowerCase()) {
-      case "easy":
-        return "bg-green-500";
-      case "medium":
-        return "bg-yellow-500";
-      case "hard":
-        return "bg-red-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
-  const handleOpenAddModal = () => {
-    setAddForm({ name: "", statement: "", difficulty: "easy" });
-    setAddError("");
-    setShowAddModal(true);
-  };
-  const handleCloseAddModal = () => setShowAddModal(false);
-
-  const handleAddInputChange = (e) => {
-    const { name, value } = e.target;
-    setAddForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddProblem = async (e) => {
-    e.preventDefault();
-    setAddLoading(true);
-    setAddError("");
-    try {
-      await problemsAPI.create({
-        title: addForm.name,
-        description: addForm.statement,
-        difficulty:
-          addForm.difficulty.charAt(0).toUpperCase() +
-          addForm.difficulty.slice(1).toLowerCase(),
-      });
-      setShowAddModal(false);
-      fetchProblems();
-    } catch (err) {
-      setAddError(err.message || "Failed to add problem.");
-    } finally {
-      setAddLoading(false);
-    }
-  };
-
-  const handleOpenEditModal = (problem) => {
-    setEditForm({
-      id: problem._id,
-      title: problem.title,
-      description: problem.description,
-      difficulty: problem.difficulty,
-    });
-    setEditError("");
-    setShowEditModal(true);
-  };
-  const handleCloseEditModal = () => setShowEditModal(false);
-
-  const handleEditInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleEditProblem = async (e) => {
-    e.preventDefault();
-    setEditLoading(true);
-    setEditError("");
-    try {
-      await problemsAPI.update(editForm.id, {
-        title: editForm.title,
-        description: editForm.description,
-        difficulty:
-          editForm.difficulty.charAt(0).toUpperCase() +
-          editForm.difficulty.slice(1).toLowerCase(),
-      });
-      setShowEditModal(false);
-      fetchProblems();
-    } catch (err) {
-      setEditError(err.message || "Failed to update problem.");
-    } finally {
-      setEditLoading(false);
-    }
-  };
-
-  const handleDeleteProblem = async (id) => {
-    setDeleteLoading(true);
-    setDeleteError("");
-    try {
-      await problemsAPI.delete(id);
-      setDeleteId(null);
-      fetchProblems();
-    } catch (err) {
-      setDeleteError(err.message || "Failed to delete problem.");
-    } finally {
-      setDeleteLoading(false);
-    }
-  };
-
-  const isAuthor = (problem) => {
-    if (!user) return false;
-    if (!problem.createdBy) return false;
-    return (problem.createdBy._id || problem.createdBy) === user.id;
-  };
-
   if (loading || authLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-white">Loading problems...</div>
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
+        <div className="text-zinc-100">Loading problems...</div>
       </div>
     );
   }
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
         <div className="text-red-500">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Header */}
-      <header className="bg-black border-b border-gray-800">
-        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <div className="bg-blue-600 p-2 rounded-lg mr-3">
-                <Code2 className="h-4 w-4 text-white" />
-              </div>
-              <h1 className="!text-lg font-bold text-white">Online Judge</h1>
-            </div>
-            <div className="items-center space-x-4 hidden md:flex">
-              <Link to="/leaderboard">
-                <Button
-                  variant="outline"
-                  className="!bg-gray-900 !border-gray-800 text-white hover:text-white"
-                >
-                  <Trophy className="mr-2 h-4 w-4" />
-                  Leaderboard
-                </Button>
-              </Link>
-              <Link to="/profile">
-                <Button
-                  variant="outline"
-                  className="!bg-gray-900 !border-gray-800 text-white hover:text-white"
-                >
-                  Profile
-                </Button>
-              </Link>
-              {isAuthenticated && (
-                <Button
-                  className="!bg-gray-900 text-white hover:text-white"
-                  onClick={handleOpenAddModal}
-                  aria-label="Add Problem"
-                >
-                  + Add Problem
-                </Button>
-              )}
-              {isAuthenticated && (
-                <Button
-                  className="!bg-gray-900  text-white hover:text-white"
-                  onClick={() => {
-                    logout();
-                    navigate("/signin");
-                  }}
-                  aria-label="Logout"
-                >
-                  Logout
-                </Button>
-              )}
-            </div>
+    <div className="min-h-screen bg-zinc-900 text-zinc-100 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-full mx-auto bg-zinc-800 rounded-lg shadow-lg p-4 sm:p-6">
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="relative flex-grow w-full sm:w-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Search questions"
+              className="pl-10 pr-4 py-2 rounded-md bg-zinc-700 border border-zinc-600 text-zinc-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search problems"
+            />
           </div>
-        </div>
-      </header>
-
-      {/* Add Problem Modal */}
-      {showAddModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="bg-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
-            <button
-              onClick={handleCloseAddModal}
-              className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              aria-label="Close"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") handleCloseAddModal();
-              }}
+          <div className="flex space-x-2 w-full sm:w-auto justify-end">
+            <Button
+              variant="ghost"
+              className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100 p-2 rounded-md"
+              aria-label="Sort"
             >
-              ×
-            </button>
-            <h2 className="text-xl font-bold text-white mb-4">
-              Add New Problem
-            </h2>
-            <form onSubmit={handleAddProblem} className="space-y-4">
-              <div>
-                <Label htmlFor="name" className="text-white">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={addForm.name}
-                  onChange={handleAddInputChange}
-                  className="bg-gray-800 border-gray-700 text-white"
-                  required
-                  aria-label="Problem Name"
-                />
-              </div>
-              <div>
-                <Label htmlFor="statement" className="text-white">
-                  Statement
-                </Label>
-                <textarea
-                  id="statement"
-                  name="statement"
-                  value={addForm.statement}
-                  onChange={handleAddInputChange}
-                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2 min-h-[80px]"
-                  required
-                  aria-label="Problem Statement"
-                />
-              </div>
-              <div>
-                <Label htmlFor="difficulty" className="text-white">
-                  Difficulty
-                </Label>
-                <select
-                  id="difficulty"
-                  name="difficulty"
-                  value={addForm.difficulty}
-                  onChange={handleAddInputChange}
-                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2"
-                  required
-                  aria-label="Difficulty"
-                >
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
-                </select>
-              </div>
-              {addError && (
-                <div className="text-red-500 text-sm">{addError}</div>
-              )}
-              <Button
-                type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
-                disabled={addLoading}
-                aria-label="Submit New Problem"
-              >
-                {addLoading ? "Adding..." : "Add Problem"}
-              </Button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Problem Modal */}
-      {showEditModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="bg-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
-            <button
-              onClick={handleCloseEditModal}
-              className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              aria-label="Close"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") handleCloseEditModal();
-              }}
+              <ArrowUpDown className="h-5 w-5" />
+              <span className="sr-only">Sort</span>
+            </Button>
+            <Button
+              variant="ghost"
+              className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100 p-2 rounded-md"
+              aria-label="Filter"
             >
-              ×
-            </button>
-            <h2 className="text-xl font-bold text-white mb-4">Edit Problem</h2>
-            <form onSubmit={handleEditProblem} className="space-y-4">
-              <div>
-                <Label htmlFor="edit-title" className="text-white">
-                  Name
-                </Label>
-                <Input
-                  id="edit-title"
-                  name="title"
-                  type="text"
-                  value={editForm.title}
-                  onChange={handleEditInputChange}
-                  className="bg-gray-800 border-gray-700 text-white"
-                  required
-                  aria-label="Problem Name"
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-description" className="text-white">
-                  Statement
-                </Label>
-                <textarea
-                  id="edit-description"
-                  name="description"
-                  value={editForm.description}
-                  onChange={handleEditInputChange}
-                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2 min-h-[80px]"
-                  required
-                  aria-label="Problem Statement"
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-difficulty" className="text-white">
-                  Difficulty
-                </Label>
-                <select
-                  id="edit-difficulty"
-                  name="difficulty"
-                  value={editForm.difficulty}
-                  onChange={handleEditInputChange}
-                  className="bg-gray-800 border-gray-700 text-white rounded-md w-full p-2"
-                  required
-                  aria-label="Difficulty"
-                >
-                  <option value="Easy">Easy</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Hard">Hard</option>
-                </select>
-              </div>
-              {editError && (
-                <div className="text-red-500 text-sm">{editError}</div>
-              )}
-              <Button
-                type="submit"
-                className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
-                disabled={editLoading}
-                aria-label="Submit Edit Problem"
-              >
-                {editLoading ? "Saving..." : "Save Changes"}
-              </Button>
-            </form>
+              <Filter className="h-5 w-5" />
+              <span className="sr-only">Filter</span>
+            </Button>
           </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deleteId && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="bg-gray-900 rounded-xl shadow-lg w-full max-w-md p-6 relative">
-            <button
-              onClick={() => setDeleteId(null)}
-              className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              aria-label="Close"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") setDeleteId(null);
-              }}
+          <div className="flex items-center space-x-4 ml-auto w-full sm:w-auto justify-end">
+            <div className="flex items-center space-x-2">
+              <div className="relative w-6 h-6">
+                <div className="absolute inset-0 rounded-full border-2 border-gray-500" />
+                <div
+                  className="absolute inset-0 rounded-full border-2 border-green-500"
+                  style={{ clipPath: "inset(0 50% 0 0)" }}
+                />
+              </div>
+              <span className="text-sm font-medium text-zinc-300">
+                {solvedCount}/{totalCount} Solved
+              </span>
+            </div>
+            <Button
+              variant="ghost"
+              className="p-2 rounded-md text-zinc-300 hover:bg-zinc-700"
+              aria-label="Shuffle"
             >
-              ×
-            </button>
-            <h2 className="text-xl font-bold text-white mb-4">
-              Delete Problem
-            </h2>
-            <p className="text-gray-300 mb-6">
-              Are you sure you want to delete this problem? This action cannot
-              be undone.
-            </p>
-            {deleteError && (
-              <div className="text-red-500 text-sm mb-2">{deleteError}</div>
-            )}
-            <div className="flex gap-4">
-              <Button
-                className="bg-gray-700 hover:bg-gray-800 text-white flex-1"
-                onClick={() => setDeleteId(null)}
-                disabled={deleteLoading}
-                aria-label="Cancel Delete"
-              >
-                Cancel
-              </Button>
-              <Button
-                className="bg-red-600 hover:bg-red-700 text-white flex-1"
-                onClick={() => handleDeleteProblem(deleteId)}
-                disabled={deleteLoading}
-                aria-label="Confirm Delete"
-              >
-                {deleteLoading ? "Deleting..." : "Delete"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content */}
-      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search and Stats */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                type="text"
-                placeholder="Search problems..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gray-900 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
-              />
-            </div>
-            <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <div className="flex items-center">
-                <Code2 className="mr-1 h-4 w-4" />
-                <span>{problems.length} Problems</span>
-              </div>
-              <div className="flex items-center">
-                <Users className="mr-1 h-4 w-4" />
-                <span>Active Users</span>
-              </div>
-            </div>
+              <Shuffle className="h-5 w-5" />
+              <span className="sr-only">Shuffle</span>
+            </Button>
+            <Button
+              variant="ghost"
+              className="p-2 rounded-md text-zinc-300 hover:bg-zinc-700"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+              <span className="sr-only">Close</span>
+            </Button>
           </div>
         </div>
 
-        {/* Problems Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredProblems.map((problem) => (
-            <Card
+        {/* Problems List */}
+        <div className="space-y-2">
+          {filteredProblems.map((problem, idx) => (
+            <Link
+              to={`/problems/${problem._id}`}
               key={problem._id}
-              className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors"
+              tabIndex={0}
+              aria-label={`Open problem ${problem.title}`}
+              className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
             >
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-white text-lg mb-2">
-                      {problem.title}
-                    </CardTitle>
-                    <CardDescription className="text-gray-400 line-clamp-3">
-                      {problem.description &&
-                        problem.description.substring(0, 150)}
-                      ...
-                    </CardDescription>
-                  </div>
-                  {problem.difficulty && (
-                    <Badge
-                      className={`${getDifficultyColor(
-                        problem.difficulty
-                      )} text-white ml-2`}
-                    >
-                      {problem.difficulty}
-                    </Badge>
+              <Card className="flex flex-row items-center justify-between p-4 rounded-md cursor-pointer transition-colors duration-200 bg-zinc-800 hover:bg-zinc-700">
+                {/* Left: Checkmark, Number, Title */}
+                <div className="flex items-center min-w-0 max-w-[70%] flex-shrink-0">
+                  {isSolved(problem) ? (
+                    <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
+                  ) : (
+                    <span className="h-5 w-5 shrink-0 inline-block" />
                   )}
+                  <span className="text-base font-medium text-zinc-100 mr-2 shrink-0">
+                    {idx + 1}.
+                  </span>
+                  <span className="text-base font-medium text-white truncate min-w-0">
+                    {problem.title}
+                  </span>
                 </div>
-                {isAuthor(problem) && (
-                  <div className="flex gap-2 mt-2">
-                    <Button
-                      size="sm"
-                      className="bg-yellow-600 hover:bg-yellow-700 text-white"
-                      onClick={() => handleOpenEditModal(problem)}
-                      aria-label="Edit Problem"
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                      onClick={() => setDeleteId(problem._id)}
-                      aria-label="Delete Problem"
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                )}
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-400">
-                    <Clock className="mr-1 h-4 w-4" />
-                    <span>Problem #{problem.code}</span>
-                  </div>
-                  <Link to={`/problems/${problem._id}`}>
-                    <Button
-                      size="sm"
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      Solve
-                    </Button>
-                  </Link>
+                {/* Right: Percentage, Difficulty, ProgressBar */}
+                <div className="flex items-center gap-3 flex-shrink-0 ml-4 whitespace-nowrap">
+                  <span className="text-sm font-medium text-zinc-300">
+                    {problem.percentage
+                      ? `${problem.percentage.toFixed(1)}%`
+                      : "0.0%"}
+                  </span>
+                  <span
+                    className={`text-sm font-semibold ${getDifficultyColor(problem.difficulty)}`}
+                  >
+                    {problem.difficulty === "Medium"
+                      ? "Med."
+                      : problem.difficulty}
+                  </span>
+                  <ProgressBar />
                 </div>
-              </CardContent>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
-
         {filteredProblems.length === 0 && (
           <div className="text-center py-12">
-            <Code2 className="mx-auto h-12 w-12 text-gray-600 mb-4" />
+            <Search className="mx-auto h-12 w-12 text-gray-600 mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">
               No problems found
             </h3>
             <p className="text-gray-400">Try adjusting your search terms.</p>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

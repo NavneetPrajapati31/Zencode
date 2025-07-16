@@ -1,0 +1,93 @@
+[
+  {
+    "title": "Find the Maximum Length of Valid Subsequence I",
+    "description": "Given an array of integers, find the maximum length of a valid subsequence according to the problem's rules.",
+    "difficulty": "Medium",
+    "tags": ["array", "subsequence"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Two Sum",
+    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "difficulty": "Easy",
+    "tags": ["array", "hashmap"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Add Two Numbers",
+    "description": "You are given two non-empty linked lists representing two non-negative integers. Add the two numbers and return the sum as a linked list.",
+    "difficulty": "Medium",
+    "tags": ["linked list", "math"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Longest Substring Without Repeating Characters",
+    "description": "Given a string, find the length of the longest substring without repeating characters.",
+    "difficulty": "Medium",
+    "tags": ["string", "sliding window"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Median of Two Sorted Arrays",
+    "description": "Given two sorted arrays nums1 and nums2, return the median of the two sorted arrays.",
+    "difficulty": "Hard",
+    "tags": ["array", "binary search"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Longest Palindromic Substring",
+    "description": "Given a string s, return the longest palindromic substring in s.",
+    "difficulty": "Medium",
+    "tags": ["string", "dynamic programming"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Zigzag Conversion",
+    "description": "Convert a given string to a zigzag pattern on a given number of rows.",
+    "difficulty": "Medium",
+    "tags": ["string", "simulation"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Reverse Integer",
+    "description": "Given a signed 32-bit integer x, return x with its digits reversed.",
+    "difficulty": "Medium",
+    "tags": ["math"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "String to Integer (atoi)",
+    "description": "Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer.",
+    "difficulty": "Medium",
+    "tags": ["string", "parsing"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Palindrome Number",
+    "description": "Given an integer x, return true if x is a palindrome, and false otherwise.",
+    "difficulty": "Easy",
+    "tags": ["math"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Regular Expression Matching",
+    "description": "Implement regular expression matching with support for '.' and '*'.",
+    "difficulty": "Hard",
+    "tags": ["string", "dynamic programming"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Container With Most Water",
+    "description": "Given n non-negative integers a1, a2, ..., an, find two lines that together with the x-axis form a container, such that the container contains the most water.",
+    "difficulty": "Medium",
+    "tags": ["array", "two pointers"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  },
+  {
+    "title": "Integer to Roman",
+    "description": "Convert an integer to a Roman numeral.",
+    "difficulty": "Medium",
+    "tags": ["math", "string"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1"
+  }
+]
