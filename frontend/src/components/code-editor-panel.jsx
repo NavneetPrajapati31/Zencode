@@ -109,7 +109,7 @@ export default function CodeEditorPanel() {
             <div key={i}>{i + 1}</div>
           ))}
         </div>
-        <pre className="ml-8 text-zinc-100">
+        <pre className="ml-8 text-zinc-100 text-left">
           <code>
             <span className="text-blue-400">class</span>{" "}
             <span className="text-green-400">Solution</span> {"{"}
@@ -168,7 +168,7 @@ export default function CodeEditorPanel() {
                   <span className="sr-only">Add Test Case</span>
                 </button>
               </div>
-              <div className="bg-zinc-700 p-3 rounded-md text-sm font-mono">
+              <div className="bg-zinc-700 p-3 rounded-md text-sm font-mono text-left">
                 <p className="text-zinc-400 mb-1">nums =</p>
                 <pre className="text-zinc-100">[2,7,11,15]</pre>
               </div>

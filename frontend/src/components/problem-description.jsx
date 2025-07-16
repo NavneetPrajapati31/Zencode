@@ -72,7 +72,7 @@ export default function ProblemDescription() {
             </div>
 
             {/* Problem Statement */}
-            <div className="text-zinc-300 leading-relaxed space-y-4 text-sm">
+            <div className="text-zinc-300 leading-relaxed space-y-4 text-sm text-left">
               <p>
                 Given an array of integers{" "}
                 <code className="bg-zinc-700 px-1 py-0.5 rounded text-zinc-100">
