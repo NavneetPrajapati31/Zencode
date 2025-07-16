@@ -100,39 +100,22 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-zinc-100 p-4 sm:p-6 lg:p-8">
-      <div className="max-w-full mx-auto bg-zinc-800 rounded-lg shadow-lg p-4 sm:p-6">
+    <div className="min-h-screen bg-black text-zinc-100 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-full mx-auto bg-black rounded-lg shadow-lg p-4 sm:p-6">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="relative flex-grow w-full sm:w-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
             <Input
               type="text"
               placeholder="Search questions"
-              className="pl-10 pr-4 py-2 rounded-md bg-zinc-700 border border-zinc-600 text-zinc-100 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+              className="pl-10 pr-4 py-2 rounded-md !bg-slate-900 border !border-slate-800 text-zinc-100 !placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search problems"
             />
           </div>
-          <div className="flex space-x-2 w-full sm:w-auto justify-end">
-            <Button
-              variant="ghost"
-              className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100 p-2 rounded-md"
-              aria-label="Sort"
-            >
-              <ArrowUpDown className="h-5 w-5" />
-              <span className="sr-only">Sort</span>
-            </Button>
-            <Button
-              variant="ghost"
-              className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100 p-2 rounded-md"
-              aria-label="Filter"
-            >
-              <Filter className="h-5 w-5" />
-              <span className="sr-only">Filter</span>
-            </Button>
-          </div>
+
           <div className="flex items-center space-x-4 ml-auto w-full sm:w-auto justify-end">
             <div className="flex items-center space-x-2">
               <div className="relative w-6 h-6">
@@ -146,22 +129,6 @@ export default function ProblemsPage() {
                 {solvedCount}/{totalCount} Solved
               </span>
             </div>
-            <Button
-              variant="ghost"
-              className="p-2 rounded-md text-zinc-300 hover:bg-zinc-700"
-              aria-label="Shuffle"
-            >
-              <Shuffle className="h-5 w-5" />
-              <span className="sr-only">Shuffle</span>
-            </Button>
-            <Button
-              variant="ghost"
-              className="p-2 rounded-md text-zinc-300 hover:bg-zinc-700"
-              aria-label="Close"
-            >
-              <X className="h-5 w-5" />
-              <span className="sr-only">Close</span>
-            </Button>
           </div>
         </div>
 
@@ -175,28 +142,28 @@ export default function ProblemsPage() {
               aria-label={`Open problem ${problem.title}`}
               className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
             >
-              <Card className="flex flex-row items-center justify-between p-4 rounded-md cursor-pointer transition-colors duration-200 bg-zinc-800 hover:bg-zinc-700">
+              <Card className="flex flex-row items-center justify-between !p-4 rounded-md cursor-pointer transition-colors duration-200 !bg-slate-900 !border-slate-800 focus-within:ring-0 focus-within:outline-0">
                 {/* Left: Checkmark, Number, Title */}
                 <div className="flex items-center min-w-0 max-w-[70%] flex-shrink-0">
                   {isSolved(problem) ? (
                     <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
                   ) : (
-                    <span className="h-5 w-5 shrink-0 inline-block" />
+                    <span className="h-5 w-5 border-2 border-slate-800 rounded-full shrink-0 inline-block mr-3" />
                   )}
-                  <span className="text-base font-medium text-zinc-100 mr-2 shrink-0">
+                  <span className="text-base font-medium text-slate-400 mr-2 shrink-0">
                     {idx + 1}.
                   </span>
-                  <span className="text-base font-medium text-white truncate min-w-0">
+                  <span className="text-base font-medium text-slate-400 truncate min-w-0">
                     {problem.title}
                   </span>
                 </div>
                 {/* Right: Percentage, Difficulty, ProgressBar */}
                 <div className="flex items-center gap-3 flex-shrink-0 ml-4 whitespace-nowrap">
-                  <span className="text-sm font-medium text-zinc-300">
+                  {/* <span className="text-sm font-medium text-zinc-300">
                     {problem.percentage
                       ? `${problem.percentage.toFixed(1)}%`
                       : "0.0%"}
-                  </span>
+                  </span> */}
                   <span
                     className={`text-sm font-semibold ${getDifficultyColor(problem.difficulty)}`}
                   >
