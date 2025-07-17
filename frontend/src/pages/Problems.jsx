@@ -86,8 +86,8 @@ export default function ProblemsPage() {
 
   if (loading || authLoading) {
     return (
-      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-        <div className="text-zinc-100">Loading problems...</div>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="text-slate-400">Loading problems...</div>
       </div>
     );
   }
@@ -100,8 +100,8 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 p-4 sm:p-6 lg:p-8">
-      <div className="max-w-full mx-auto bg-black rounded-lg shadow-lg p-4 sm:p-6">
+    <div className="min-h-screen bg-slate-950 text-slate-400 px-4">
+      <div className="max-w-full mx-auto rounded-lg shadow-lg p-4 sm:p-6">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="relative flex-grow w-full sm:w-auto">

@@ -25,28 +25,28 @@ export default function ProblemDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-900 flex items-center justify-center text-zinc-100">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
         Loading problem...
       </div>
     );
   }
   if (error) {
     return (
-      <div className="min-h-screen bg-zinc-900 flex items-center justify-center text-red-500">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-red-500">
         {error}
       </div>
     );
   }
   if (!problem) {
     return (
-      <div className="min-h-screen bg-zinc-900 flex items-center justify-center text-zinc-100">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
         Problem not found.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-400 flex flex-col">
+    <div className="min-h-screen bg-slate-950 text-slate-400 flex flex-col">
       <TopNavbar
         onRun={() => codeEditorRef.current?.run()}
         onSubmit={() => codeEditorRef.current?.submit()}

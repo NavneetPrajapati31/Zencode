@@ -18,7 +18,7 @@ export default function ProblemDescription({ problem }) {
     return <div className="p-4 text-zinc-300">No problem data available.</div>;
   }
   return (
-    <div className="p-4 overflow-y-auto bg-slate-900 text-slate-400">
+    <div className="p-4 overflow-y-auto bg-slate-950 text-slate-400">
       {/* Tabs */}
       <div className="w-full">
         <div>
@@ -51,7 +51,7 @@ export default function ProblemDescription({ problem }) {
                     <h3 className="font-semibold text-slate-400 text-md mb-2">
                       Example {i + 1}:
                     </h3>
-                    <div className="bg-slate-800 p-3 rounded-md text-sm">
+                    <div className="bg-slate-900 p-3 rounded-md text-sm">
                       <pre className="whitespace-pre-wrap break-words">
                         <code className="block">Input: {ex.input}</code>
                         <code className="block">Output: {ex.output}</code>

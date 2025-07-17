@@ -14,7 +14,7 @@ import {
 
 export default function TopNavbar({ onRun, onSubmit }) {
   return (
-    <nav className="flex items-center justify-between bg-slate-900 text-slate-400 p-3 border-b border-slate-800">
+    <nav className="flex items-center justify-between bg-slate-950 text-slate-400 p-3 border-b border-slate-800">
       {/* Left Section */}
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2 text-slate-400 p-1">

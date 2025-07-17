@@ -51,11 +51,14 @@
       "cpp": "int lengthOfLongestSubstring(string s) {\n    // your code here\n}",
       "python": "def lengthOfLongestSubstring(s):\n    # your code here\n    pass",
       "javascript": "function lengthOfLongestSubstring(s) {\n    // your code here\n}",
-      "java": "public int lengthOfLongestSubstring(String s) {\n    // your code here\n}"
+      "java": "public static int lengthOfLongestSubstring(String s) {\n    // your code here\n    return 0;\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n// USER_CODE\nint main() {\n    char s[50001];\n    scanf(\"%s\", s);\n    printf(\"%d\\n\", lengthOfLongestSubstring(s));\n    return 0;\n}",
-      "cpp": "#include <iostream>\n#include <string>\n#include <unordered_set>\nusing namespace std;\n// USER_CODE\nint main() {\n    string s;\n    cin >> s;\n    cout << lengthOfLongestSubstring(s) << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\n#include <string>\n#include <unordered_set>\nusing namespace std;\n// USER_CODE\nint main() {\n    string s;\n    cin >> s;\n    cout << lengthOfLongestSubstring(s) << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        String s = sc.next();\n        System.out.println(lengthOfLongestSubstring(s));\n    }\n}"
     }
   },
   {
@@ -102,11 +105,14 @@
       "cpp": "int maxArea(vector<int>& height) {\n    // your code here\n}",
       "python": "def maxArea(height):\n    # your code here\n    pass",
       "javascript": "function maxArea(height) {\n    // your code here\n}",
-      "java": "public int maxArea(int[] height) {\n    // your code here\n}"
+      "java": "public static int maxArea(int[] height) {\n    // your code here\n    return 0;\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <stdlib.h>\n// USER_CODE\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int* height = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) scanf(\"%d\", &height[i]);\n    printf(\"%d\\n\", maxArea(height, n));\n    free(height);\n    return 0;\n}",
-      "cpp": "#include <iostream>\n#include <vector>\nusing namespace std;\n// USER_CODE\nint main() {\n    int n;\n    cin >> n;\n    vector<int> height(n);\n    for (int i = 0; i < n; i++) cin >> height[i];\n    cout << maxArea(height) << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\n#include <vector>\nusing namespace std;\n// USER_CODE\nint main() {\n    int n;\n    cin >> n;\n    vector<int> height(n);\n    for (int i = 0; i < n; i++) cin >> height[i];\n    cout << maxArea(height) << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        int n = sc.nextInt();\n        int[] height = new int[n];\n        for (int i = 0; i < n; i++) height[i] = sc.nextInt();\n        System.out.println(maxArea(height));\n    }\n}"
     }
   },
   {
@@ -158,11 +164,14 @@
       "cpp": "string intToRoman(int num) {\n    // your code here\n}",
       "python": "def intToRoman(num):\n    # your code here\n    pass",
       "javascript": "function intToRoman(num) {\n    // your code here\n}",
-      "java": "public String intToRoman(int num) {\n    // your code here\n}"
+      "java": "public static String intToRoman(int num) {\n    // your code here\n    return \"\";\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <stdlib.h>\n// USER_CODE\nint main() {\n    int num;\n    scanf(\"%d\", &num);\n    char* result = intToRoman(num);\n    printf(\"%s\\n\", result);\n    return 0;\n}",
-      "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n// USER_CODE\nint main() {\n    int num;\n    cin >> num;\n    cout << intToRoman(num) << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n// USER_CODE\nint main() {\n    int num;\n    cin >> num;\n    cout << intToRoman(num) << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        int num = sc.nextInt();\n        System.out.println(intToRoman(num));\n    }\n}"
     }
   },
   {
@@ -214,11 +223,14 @@
       "cpp": "int reverse(int x) {\n    // your code here\n}",
       "python": "def reverse(x):\n    # your code here\n    pass",
       "javascript": "function reverse(x) {\n    // your code here\n}",
-      "java": "public int reverse(int x) {\n    // your code here\n}"
+      "java": "public static int reverse(int x) {\n    // your code here\n    return 0;\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n// USER_CODE\nint main() {\n    int x;\n    scanf(\"%d\", &x);\n    printf(\"%d\\n\", reverse(x));\n    return 0;\n}",
-      "cpp": "#include <iostream>\nusing namespace std;\n// USER_CODE\nint main() {\n    int x;\n    cin >> x;\n    cout << reverse(x) << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\nusing namespace std;\n// USER_CODE\nint main() {\n    int x;\n    cin >> x;\n    cout << reverse(x) << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        int x = sc.nextInt();\n        System.out.println(reverse(x));\n    }\n}"
     }
   },
   {
@@ -270,11 +282,14 @@
       "cpp": "bool isPalindrome(int x) {\n    // your code here\n}",
       "python": "def isPalindrome(x):\n    # your code here\n    pass",
       "javascript": "function isPalindrome(x) {\n    // your code here\n}",
-      "java": "public boolean isPalindrome(int x) {\n    // your code here\n}"
+      "java": "public static boolean isPalindrome(int x) {\n    // your code here\n    return false;\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <stdbool.h>\n// USER_CODE\nint main() {\n    int x;\n    scanf(\"%d\", &x);\n    printf(\"%s\\n\", isPalindrome(x) ? \"true\" : \"false\");\n    return 0;\n}",
-      "cpp": "#include <iostream>\nusing namespace std;\n// USER_CODE\nint main() {\n    int x;\n    cin >> x;\n    cout << (isPalindrome(x) ? \"true\" : \"false\") << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\nusing namespace std;\n// USER_CODE\nint main() {\n    int x;\n    cin >> x;\n    cout << (isPalindrome(x) ? \"true\" : \"false\") << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        int x = sc.nextInt();\n        System.out.println(isPalindrome(x));\n    }\n}"
     }
   },
   {
@@ -321,11 +336,14 @@
       "cpp": "int maximumLength(vector<int>& nums) {\n    // your code here\n}",
       "python": "def maximumLength(nums):\n    # your code here\n    pass",
       "javascript": "function maximumLength(nums) {\n    // your code here\n}",
-      "java": "public int maximumLength(int[] nums) {\n    // your code here\n}"
+      "java": "public static int maximumLength(int[] nums) {\n    // your code here\n    return 0;\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <stdlib.h>\n// USER_CODE\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int* nums = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) scanf(\"%d\", &nums[i]);\n    printf(\"%d\\n\", maximumLength(nums, n));\n    free(nums);\n    return 0;\n}",
-      "cpp": "#include <iostream>\n#include <vector>\nusing namespace std;\n// USER_CODE\nint main() {\n    int n;\n    cin >> n;\n    vector<int> nums(n);\n    for (int i = 0; i < n; i++) cin >> nums[i];\n    cout << maximumLength(nums) << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\n#include <vector>\nusing namespace std;\n// USER_CODE\nint main() {\n    int n;\n    cin >> n;\n    vector<int> nums(n);\n    for (int i = 0; i < n; i++) cin >> nums[i];\n    cout << maximumLength(nums) << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        int n = sc.nextInt();\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n        System.out.println(maximumLength(nums));\n    }\n}"
     }
   },
   {
@@ -382,11 +400,14 @@
       "cpp": "vector<int> twoSum(vector<int>& nums, int target) {\n    // your code here\n}",
       "python": "def twoSum(nums, target):\n    # your code here\n    pass",
       "javascript": "function twoSum(nums, target) {\n    // your code here\n}",
-      "java": "public int[] twoSum(int[] nums, int target) {\n    // your code here\n}"
+      "java": "public static int[] twoSum(int[] nums, int target) {\n    // your code here\n    return new int[0];\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <stdlib.h>\n// USER_CODE\nint main() {\n    int n, target;\n    scanf(\"%d\", &n);\n    int* nums = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) scanf(\"%d\", &nums[i]);\n    scanf(\"%d\", &target);\n    int returnSize;\n    int* result = twoSum(nums, n, target, &returnSize);\n    printf(\"[%d,%d]\\n\", result[0], result[1]);\n    free(nums);\n    free(result);\n    return 0;\n}",
-      "cpp": "#include <iostream>\n#include <vector>\nusing namespace std;\n// USER_CODE\nint main() {\n    int n, target;\n    cin >> n;\n    vector<int> nums(n);\n    for (int i = 0; i < n; i++) cin >> nums[i];\n    cin >> target;\n    vector<int> result = twoSum(nums, target);\n    cout << \"[\" << result[0] << \",\" << result[1] << \"]\" << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\n#include <vector>\nusing namespace std;\n// USER_CODE\nint main() {\n    int n, target;\n    cin >> n;\n    vector<int> nums(n);\n    for (int i = 0; i < n; i++) cin >> nums[i];\n    cin >> target;\n    vector<int> result = twoSum(nums, target);\n    cout << \"[\" << result[0] << \",\" << result[1] << \"]\" << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        int n = sc.nextInt();\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n        int target = sc.nextInt();\n        int[] result = twoSum(nums, target);\n        System.out.print(\"[\");\n        for (int i = 0; i < result.length; i++) {\n            System.out.print(result[i]);\n            if (i < result.length - 1) System.out.print(\",\");\n        }\n        System.out.println(\"]\");\n    }\n}"
     }
   },
   {
@@ -436,11 +457,14 @@
       "cpp": "string longestPalindrome(string s) {\n    // your code here\n}",
       "python": "def longestPalindrome(s):\n    # your code here\n    pass",
       "javascript": "function longestPalindrome(s) {\n    // your code here\n}",
-      "java": "public String longestPalindrome(String s) {\n    // your code here\n}"
+      "java": "public static String longestPalindrome(String s) {\n    // your code here\n    return \"\";\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n// USER_CODE\nint main() {\n    char s[1001];\n    scanf(\"%s\", s);\n    char* result = longestPalindrome(s);\n    printf(\"%s\\n\", result);\n    return 0;\n}",
-      "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n// USER_CODE\nint main() {\n    string s;\n    cin >> s;\n    cout << longestPalindrome(s) << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n// USER_CODE\nint main() {\n    string s;\n    cin >> s;\n    cout << longestPalindrome(s) << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        String s = sc.next();\n        System.out.println(longestPalindrome(s));\n    }\n}"
     }
   },
   {
@@ -496,11 +520,14 @@
       "cpp": "string convert(string s, int numRows) {\n    // your code here\n}",
       "python": "def convert(s, numRows):\n    # your code here\n    pass",
       "javascript": "function convert(s, numRows) {\n    // your code here\n}",
-      "java": "public String convert(String s, int numRows) {\n    // your code here\n}"
+      "java": "public static String convert(String s, int numRows) {\n    // your code here\n    return \"\";\n}"
     },
     "harness": {
       "c": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n// USER_CODE\nint main() {\n    char s[1001];\n    int numRows;\n    scanf(\"%s\", s);\n    scanf(\"%d\", &numRows);\n    char* result = convert(s, numRows);\n    printf(\"%s\\n\", result);\n    return 0;\n}",
-      "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n// USER_CODE\nint main() {\n    string s;\n    int numRows;\n    cin >> s >> numRows;\n    cout << convert(s, numRows) << endl;\n    return 0;\n}"
+      "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n// USER_CODE\nint main() {\n    string s;\n    int numRows;\n    cin >> s >> numRows;\n    cout << convert(s, numRows) << endl;\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        String s = sc.next();\n        int numRows = sc.nextInt();\n        System.out.println(convert(s, numRows));\n    }\n}"
     }
   },
   {
@@ -546,10 +573,14 @@
       "cpp": "ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {\n    // your code here\n}",
       "python": "def addTwoNumbers(l1, l2):\n    # your code here\n    pass",
       "javascript": "function addTwoNumbers(l1, l2) {\n    // your code here\n}",
-      "java": "public ListNode addTwoNumbers(ListNode l1, ListNode l2) {\n    // your code here\n}"
+      "java": "public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {\n    // your code here\n    return null;\n}"
     },
     "harness": {
-      "cpp": "#include <iostream>\n#include <sstream>\n#include <string>\nusing namespace std;\nstruct ListNode { int val; ListNode* next; ListNode(int x) : val(x), next(nullptr) {} };\n// USER_CODE\nListNode* buildList() {\n    std::string line;\n    if (!std::getline(std::cin, line)) return nullptr;\n    std::istringstream iss(line);\n    int x;\n    ListNode dummy(0), *cur = &dummy;\n    while (iss >> x) cur = cur->next = new ListNode(x);\n    return dummy.next;\n}\nvoid printList(ListNode* head) { while (head) { cout << head->val; if (head->next) cout << \" \"; head = head->next; } cout << endl; }\nint main() {\n    ListNode* l1 = buildList();\n    ListNode* l2 = buildList();\n    ListNode* res = addTwoNumbers(l1, l2);\n    printList(res);\n    return 0;\n}\n"
+      "cpp": "#include <iostream>\n#include <sstream>\n#include <string>\nusing namespace std;\nstruct ListNode { int val; ListNode* next; ListNode(int x) : val(x), next(nullptr) {} };\n// USER_CODE\nListNode* buildList() {\n    std::string line;\n    if (!std::getline(std::cin, line)) return nullptr;\n    std::istringstream iss(line);\n    int x;\n    ListNode dummy(0), *cur = &dummy;\n    while (iss >> x) cur = cur->next = new ListNode(x);\n    return dummy.next;\n}\nvoid printList(ListNode* head) { while (head) { cout << head->val; if (head->next) cout << \" \"; head = head->next; } cout << endl; }\nint main() {\n    ListNode* l1 = buildList();\n    ListNode* l2 = buildList();\n    ListNode* res = addTwoNumbers(l1, l2);\n    printList(res);\n    return 0;\n}\n",
+      "c": "// USER_CODE\nint main() {\n    return 0;\n}",
+      "python": "# USER_CODE\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()",
+      "javascript": "// USER_CODE\nfunction main() {\n    // test code\n}\nmain();",
+      "java": "public class Main {\n    // USER_CODE\n    public static void main(String[] args) {\n        java.util.Scanner sc = new java.util.Scanner(System.in);\n        String line1 = sc.nextLine();\n        String line2 = sc.nextLine();\n        ListNode l1 = buildList(line1);\n        ListNode l2 = buildList(line2);\n        ListNode res = addTwoNumbers(l1, l2);\n        printList(res);\n    }\n    static ListNode buildList(String line) {\n        String[] parts = line.trim().split(\" \" );\n        ListNode dummy = new ListNode(0), cur = dummy;\n        for (String p : parts) {\n            if (!p.isEmpty()) {\n                cur.next = new ListNode(Integer.parseInt(p));\n                cur = cur.next;\n            }\n        }\n        return dummy.next;\n    }\n    static void printList(ListNode head) {\n        while (head != null) {\n            System.out.print(head.val);\n            if (head.next != null) System.out.print(\" \" );\n            head = head.next;\n        }\n        System.out.println();\n    }\n    static class ListNode {\n        int val;\n        ListNode next;\n        ListNode(int x) { val = x; }\n    }\n}"
     }
   }
 ]
