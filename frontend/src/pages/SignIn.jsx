@@ -51,18 +51,18 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-6">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
       <div className="w-full max-w-lg space-y-8">
         {/* Logo and Header */}
         <div className="text-center">
-          <p className="text-2xl font-bold text-white">Welcome back, Coder!</p>
-          <p className="text-gray-400 mt-2">
+          <p className="text-xl font-bold text-white">Welcome back, Coder!</p>
+          <p className="!text-md text-gray-400 mt-2">
             Sign in to access coding challenges
           </p>
         </div>
 
-        <Card className="bg-gray-900 border-gray-800">
-          <CardHeader className="space-y-1">
+        <Card className="!bg-slate-900 !border-slate-800">
+          <CardHeader className="space-y-1 !border-slate-800">
             <CardTitle className="!text-xl text-center text-white">
               Sign in
             </CardTitle>
@@ -75,14 +75,14 @@ export default function SignIn() {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="!bg-gray-800 !border-gray-700 !text-white"
+                className="!bg-slate-900 !border-slate-800 !text-white"
               >
                 <Github className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
               <Button
                 variant="outline"
-                className="!bg-gray-800 !border-gray-700 !text-white !hover:bg-gray-700"
+                className="!bg-slate-900 !border-slate-800  !text-white !hover:bg-gray-700"
               >
                 <Mail className="mr-2 h-4 w-4" />
                 Google
@@ -91,10 +91,10 @@ export default function SignIn() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full bg-gray-700" />
+                <Separator className="w-full !bg-slate-800" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-gray-900 px-2 text-gray-400">
+                <span className="bg-slate-900 px-2 text-gray-400">
                   Or continue with
                 </span>
               </div>
@@ -113,7 +113,7 @@ export default function SignIn() {
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
                   required
                 />
               </div>
@@ -130,7 +130,7 @@ export default function SignIn() {
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
+                    className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
                     required
                   />
                   <Button
@@ -156,7 +156,10 @@ export default function SignIn() {
                     type="checkbox"
                     className="rounded border-gray-700 bg-gray-800 text-blue-600 focus:ring-blue-500"
                   />
-                  <Label htmlFor="remember" className="text-sm text-gray-400">
+                  <Label
+                    htmlFor="remember"
+                    className="text-sm text-gray-400 !bg-slate-900"
+                  >
                     Remember me
                   </Label>
                 </div>

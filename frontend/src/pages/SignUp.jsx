@@ -91,16 +91,18 @@ export default function SignUp() {
     formData.confirmPassword !== "";
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-6">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
       <div className="w-full max-w-lg space-y-8">
         {/* Logo and Header */}
         <div className="text-center">
-          <p className="text-3xl font-bold text-white">Join our community</p>
-          <p className="text-gray-400 mt-2">Create your coding account today</p>
+          <p className="text-xl font-bold text-white">Join our community</p>
+          <p className="!text-md text-gray-400 mt-2">
+            Create your coding account today
+          </p>
         </div>
 
-        <Card className="bg-gray-900 border-gray-800">
-          <CardHeader className="space-y-1">
+        <Card className="!bg-slate-900 !border-slate-800">
+          <CardHeader className="space-y-1  !border-slate-800">
             <CardTitle className="!text-xl text-center text-white">
               Create account
             </CardTitle>
@@ -113,14 +115,14 @@ export default function SignUp() {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="!bg-gray-800 !border-gray-700 !text-white"
+                className="!bg-slate-900 !border-slate-800 !text-white"
               >
                 <Github className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
               <Button
                 variant="outline"
-                className="!bg-gray-800 !border-gray-700 !text-white"
+                className="!bg-slate-900 !border-slate-800 !text-white"
               >
                 <Mail className="mr-2 h-4 w-4" />
                 Google
@@ -129,10 +131,10 @@ export default function SignUp() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full bg-gray-700" />
+                <Separator className="w-full !bg-slate-800" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-gray-900 px-2 text-gray-400">
+                <span className="bg-slate-900 px-2 text-gray-400">
                   Or continue with
                 </span>
               </div>
@@ -156,7 +158,7 @@ export default function SignUp() {
                   placeholder="Enter your full name"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
                   required
                 />
               </div>
@@ -172,7 +174,7 @@ export default function SignUp() {
                   placeholder="Choose a unique user ID"
                   value={formData.userId}
                   onChange={handleInputChange}
-                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
                   required
                 />
               </div>
@@ -188,7 +190,7 @@ export default function SignUp() {
                   placeholder="john@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="!bg-slate-900 !border-slate-800  text-white placeholder:text-gray-400 focus:border-blue-500"
                   required
                 />
               </div>
@@ -203,7 +205,7 @@ export default function SignUp() {
                   type="date"
                   value={formData.dob}
                   onChange={handleInputChange}
-                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
                   required
                 />
               </div>
@@ -220,7 +222,7 @@ export default function SignUp() {
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
+                    className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
                     required
                   />
                   <Button
@@ -337,7 +339,7 @@ export default function SignUp() {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
+                    className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
                     required
                   />
                   <Button

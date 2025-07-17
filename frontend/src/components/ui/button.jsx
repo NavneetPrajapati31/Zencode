@@ -11,8 +11,7 @@ const buttonVariants = {
     "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-gray-700 text-gray-200 hover:bg-gray-600 disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
   ghost:
     "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-transparent text-gray-700 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
-  link:
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all text-blue-600 underline-offset-4 hover:underline bg-transparent",
+  link: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all text-blue-600 underline-offset-4 hover:underline bg-transparent",
 };
 
 const buttonSizes = {
@@ -31,7 +30,7 @@ const Button = ({
 }) => {
   return (
     <button
-      className={`${buttonVariants[variant] || buttonVariants.default} ${buttonSizes[size] || buttonSizes.default} ${className}`}
+      className={`${buttonVariants[variant] || buttonVariants.default} ${buttonSizes[size] || buttonSizes.default} ${className} hover:cursor-pointer`}
       {...props}
     >
       {children}
@@ -39,4 +38,4 @@ const Button = ({
   );
 };
 
-export { Button }; 
+export { Button };
