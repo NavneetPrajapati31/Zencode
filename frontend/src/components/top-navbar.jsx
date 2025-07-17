@@ -17,7 +17,7 @@ export default function TopNavbar({ onRun, onSubmit }) {
     <nav className="flex items-center justify-between bg-slate-900 text-slate-400 p-3 border-b border-slate-800">
       {/* Left Section */}
       <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2 text-slate-400">
+        <div className="flex items-center space-x-2 text-slate-400 p-1">
           <List className="h-5 w-5" />
           <span className="font-medium hidden sm:block">Problem List</span>
         </div>
@@ -40,7 +40,7 @@ export default function TopNavbar({ onRun, onSubmit }) {
       {/* Middle Section */}
       <div className="flex items-center space-x-2">
         <button
-          className="bg-slate-800 text-slate-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5"
+          className="bg-slate-800 text-slate-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer"
           onClick={onRun}
           aria-label="Run code"
         >
@@ -48,7 +48,7 @@ export default function TopNavbar({ onRun, onSubmit }) {
           <span className="text-sm">Run</span>
         </button>
         <button
-          className="bg-green-600/20 text-green-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5"
+          className="bg-green-600/20 text-green-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer"
           onClick={onSubmit}
           aria-label="Submit code"
         >
@@ -59,7 +59,7 @@ export default function TopNavbar({ onRun, onSubmit }) {
 
       {/* Right Section */}
       <div className="flex items-center space-x-2 sm:space-x-4">
-        <button className="text-slate-400 p-2 rounded-md flex items-center justify-center">
+        <button className="text-slate-400 p-1 rounded-md flex items-center justify-center">
           <User className="h-5 w-5" />
           <span className="sr-only">User Profile</span>
         </button>

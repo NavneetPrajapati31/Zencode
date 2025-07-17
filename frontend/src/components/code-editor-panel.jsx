@@ -326,7 +326,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
 
   // --- UI ---
   return (
-    <div className="flex flex-col h-full bg-slate-900 text-gray-100 rounded-lg border border-slate-800">
+    <div className="flex flex-col h-full bg-slate-900 text-gray-100 rounded-none">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 ">
         <div className="flex items-center space-x-2">
@@ -387,7 +387,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               </div>
               {/* Code Area */}
               <div className="flex-1 relative min-w-0 h-full">
-                <div className="p-1 font-mono text-sm leading-6 min-h-full text-gray-100">
+                <div className="p-1 font-mono text-md leading-6 min-h-full text-gray-100">
                   <div ref={editorRootRef} className="h-full">
                     <Editor
                       value={code}
@@ -412,16 +412,15 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           </div>
         </div>
         {/* Status Bar */}
-        <div className="h-8  border-t border-slate-800 flex items-center justify-between px-4 text-xs text-gray-400">
+        <div className="h-8 flex items-center justify-end px-4 text-xs text-gray-400">
           <span>
             Ln {cursorPosition.line}, Col {cursorPosition.column}
           </span>
-          <span>{langObj.name}</span>
         </div>
       </div>
 
       {/* Tab Content */}
-      <div className="bg-slate-900 border-t border-slate-800 px-4 py-4 min-h-[120px]">
+      <div className="bg-slate-900 border-t border-slate-800 px-4 py-4 h-1/2 overflow-y-auto">
         {activeTab === "testcases" && (
           <div>
             {/* Testcase Tabs */}
@@ -429,7 +428,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               {publicTestcases.map((tc, idx) => (
                 <button
                   key={idx}
-                  className={`px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                  className={`text-sm px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-slate-700 text-slate-400" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
                   onClick={() => {
                     setActiveTestcaseType("public");
                     setActiveTestcaseIdx(idx);
@@ -443,7 +442,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               {customTestcases.map((tc, idx) => (
                 <div key={idx} className="relative flex items-center">
                   <button
-                    className={`px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "custom" && activeTestcaseIdx === idx ? "bg-blue-700 text-white" : "bg-slate-800 text-blue-300 hover:bg-blue-700"}`}
+                    className={`text-sm px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "custom" && activeTestcaseIdx === idx ? "bg-slate-700 text-slate-400" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
                     onClick={() => {
                       setActiveTestcaseType("custom");
                       setActiveTestcaseIdx(idx);
@@ -454,7 +453,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                     Custom {idx + 1}
                   </button>
                   <button
-                    className="absolute -right-2 -top-2 text-xs text-red-400 hover:text-red-600 bg-slate-900 rounded-full px-1"
+                    className="absolute -right-2 -top-2 text-xs text-slate-400 bg-slate-800 rounded-full px-1"
                     onClick={() => handleRemoveCustomTestcase(idx)}
                     aria-label="Remove custom testcase"
                   >
@@ -464,7 +463,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               ))}
               {/* Add (+) tab */}
               <button
-                className={`px-3 py-1 rounded font-bold text-lg bg-slate-800 text-slate-400 hover:bg-slate-700 focus:outline-none`}
+                className={`text-sm px-3 py-1 rounded font-bold bg-slate-800 text-slate-400 hover:bg-slate-700 focus:outline-none`}
                 onClick={() => {
                   setActiveTestcaseType("add");
                   setActiveTestcaseIdx(-1);
@@ -478,38 +477,42 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
             {/* Testcase Details */}
             {activeTestcaseType === "public" &&
             publicTestcases[activeTestcaseIdx] ? (
-              <div className="space-y-3">
+              <div className="space-y-3 text-left">
                 <div>
-                  <span className="text-slate-400">Input:</span>
-                  <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                  <span className="text-slate-400 text-sm">Input:</span>
+                  <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap text-left">
                     {publicTestcases[activeTestcaseIdx].input}
                   </div>
                 </div>
                 <div>
-                  <span className="text-slate-400">Expected Output:</span>
+                  <span className="text-slate-400 text-sm">
+                    Expected Output:
+                  </span>
                   <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
                     {publicTestcases[activeTestcaseIdx].output}
                   </div>
                 </div>
-                {publicTestcases[activeTestcaseIdx].explanation && (
+                {/* {publicTestcases[activeTestcaseIdx].explanation && (
                   <div className="text-xs text-slate-400">
                     <span className="font-semibold">Explanation:</span>{" "}
                     {publicTestcases[activeTestcaseIdx].explanation}
                   </div>
-                )}
+                )} */}
                 {/* Show run result for this testcase if available */}
                 {runResults[activeTestcaseIdx] && (
                   <div className="space-y-1">
                     <div>
-                      <span className="text-slate-400">Your Output:</span>
+                      <span className="text-slate-400 text-sm">
+                        Your Output:
+                      </span>
                       <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
                         {runResults[activeTestcaseIdx].output}
                       </div>
                     </div>
                     <div>
-                      <span className="text-slate-400">Verdict:</span>
+                      <span className="text-slate-400 text-sm">Verdict:</span>
                       <span
-                        className={`ml-2 font-semibold ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-400" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-red-400" : "text-yellow-400"}`}
+                        className={`ml-2 font-semibold text-sm ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-400" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-red-400" : "text-yellow-400"}`}
                       >
                         {runResults[activeTestcaseIdx].verdict}
                       </span>
@@ -525,7 +528,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
             ) : null}
             {activeTestcaseType === "custom" &&
             customTestcases[activeTestcaseIdx] ? (
-              <div className="space-y-3">
+              <div className="space-y-3 text-left">
                 <div>
                   <span className="text-slate-400">Input:</span>
                   {customEditIdx === activeTestcaseIdx ? (

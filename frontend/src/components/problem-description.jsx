@@ -41,17 +41,17 @@ export default function ProblemDescription({ problem }) {
             {/* Add more tags if available in problem object */}
           </div>
           {/* Problem Statement */}
-          <div className="text-slate-400 leading-relaxed space-y-4 text-sm text-left">
+          <div className="text-slate-400 leading-relaxed space-y-4 text-md text-left">
             <p>{problem.description}</p>
             {/* Render examples if available */}
             {problem.examples && problem.examples.length > 0 && (
               <div className="space-y-4">
                 {problem.examples.map((ex, i) => (
                   <div key={i}>
-                    <h3 className="font-semibold text-zinc-100 mb-1">
+                    <h3 className="font-semibold text-slate-400 text-md mb-2">
                       Example {i + 1}:
                     </h3>
-                    <div className="bg-slate-800 p-3 rounded-md text-xs">
+                    <div className="bg-slate-800 p-3 rounded-md text-sm">
                       <pre>
                         <code className="block">Input: {ex.input}</code>
                         <code className="block">Output: {ex.output}</code>
@@ -69,8 +69,10 @@ export default function ProblemDescription({ problem }) {
             {/* Constraints */}
             {problem.constraints && problem.constraints.length > 0 && (
               <div className="space-y-2">
-                <h3 className="font-semibold text-zinc-100">Constraints:</h3>
-                <ul className="list-disc list-inside text-xs space-y-1">
+                <h3 className="font-semibold text-slate-400 text-md">
+                  Constraints:
+                </h3>
+                <ul className="list-disc list-inside text-md space-y-1">
                   {problem.constraints.map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
