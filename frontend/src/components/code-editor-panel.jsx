@@ -101,7 +101,6 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
   const [customTestcases, setCustomTestcases] = useState([]); // [{input, output, result}]
   const [customInputDraft, setCustomInputDraft] = useState("");
   const [customOutputDraft, setCustomOutputDraft] = useState("");
-  const [customRunLoading, setCustomRunLoading] = useState(false);
   const [customEditIdx, setCustomEditIdx] = useState(null);
   const [customEditInput, setCustomEditInput] = useState("");
   const [runResults, setRunResults] = useState([]); // [{input, expected, output, verdict, error}]
@@ -153,6 +152,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
     setRunResults([]);
     setError("");
     const results = [];
+    // Run public testcases
     for (let i = 0; i < publicTestcases.length; ++i) {
       const tc = publicTestcases[i];
       try {
@@ -188,6 +188,39 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
       }
     }
     setRunResults(results);
+
+    // Run all custom testcases
+    if (customTestcases.length > 0) {
+      const newCustomTestcases = [...customTestcases];
+      for (let i = 0; i < customTestcases.length; ++i) {
+        try {
+          const res = await compilerAPI.runCode({
+            language,
+            code,
+            input: customTestcases[i].input,
+            problemId: getProblemId(),
+          });
+          const output = (
+            res.output?.stdout ||
+            res.output?.stderr ||
+            res.output ||
+            ""
+          ).trim();
+          newCustomTestcases[i].result = {
+            output,
+            verdict: "Custom",
+            error: null,
+          };
+        } catch (err) {
+          newCustomTestcases[i].result = {
+            output: "",
+            verdict: "Error",
+            error: extractErrorMessage(err),
+          };
+        }
+      }
+      setCustomTestcases(newCustomTestcases);
+    }
   };
 
   // --- Submit Handler ---
@@ -283,37 +316,6 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
     setCustomEditIdx(null);
     setCustomEditInput("");
   };
-  const handleRunCustomTestcase = async (idx) => {
-    setCustomRunLoading(true);
-    try {
-      const res = await compilerAPI.runCode({
-        language,
-        code,
-        input: customTestcases[idx].input,
-        problemId: getProblemId(),
-      });
-      const output = (
-        res.output?.stdout ||
-        res.output?.stderr ||
-        res.output ||
-        ""
-      ).trim();
-      const result = { output, verdict: "Custom", error: null };
-      const newCustoms = customTestcases.slice();
-      newCustoms[idx].result = result;
-      setCustomTestcases(newCustoms);
-    } catch (err) {
-      const result = {
-        output: "",
-        verdict: "Error",
-        error: extractErrorMessage(err),
-      };
-      const newCustoms = customTestcases.slice();
-      newCustoms[idx].result = result;
-      setCustomTestcases(newCustoms);
-    }
-    setCustomRunLoading(false);
-  };
 
   useImperativeHandle(ref, () => ({
     run: handleRun,
@@ -338,7 +340,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
         <div className="flex items-center space-x-2">
           <div className="relative">
             <button
-              className="text-slate-400 hover:bg-zinc-600 px-2 py-1.5 rounded-md flex items-center space-x-1 text-sm"
+              className="text-slate-400 hover:bg-slate-800 px-2 py-1.5 rounded-md flex items-center space-x-1 text-sm"
               aria-label="Select language"
               tabIndex={0}
               onClick={() => setIsDropdownOpen((v) => !v)}
@@ -350,12 +352,12 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               <ChevronDown className="h-4 w-4" />
             </button>
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 bg-zinc-700 border border-zinc-600 text-slate-400 rounded-md shadow-lg z-10 min-w-[120px]">
+              <div className="absolute top-full right-0 mt-1 bg-slate-900 border border-slate-800 text-slate-400 rounded-md shadow-lg z-10 min-w-[120px]">
                 {SUPPORTED_LANGUAGES.map((lang) => (
                   <button
                     key={lang.prism}
                     onClick={() => handleLanguageChange(lang.prism)}
-                    className="block w-full text-left px-4 py-2 hover:bg-zinc-600"
+                    className="block w-full text-left px-4 py-2 hover:bg-slate-800"
                   >
                     {lang.name}
                   </button>
@@ -428,7 +430,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               {publicTestcases.map((tc, idx) => (
                 <button
                   key={idx}
-                  className={`text-sm px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-slate-700 text-slate-400" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                  className={`text-sm px-5 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-slate-700 text-slate-400" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
                   onClick={() => {
                     setActiveTestcaseType("public");
                     setActiveTestcaseIdx(idx);
@@ -442,7 +444,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               {customTestcases.map((tc, idx) => (
                 <div key={idx} className="relative flex items-center">
                   <button
-                    className={`text-sm px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "custom" && activeTestcaseIdx === idx ? "bg-slate-700 text-slate-400" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
+                    className={`text-sm px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer  ${activeTestcaseType === "custom" && activeTestcaseIdx === idx ? "bg-slate-700 text-slate-400" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
                     onClick={() => {
                       setActiveTestcaseType("custom");
                       setActiveTestcaseIdx(idx);
@@ -453,7 +455,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                     Custom {idx + 1}
                   </button>
                   <button
-                    className="absolute -right-2 -top-2 text-xs text-slate-400 bg-slate-800 rounded-full px-1"
+                    className="absolute -right-1.5 -top-2 text-slate-400 bg-slate-700 rounded-full px-1.5 hover:cursor-pointer text-sm"
                     onClick={() => handleRemoveCustomTestcase(idx)}
                     aria-label="Remove custom testcase"
                   >
@@ -563,7 +565,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                     </>
                   ) : (
                     <button
-                      className="px-3 py-1 rounded bg-slate-700 text-slate-300 text-xs"
+                      className="px-3 py-1 rounded bg-slate-700 text-slate-300 text-xs hover:cursor-pointer"
                       onClick={() =>
                         handleEditCustomTestcase(activeTestcaseIdx)
                       }
@@ -571,19 +573,14 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       Edit
                     </button>
                   )}
-                  <button
-                    className="px-3 py-1 rounded bg-green-600 text-white text-xs"
-                    onClick={() => handleRunCustomTestcase(activeTestcaseIdx)}
-                    disabled={customRunLoading}
-                  >
-                    {customRunLoading ? "Running..." : "Run"}
-                  </button>
                 </div>
                 {/* Show run result for this custom testcase if available */}
                 {customTestcases[activeTestcaseIdx].result && (
                   <div className="space-y-1">
                     <div>
-                      <span className="text-slate-400">Your Output:</span>
+                      <span className="text-slate-400 text-sm">
+                        Your Output:
+                      </span>
                       <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
                         {customTestcases[activeTestcaseIdx].result.output}
                       </div>
@@ -598,18 +595,18 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               </div>
             ) : null}
             {activeTestcaseType === "add" && (
-              <div className="space-y-3">
+              <div className="space-y-3 text-left">
                 <div>
-                  <span className="text-slate-400">Input:</span>
+                  <span className="text-slate-400 text-sm">Input:</span>
                   <textarea
-                    className="w-full min-h-[60px] bg-slate-800 text-gray-100 rounded p-2 font-mono text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full min-h-[60px] bg-slate-800 text-slate-400 rounded p-2 font-mono text-sm border border-slate-700 focus:outline-none mt-2"
                     value={customInputDraft}
                     onChange={(e) => setCustomInputDraft(e.target.value)}
                     placeholder="Enter custom input..."
                   />
                 </div>
                 <button
-                  className="px-4 py-1 rounded bg-blue-600 text-white text-xs"
+                  className="px-4 py-1 rounded bg-blue-600/20 text-blue-400 text-xs hover:cursor-pointer"
                   onClick={handleAddCustomTestcase}
                   disabled={!customInputDraft.trim()}
                 >
