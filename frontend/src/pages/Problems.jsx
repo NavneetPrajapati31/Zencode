@@ -103,7 +103,7 @@ export default function ProblemsPage() {
     <div className="min-h-screen bg-slate-950 text-slate-400 px-4">
       <div className="max-w-full mx-auto rounded-lg shadow-lg p-4 sm:p-6">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="relative flex-grow w-full sm:w-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
             <Input
@@ -133,7 +133,7 @@ export default function ProblemsPage() {
         </div>
 
         {/* Problems List */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           {filteredProblems.map((problem, idx) => (
             <Link
               to={`/problems/${problem._id}`}
