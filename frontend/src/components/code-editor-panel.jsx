@@ -32,6 +32,13 @@ const SUPPORTED_LANGUAGES = [
       '#include <iostream>\n\nint main() {\n  std::cout << "Hello World!\\n";\n  return 0;\n}',
   },
   {
+    name: "C",
+    extension: "c",
+    prism: "c",
+    defaultCode:
+      '#include <stdio.h>\n\nint main() {\n  printf("Hello World!\\n");\n  return 0;\n}',
+  },
+  {
     name: "Python",
     extension: "py",
     prism: "python",
@@ -54,6 +61,8 @@ const SUPPORTED_LANGUAGES = [
 
 const getFileIcon = (lang) => {
   switch (lang) {
+    case "c":
+      return <FileText className="w-4 h-4 text-cyan-400" />;
     case "cpp":
       return <FileText className="w-4 h-4 text-blue-400" />;
     case "python":
@@ -162,12 +171,17 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           input: tc.input,
           problemId: getProblemId(),
         });
-        const output = (
-          res.output?.stdout ||
-          res.output?.stderr ||
-          res.output ||
-          ""
-        ).trim();
+        let output = "";
+        if (typeof res.output?.stdout === "string" && res.output.stdout) {
+          output = res.output.stdout.trim();
+        } else if (
+          typeof res.output?.stderr === "string" &&
+          res.output.stderr
+        ) {
+          output = res.output.stderr.trim();
+        } else if (typeof res.output === "string") {
+          output = res.output.trim();
+        }
         const expected = (tc.output || "").trim();
         const verdict = output === expected ? "Correct" : "Wrong";
         results.push({
@@ -200,12 +214,17 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
             input: customTestcases[i].input,
             problemId: getProblemId(),
           });
-          const output = (
-            res.output?.stdout ||
-            res.output?.stderr ||
-            res.output ||
-            ""
-          ).trim();
+          let output = "";
+          if (typeof res.output?.stdout === "string" && res.output.stdout) {
+            output = res.output.stdout.trim();
+          } else if (
+            typeof res.output?.stderr === "string" &&
+            res.output.stderr
+          ) {
+            output = res.output.stderr.trim();
+          } else if (typeof res.output === "string") {
+            output = res.output.trim();
+          }
           newCustomTestcases[i].result = {
             output,
             verdict: "Custom",
@@ -241,12 +260,17 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           input: tc.input,
           problemId: getProblemId(),
         });
-        const output = (
-          res.output?.stdout ||
-          res.output?.stderr ||
-          res.output ||
-          ""
-        ).trim();
+        let output = "";
+        if (typeof res.output?.stdout === "string" && res.output.stdout) {
+          output = res.output.stdout.trim();
+        } else if (
+          typeof res.output?.stderr === "string" &&
+          res.output.stderr
+        ) {
+          output = res.output.stderr.trim();
+        } else if (typeof res.output === "string") {
+          output = res.output.trim();
+        }
         const expected = (tc.output || "").trim();
         const verdict = output === expected ? "Passed" : "Failed";
         results.push({

@@ -1,0 +1,217 @@
+[
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e0" },
+    "title": "Longest Substring Without Repeating Characters",
+    "description": "Given a string, find the length of the longest substring without repeating characters.",
+    "difficulty": "Medium",
+    "tags": ["string", "sliding window"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e8" },
+    "title": "Container With Most Water",
+    "description": "Given n non-negative integers a1, a2, ..., an, find two lines that together with the x-axis form a container, such that the container contains the most water.",
+    "difficulty": "Medium",
+    "tags": ["array", "two pointers"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e9" },
+    "title": "Integer to Roman",
+    "description": "Convert an integer to a Roman numeral.",
+    "difficulty": "Medium",
+    "tags": ["math", "string"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e4" },
+    "title": "Reverse Integer",
+    "description": "Given a signed 32-bit integer x, return x with its digits reversed.",
+    "difficulty": "Medium",
+    "tags": ["math"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e6" },
+    "title": "Palindrome Number",
+    "description": "Given an integer x, return true if x is a palindrome, and false otherwise.",
+    "difficulty": "Easy",
+    "tags": ["math"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181dd" },
+    "title": "Find the Maximum Length of Valid Subsequence I",
+    "description": "Given an array of integers, find the maximum length of a valid subsequence according to the problem's rules.",
+    "difficulty": "Medium",
+    "tags": ["array", "subsequence"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181de" },
+    "title": "Two Sum",
+    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "difficulty": "Easy",
+    "tags": ["array", "hashmap"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e2" },
+    "title": "Longest Palindromic Substring",
+    "description": "Given a string s, return the longest palindromic substring in s.",
+    "difficulty": "Medium",
+    "tags": ["string", "dynamic programming"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e3" },
+    "title": "Zigzag Conversion",
+    "description": "Convert a given string to a zigzag pattern on a given number of rows.",
+    "difficulty": "Medium",
+    "tags": ["string", "simulation"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e1" },
+    "title": "Median of Two Sorted Arrays",
+    "description": "Given two sorted arrays nums1 and nums2, return the median of the two sorted arrays.",
+    "difficulty": "Hard",
+    "tags": ["array", "binary search"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e5" },
+    "title": "String to Integer (atoi)",
+    "description": "Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer.",
+    "difficulty": "Medium",
+    "tags": ["string", "parsing"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181e7" },
+    "title": "Regular Expression Matching",
+    "description": "Implement regular expression matching with support for '.' and '*'.",
+    "difficulty": "Hard",
+    "tags": ["string", "dynamic programming"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [],
+    "hiddenTestcases": [],
+    "constraints": [],
+    "examples": [],
+    "boilerplate": {},
+    "harness": {}
+  },
+  {
+    "_id": { "$oid": "6877ce90652ecbda450181df" },
+    "title": "Add Two Numbers",
+    "description": "You are given two non-empty linked lists representing two non-negative integers. Add the two numbers and return the sum as a linked list.",
+    "difficulty": "Medium",
+    "tags": ["linked list", "math"],
+    "createdBy": "6877ce1cde4c8b4701e20aa1",
+    "testcases": [
+      {
+        "input": "2 4 3\n5 6 4",
+        "output": "7 0 8",
+        "explanation": "342 + 465 = 807"
+      },
+      {
+        "input": "0\n0",
+        "output": "0",
+        "explanation": "0 + 0 = 0"
+      }
+    ],
+    "hiddenTestcases": [
+      {
+        "input": "9 9 9 9 9 9 9\n9 9 9 9",
+        "output": "8 9 9 9 0 0 0 1"
+      }
+    ],
+    "constraints": [
+      "The number of nodes in each linked list is in the range [1, 100].",
+      "0 <= Node.val <= 9",
+      "It is guaranteed that the list represents a number that does not have leading zeros."
+    ],
+    "examples": [
+      {
+        "input": "2 4 3\n5 6 4",
+        "output": "7 0 8",
+        "explanation": "342 + 465 = 807"
+      }
+    ],
+    "boilerplate": {
+      "cpp": "ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {\n    // your code here\n}",
+      "python": "def addTwoNumbers(l1, l2):\n    # your code here\n    pass",
+      "javascript": "function addTwoNumbers(l1, l2) {\n    // your code here\n}",
+      "java": "public ListNode addTwoNumbers(ListNode l1, ListNode l2) {\n    // your code here\n}"
+    },
+    "harness": {
+      "cpp": "#include <iostream>\n#include <sstream>\n#include <string>\nusing namespace std;\nstruct ListNode { int val; ListNode* next; ListNode(int x) : val(x), next(nullptr) {} };\n// USER_CODE\nListNode* buildList() {\n    std::string line;\n    if (!std::getline(std::cin, line)) return nullptr;\n    std::istringstream iss(line);\n    int x;\n    ListNode dummy(0), *cur = &dummy;\n    while (iss >> x) cur = cur->next = new ListNode(x);\n    return dummy.next;\n}\nvoid printList(ListNode* head) { while (head) { cout << head->val; if (head->next) cout << \" \"; head = head->next; } cout << endl; }\nint main() {\n    ListNode* l1 = buildList();\n    ListNode* l2 = buildList();\n    ListNode* res = addTwoNumbers(l1, l2);\n    printList(res);\n    return 0;\n}\n"
+    }
+  }
+]
