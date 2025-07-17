@@ -51,7 +51,7 @@ export default function ProblemDescription({ problem }) {
                     <h3 className="font-semibold text-zinc-100 mb-1">
                       Example {i + 1}:
                     </h3>
-                    <div className="bg-zinc-700 p-3 rounded-md text-xs">
+                    <div className="bg-slate-800 p-3 rounded-md text-xs">
                       <pre>
                         <code className="block">Input: {ex.input}</code>
                         <code className="block">Output: {ex.output}</code>

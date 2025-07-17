@@ -328,7 +328,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
   return (
     <div className="flex flex-col h-full bg-slate-900 text-gray-100 rounded-lg border border-slate-800">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-black">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 ">
         <div className="flex items-center space-x-2">
           {getFileIcon(language)}
           <span className="font-medium text-slate-300 text-sm">
@@ -366,49 +366,13 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center space-x-2 px-4 pt-2 bg-slate-900">
-        <button
-          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "testcases" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
-          onClick={() => setActiveTab("testcases")}
-          aria-label="Testcases"
-          tabIndex={0}
-        >
-          Testcases
-        </button>
-        <button
-          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "custom" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
-          onClick={() => setActiveTab("custom")}
-          aria-label="Custom Input"
-          tabIndex={0}
-        >
-          Custom Input
-        </button>
-        <button
-          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "output" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
-          onClick={() => setActiveTab("output")}
-          aria-label="Output"
-          tabIndex={0}
-        >
-          Output
-        </button>
-        <button
-          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "submit" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
-          onClick={() => setActiveTab("submit")}
-          aria-label="Submit Results"
-          tabIndex={0}
-        >
-          Submit
-        </button>
-      </div>
-
       {/* Editor */}
       <div className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 relative bg-slate-900 border-b border-slate-800">
-          <div className="absolute inset-0 flex overflow-auto">
-            <div className="flex w-full">
+          <div className="absolute inset-0 flex h-full overflow-auto">
+            <div className="flex w-full h-full">
               {/* Line Numbers */}
-              <div className="w-8 bg-black border-r border-slate-800 flex flex-col text-right text-sm text-slate-600 py-[14px] select-none">
+              <div className="w-auto px-2 h-full flex flex-col text-right text-sm text-slate-600 py-[14px] select-none">
                 {Array.from({ length: code.split("\n").length || 1 }).map(
                   (_, i) => (
                     <div
@@ -422,7 +386,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                 )}
               </div>
               {/* Code Area */}
-              <div className="flex-1 relative min-w-0">
+              <div className="flex-1 relative min-w-0 h-full">
                 <div className="p-1 font-mono text-sm leading-6 min-h-full text-gray-100">
                   <div ref={editorRootRef} className="h-full">
                     <Editor
@@ -448,7 +412,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           </div>
         </div>
         {/* Status Bar */}
-        <div className="h-8 bg-black border-t border-slate-800 flex items-center justify-between px-4 text-xs text-gray-400">
+        <div className="h-8  border-t border-slate-800 flex items-center justify-between px-4 text-xs text-gray-400">
           <span>
             Ln {cursorPosition.line}, Col {cursorPosition.column}
           </span>
