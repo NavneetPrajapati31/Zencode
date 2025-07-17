@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-slate-950">
       {/* Navbar */}
       <header className="backdrop-blur-md py-4 w-full flex items-center justify-between px-4 sm:px-8">
         <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-black">
+      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-slate-950">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge className="mb-6 bg-blue-900/30 text-blue-300 border-blue-700 hover:bg-blue-900/50 p-2">
@@ -120,19 +120,21 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                tabIndex={0}
-                aria-label="Start Coding Now"
-                endContent={<Play className="w-3 h-3" />}
-              >
-                Start Coding Now
-              </Button>
+              <Link to={"/problems"}>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  tabIndex={0}
+                  aria-label="Start Coding Now"
+                  endContent={<Play className="w-3 h-3" />}
+                >
+                  Start Coding Now
+                </Button>
+              </Link>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-gray-600 text-gray-300 font-semibold px-8 py-3 hover:bg-gray-800 transition-all duration-300"
+                className="!border-gray-600 !bg-transparent !text-gray-300 font-semibold px-8 py-3 !hover:bg-gray-800 transition-all duration-300"
                 tabIndex={0}
                 aria-label="View Competitions"
               >
@@ -176,7 +178,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-black">
+      <section id="features" className="py-20 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -189,7 +191,7 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800/30">
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-800/30">
               <CardContent className="p-0">
                 <div className="w-12 h-12 bg-blue-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Code2 className="w-6 h-6 text-blue-600" />
@@ -283,7 +285,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-black">
+      <section className="py-20 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -338,7 +340,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="text-white py-16 bg-black">
+      <footer className="text-white py-16 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
