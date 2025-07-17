@@ -11,11 +11,12 @@ if (!fs.existsSync(outputPath)) {
 
 const executeCpp = async (filePath, input = "") => {
   const outputId = path.basename(filePath).split(".")[0];
-  const outputFilename = `${outputId}.exe`;
+  const isWindows = process.platform === "win32";
+  const outputExtension = isWindows ? ".exe" : ".out";
+  const outputFilename = `${outputId}${outputExtension}`;
   const outPath = path.join(outputPath, outputFilename);
 
   return new Promise((resolve, reject) => {
-    const isWindows = process.platform === "win32";
     const compileCommand = isWindows
       ? `g++ "${filePath}" -o "${outPath}"`
       : `g++ "${filePath}" -o "${outPath}"`;

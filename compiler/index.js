@@ -28,6 +28,8 @@ const runners = {
   js: executeJavascript,
 };
 
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+
 app.post("/compiler", async (req, res) => {
   const { language = "cpp", code, input = "", problemId } = req.body;
 
@@ -53,9 +55,7 @@ app.post("/compiler", async (req, res) => {
   let finalCode = code;
   if (problemId) {
     try {
-      const resp = await fetch(
-        `http://localhost:5000/api/problems/${problemId}`
-      );
+      const resp = await fetch(`${BACKEND_URL}/api/problems/${problemId}`);
       if (resp.ok) {
         const problem = await resp.json();
         console.log("[Compiler] Fetched problem:", problem);
@@ -85,4 +85,6 @@ app.post("/compiler", async (req, res) => {
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
   console.log(process.env.TEST_ENV);
+  console.log(process.env.BACKEND_URL);
+  console.log(process.env.MONGODB_URI);
 });
