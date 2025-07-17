@@ -12,7 +12,7 @@ import {
   User,
 } from "lucide-react";
 
-export default function TopNavbar() {
+export default function TopNavbar({ onRun, onSubmit }) {
   return (
     <nav className="flex items-center justify-between bg-slate-900 text-slate-400 p-3 border-b border-slate-800">
       {/* Left Section */}
@@ -39,11 +39,19 @@ export default function TopNavbar() {
 
       {/* Middle Section */}
       <div className="flex items-center space-x-2">
-        <button className="bg-slate-800 text-slate-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5">
+        <button
+          className="bg-slate-800 text-slate-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5"
+          onClick={onRun}
+          aria-label="Run code"
+        >
           <Play className="h-3 w-3" />
           <span className="text-sm">Run</span>
         </button>
-        <button className="bg-green-600/20 text-green-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5">
+        <button
+          className="bg-green-600/20 text-green-400 !px-3 !py-1.5 rounded-md flex items-center space-x-1.5"
+          onClick={onSubmit}
+          aria-label="Submit code"
+        >
           <CloudUpload className="h-3 w-3" />
           <span className="text-sm">Submit</span>
         </button>

@@ -1,189 +1,803 @@
 "use client";
 
-import { useState } from "react";
 import {
-  Code,
-  ChevronDown,
-  AlignLeft,
-  Bookmark,
-  Braces,
-  RotateCcw,
-  Maximize,
-  CheckSquare,
-  Plus,
-  Link,
-  HelpCircle,
+  useState,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import Editor from "react-simple-code-editor";
+import { highlight, languages } from "prismjs/components/prism-core";
+import "prismjs/components/prism-clike";
+import "prismjs/themes/prism.css";
+import {
   Play,
+  Send,
+  ChevronDown,
+  CheckCircle2,
+  XCircle,
+  FileText,
+  Plus,
+  Loader2,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function CodeEditorPanel({ problem }) {
+const SUPPORTED_LANGUAGES = [
+  {
+    name: "C++",
+    extension: "cpp",
+    prism: "cpp",
+    defaultCode:
+      '#include <iostream>\n\nint main() {\n  std::cout << "Hello World!\\n";\n  return 0;\n}',
+  },
+  {
+    name: "Python",
+    extension: "py",
+    prism: "python",
+    defaultCode: 'print("Hello World!")',
+  },
+  {
+    name: "JavaScript",
+    extension: "js",
+    prism: "javascript",
+    defaultCode: 'console.log("Hello World!");',
+  },
+  {
+    name: "Java",
+    extension: "java",
+    prism: "java",
+    defaultCode:
+      'public class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello World!");\n  }\n}',
+  },
+];
+
+const getFileIcon = (lang) => {
+  switch (lang) {
+    case "cpp":
+      return <FileText className="w-4 h-4 text-blue-400" />;
+    case "python":
+      return <FileText className="w-4 h-4 text-yellow-400" />;
+    case "javascript":
+      return <FileText className="w-4 h-4 text-yellow-300" />;
+    case "java":
+      return <FileText className="w-4 h-4 text-orange-400" />;
+    default:
+      return <FileText className="w-4 h-4 text-gray-400" />;
+  }
+};
+
+const compilerAPI = {
+  runCode: async ({ language, code, input, problemId }) => {
+    const res = await fetch("/compiler", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ language, code, input, problemId }),
+    });
+    if (!res.ok) throw new Error("Compiler error");
+    return res.json();
+  },
+};
+
+const extractErrorMessage = (err) => {
+  if (!err) return "Unknown error";
+  if (err instanceof Error) return err.message || "Unknown error";
+  if (typeof err === "string") return err;
+  if (err.stderr) return err.stderr;
+  if (err.error && err.error.stderr) return err.error.stderr;
+  if (typeof err === "object" && Object.keys(err).length > 0) {
+    return JSON.stringify(err, null, 2);
+  }
+  return "Unknown error";
+};
+
+const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
+  // --- State ---
+  const [language, setLanguage] = useState(SUPPORTED_LANGUAGES[0].prism);
+  const [code, setCode] = useState(SUPPORTED_LANGUAGES[0].defaultCode);
+  const [activeTab, setActiveTab] = useState("testcases");
+  const [activeTestcaseType, setActiveTestcaseType] = useState("public"); // 'public' | 'custom' | 'add'
+  const [activeTestcaseIdx, setActiveTestcaseIdx] = useState(0);
+  const [customTestcases, setCustomTestcases] = useState([]); // [{input, output, result}]
+  const [customInputDraft, setCustomInputDraft] = useState("");
+  const [customOutputDraft, setCustomOutputDraft] = useState("");
+  const [customRunLoading, setCustomRunLoading] = useState(false);
+  const [customEditIdx, setCustomEditIdx] = useState(null);
+  const [customEditInput, setCustomEditInput] = useState("");
+  const [runResults, setRunResults] = useState([]); // [{input, expected, output, verdict, error}]
+  const [submitResults, setSubmitResults] = useState([]); // [{input, expected, output, verdict, error, hidden}]
+  const [error, setError] = useState("");
+  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [activeTestcaseTab, setActiveTestcaseTab] = useState("testcase");
+  const editorRootRef = useRef(null);
+
+  // --- Helpers ---
+  const langObj = SUPPORTED_LANGUAGES.find((l) => l.prism === language);
+  const publicTestcases = problem?.testcases || [];
+  const hiddenTestcases = problem?.hiddenTestcases || [];
+
+  // Helper to get the correct problemId string
+  const getProblemId = () => problem?._id?.$oid || problem?._id || problem?.id;
+
+  // --- Boilerplate Handling ---
+  useEffect(() => {
+    if (problem && problem.boilerplate && problem.boilerplate[language]) {
+      setCode(problem.boilerplate[language]);
+    } else {
+      setCode(langObj.defaultCode);
+    }
+    // eslint-disable-next-line
+  }, [problem, language]);
+
+  // --- Cursor Position ---
+  const updateCursorPosition = () => {
+    if (!editorRootRef.current) return;
+    const textarea = editorRootRef.current.querySelector("textarea");
+    if (!textarea) return;
+    const value = textarea.value;
+    const selectionStart = textarea.selectionStart || 0;
+    const lines = value.slice(0, selectionStart).split("\n");
+    const line = lines.length;
+    const column = lines[lines.length - 1].length + 1;
+    setCursorPosition({ line, column });
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      updateCursorPosition();
+    }, 0);
+    // eslint-disable-next-line
+  }, [code]);
+
+  // --- Run Handler ---
+  const handleRun = async () => {
+    setRunResults([]);
+    setError("");
+    const results = [];
+    for (let i = 0; i < publicTestcases.length; ++i) {
+      const tc = publicTestcases[i];
+      try {
+        const res = await compilerAPI.runCode({
+          language,
+          code,
+          input: tc.input,
+          problemId: getProblemId(),
+        });
+        const output = (
+          res.output?.stdout ||
+          res.output?.stderr ||
+          res.output ||
+          ""
+        ).trim();
+        const expected = (tc.output || "").trim();
+        const verdict = output === expected ? "Correct" : "Wrong";
+        results.push({
+          input: tc.input,
+          expected: tc.output,
+          output,
+          verdict,
+          error: null,
+        });
+      } catch (err) {
+        results.push({
+          input: tc.input,
+          expected: tc.output,
+          output: "",
+          verdict: "Error",
+          error: extractErrorMessage(err),
+        });
+      }
+    }
+    setRunResults(results);
+  };
+
+  // --- Submit Handler ---
+  const handleSubmit = async () => {
+    setSubmitResults([]);
+    setError("");
+    const allTestcases = [
+      ...publicTestcases.map((tc) => ({ ...tc, hidden: false })),
+      ...hiddenTestcases.map((tc) => ({ ...tc, hidden: true })),
+    ];
+    const results = [];
+    for (let i = 0; i < allTestcases.length; ++i) {
+      const tc = allTestcases[i];
+      try {
+        const res = await compilerAPI.runCode({
+          language,
+          code,
+          input: tc.input,
+          problemId: getProblemId(),
+        });
+        const output = (
+          res.output?.stdout ||
+          res.output?.stderr ||
+          res.output ||
+          ""
+        ).trim();
+        const expected = (tc.output || "").trim();
+        const verdict = output === expected ? "Passed" : "Failed";
+        results.push({
+          input: tc.input,
+          expected: tc.output,
+          output,
+          verdict,
+          error: null,
+          hidden: tc.hidden,
+        });
+      } catch (err) {
+        results.push({
+          input: tc.input,
+          expected: tc.output,
+          output: "",
+          verdict: "Error",
+          error: extractErrorMessage(err),
+          hidden: tc.hidden,
+        });
+      }
+    }
+    setSubmitResults(results);
+    setActiveTab("submit");
+  };
+
+  // --- Language Change ---
+  const handleLanguageChange = (prism) => {
+    const lang = SUPPORTED_LANGUAGES.find((l) => l.prism === prism);
+    setLanguage(lang.prism);
+    setCode(lang.defaultCode);
+    setIsDropdownOpen(false);
+  };
+
+  // --- Custom Testcase Handlers ---
+  const handleAddCustomTestcase = () => {
+    if (!customInputDraft.trim()) return;
+    setCustomTestcases([
+      ...customTestcases,
+      { input: customInputDraft, output: customOutputDraft, result: null },
+    ]);
+    setCustomInputDraft("");
+    setCustomOutputDraft("");
+    setActiveTestcaseType("custom");
+    setActiveTestcaseIdx(customTestcases.length);
+  };
+  const handleRemoveCustomTestcase = (idx) => {
+    const newCustoms = customTestcases.slice();
+    newCustoms.splice(idx, 1);
+    setCustomTestcases(newCustoms);
+    if (activeTestcaseType === "custom") {
+      if (activeTestcaseIdx === idx) {
+        setActiveTestcaseType("public");
+        setActiveTestcaseIdx(0);
+      } else if (activeTestcaseIdx > idx) {
+        setActiveTestcaseIdx(activeTestcaseIdx - 1);
+      }
+    }
+  };
+  const handleEditCustomTestcase = (idx) => {
+    setCustomEditIdx(idx);
+    setCustomEditInput(customTestcases[idx].input);
+  };
+  const handleSaveEditCustomTestcase = (idx) => {
+    const newCustoms = customTestcases.slice();
+    newCustoms[idx].input = customEditInput;
+    setCustomTestcases(newCustoms);
+    setCustomEditIdx(null);
+    setCustomEditInput("");
+  };
+  const handleRunCustomTestcase = async (idx) => {
+    setCustomRunLoading(true);
+    try {
+      const res = await compilerAPI.runCode({
+        language,
+        code,
+        input: customTestcases[idx].input,
+        problemId: getProblemId(),
+      });
+      const output = (
+        res.output?.stdout ||
+        res.output?.stderr ||
+        res.output ||
+        ""
+      ).trim();
+      const result = { output, verdict: "Custom", error: null };
+      const newCustoms = customTestcases.slice();
+      newCustoms[idx].result = result;
+      setCustomTestcases(newCustoms);
+    } catch (err) {
+      const result = {
+        output: "",
+        verdict: "Error",
+        error: extractErrorMessage(err),
+      };
+      const newCustoms = customTestcases.slice();
+      newCustoms[idx].result = result;
+      setCustomTestcases(newCustoms);
+    }
+    setCustomRunLoading(false);
+  };
+
+  useImperativeHandle(ref, () => ({
+    run: handleRun,
+    submit: handleSubmit,
+  }));
+
   if (!problem) {
     return <div className="p-4 text-zinc-300">No problem data available.</div>;
   }
 
-  const testcaseTabs = [
-    { value: "testcase", label: "Testcase", icon: CheckSquare },
-    { value: "test-result", label: "Test Result", icon: Play },
-  ];
-
+  // --- UI ---
   return (
-    <div className="flex flex-col h-full">
-      {/* Code Editor Header */}
-      <div className="flex items-center justify-between bg-slate-900 !px-4 !py-1 border-b border-slate-800">
+    <div className="flex flex-col h-full bg-slate-900 text-gray-100 rounded-lg border border-slate-800">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-black">
         <div className="flex items-center space-x-2">
-          <Code className="h-4 w-4 text-slate-400" />
-          <span className="font-medium text-slate-400 text-sm">Code</span>
+          {getFileIcon(language)}
+          <span className="font-medium text-slate-300 text-sm">
+            {problem.title || "Code"}
+          </span>
         </div>
         <div className="flex items-center space-x-2">
           <div className="relative">
             <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="text-slate-400 hover:bg-zinc-600 px-2 py-1.5 rounded-md flex items-center space-x-1 text-sm"
+              aria-label="Select language"
+              tabIndex={0}
+              onClick={() => setIsDropdownOpen((v) => !v)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && setIsDropdownOpen((v) => !v)
+              }
             >
-              <span>C++</span>
+              <span>{langObj.name}</span>
               <ChevronDown className="h-4 w-4" />
             </button>
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 bg-zinc-700 border border-zinc-600 text-slate-400 rounded-md shadow-lg z-10">
+              <div className="absolute top-full left-0 mt-1 bg-zinc-700 border border-zinc-600 text-slate-400 rounded-md shadow-lg z-10 min-w-[120px]">
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.prism}
+                    onClick={() => handleLanguageChange(lang.prism)}
+                    className="block w-full text-left px-4 py-2 hover:bg-zinc-600"
+                  >
+                    {lang.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center space-x-2 px-4 pt-2 bg-slate-900">
+        <button
+          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "testcases" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
+          onClick={() => setActiveTab("testcases")}
+          aria-label="Testcases"
+          tabIndex={0}
+        >
+          Testcases
+        </button>
+        <button
+          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "custom" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
+          onClick={() => setActiveTab("custom")}
+          aria-label="Custom Input"
+          tabIndex={0}
+        >
+          Custom Input
+        </button>
+        <button
+          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "output" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
+          onClick={() => setActiveTab("output")}
+          aria-label="Output"
+          tabIndex={0}
+        >
+          Output
+        </button>
+        <button
+          className={`px-3 py-1.5 text-xs rounded transition-colors duration-200 ${activeTab === "submit" ? "bg-slate-800 text-slate-200" : "hover:bg-slate-800 text-slate-400"}`}
+          onClick={() => setActiveTab("submit")}
+          aria-label="Submit Results"
+          tabIndex={0}
+        >
+          Submit
+        </button>
+      </div>
+
+      {/* Editor */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 relative bg-slate-900 border-b border-slate-800">
+          <div className="absolute inset-0 flex overflow-auto">
+            <div className="flex w-full">
+              {/* Line Numbers */}
+              <div className="w-8 bg-black border-r border-slate-800 flex flex-col text-right text-sm text-slate-600 py-[14px] select-none">
+                {Array.from({ length: code.split("\n").length || 1 }).map(
+                  (_, i) => (
+                    <div
+                      key={i}
+                      className="h-6 flex items-center justify-end pr-3"
+                      style={{ lineHeight: "1.5rem" }}
+                    >
+                      {i + 1}
+                    </div>
+                  )
+                )}
+              </div>
+              {/* Code Area */}
+              <div className="flex-1 relative min-w-0">
+                <div className="p-1 font-mono text-sm leading-6 min-h-full text-gray-100">
+                  <div ref={editorRootRef} className="h-full">
+                    <Editor
+                      value={code}
+                      onValueChange={setCode}
+                      highlight={(c) =>
+                        highlight(c, languages[language] || languages.clike)
+                      }
+                      padding={10}
+                      textareaId="codeArea"
+                      textareaClassName="outline-none bg-transparent w-full h-full"
+                      className="min-h-full bg-transparent text-gray-100"
+                      aria-label="Code editor"
+                      tabIndex={0}
+                      onClick={updateCursorPosition}
+                      onKeyUp={updateCursorPosition}
+                      onSelect={updateCursorPosition}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Status Bar */}
+        <div className="h-8 bg-black border-t border-slate-800 flex items-center justify-between px-4 text-xs text-gray-400">
+          <span>
+            Ln {cursorPosition.line}, Col {cursorPosition.column}
+          </span>
+          <span>{langObj.name}</span>
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      <div className="bg-slate-900 border-t border-slate-800 px-4 py-4 min-h-[120px]">
+        {activeTab === "testcases" && (
+          <div>
+            {/* Testcase Tabs */}
+            <div className="flex items-center space-x-2 mb-4">
+              {publicTestcases.map((tc, idx) => (
                 <button
+                  key={idx}
+                  className={`px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-400 hover:bg-slate-700"}`}
                   onClick={() => {
-                    // Handle language selection
-                    setIsDropdownOpen(false);
+                    setActiveTestcaseType("public");
+                    setActiveTestcaseIdx(idx);
                   }}
-                  className="block w-full text-left px-4 py-2 hover:bg-zinc-600"
+                  tabIndex={0}
+                  aria-label={`Testcase ${idx + 1}`}
                 >
-                  JavaScript
+                  Case {idx + 1}
                 </button>
+              ))}
+              {customTestcases.map((tc, idx) => (
+                <div key={idx} className="relative flex items-center">
+                  <button
+                    className={`px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none ${activeTestcaseType === "custom" && activeTestcaseIdx === idx ? "bg-blue-700 text-white" : "bg-slate-800 text-blue-300 hover:bg-blue-700"}`}
+                    onClick={() => {
+                      setActiveTestcaseType("custom");
+                      setActiveTestcaseIdx(idx);
+                    }}
+                    tabIndex={0}
+                    aria-label={`Custom Testcase ${idx + 1}`}
+                  >
+                    Custom {idx + 1}
+                  </button>
+                  <button
+                    className="absolute -right-2 -top-2 text-xs text-red-400 hover:text-red-600 bg-slate-900 rounded-full px-1"
+                    onClick={() => handleRemoveCustomTestcase(idx)}
+                    aria-label="Remove custom testcase"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              {/* Add (+) tab */}
+              <button
+                className={`px-3 py-1 rounded font-bold text-lg bg-slate-800 text-slate-400 hover:bg-slate-700 focus:outline-none`}
+                onClick={() => {
+                  setActiveTestcaseType("add");
+                  setActiveTestcaseIdx(-1);
+                }}
+                tabIndex={0}
+                aria-label="Add custom testcase"
+              >
+                +
+              </button>
+            </div>
+            {/* Testcase Details */}
+            {activeTestcaseType === "public" &&
+            publicTestcases[activeTestcaseIdx] ? (
+              <div className="space-y-3">
+                <div>
+                  <span className="text-slate-400">Input:</span>
+                  <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                    {publicTestcases[activeTestcaseIdx].input}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-slate-400">Expected Output:</span>
+                  <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                    {publicTestcases[activeTestcaseIdx].output}
+                  </div>
+                </div>
+                {publicTestcases[activeTestcaseIdx].explanation && (
+                  <div className="text-xs text-slate-400">
+                    <span className="font-semibold">Explanation:</span>{" "}
+                    {publicTestcases[activeTestcaseIdx].explanation}
+                  </div>
+                )}
+                {/* Show run result for this testcase if available */}
+                {runResults[activeTestcaseIdx] && (
+                  <div className="space-y-1">
+                    <div>
+                      <span className="text-slate-400">Your Output:</span>
+                      <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                        {runResults[activeTestcaseIdx].output}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-slate-400">Verdict:</span>
+                      <span
+                        className={`ml-2 font-semibold ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-400" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-red-400" : "text-yellow-400"}`}
+                      >
+                        {runResults[activeTestcaseIdx].verdict}
+                      </span>
+                    </div>
+                    {runResults[activeTestcaseIdx].error && (
+                      <div className="text-xs text-red-400 mt-1">
+                        Error: {runResults[activeTestcaseIdx].error}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : null}
+            {activeTestcaseType === "custom" &&
+            customTestcases[activeTestcaseIdx] ? (
+              <div className="space-y-3">
+                <div>
+                  <span className="text-slate-400">Input:</span>
+                  {customEditIdx === activeTestcaseIdx ? (
+                    <textarea
+                      className="w-full min-h-[60px] bg-slate-800 text-gray-100 rounded p-2 font-mono text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={customEditInput}
+                      onChange={(e) => setCustomEditInput(e.target.value)}
+                    />
+                  ) : (
+                    <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                      {customTestcases[activeTestcaseIdx].input}
+                    </div>
+                  )}
+                </div>
+                <div className="flex space-x-2">
+                  {customEditIdx === activeTestcaseIdx ? (
+                    <>
+                      <button
+                        className="px-3 py-1 rounded bg-blue-600 text-white text-xs"
+                        onClick={() =>
+                          handleSaveEditCustomTestcase(activeTestcaseIdx)
+                        }
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="px-3 py-1 rounded bg-slate-700 text-slate-300 text-xs"
+                        onClick={() => setCustomEditIdx(null)}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="px-3 py-1 rounded bg-slate-700 text-slate-300 text-xs"
+                      onClick={() =>
+                        handleEditCustomTestcase(activeTestcaseIdx)
+                      }
+                    >
+                      Edit
+                    </button>
+                  )}
+                  <button
+                    className="px-3 py-1 rounded bg-green-600 text-white text-xs"
+                    onClick={() => handleRunCustomTestcase(activeTestcaseIdx)}
+                    disabled={customRunLoading}
+                  >
+                    {customRunLoading ? "Running..." : "Run"}
+                  </button>
+                </div>
+                {/* Show run result for this custom testcase if available */}
+                {customTestcases[activeTestcaseIdx].result && (
+                  <div className="space-y-1">
+                    <div>
+                      <span className="text-slate-400">Your Output:</span>
+                      <div className="bg-slate-800 rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                        {customTestcases[activeTestcaseIdx].result.output}
+                      </div>
+                    </div>
+                    {customTestcases[activeTestcaseIdx].result.error && (
+                      <div className="text-xs text-red-400 mt-1">
+                        Error: {customTestcases[activeTestcaseIdx].result.error}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : null}
+            {activeTestcaseType === "add" && (
+              <div className="space-y-3">
+                <div>
+                  <span className="text-slate-400">Input:</span>
+                  <textarea
+                    className="w-full min-h-[60px] bg-slate-800 text-gray-100 rounded p-2 font-mono text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={customInputDraft}
+                    onChange={(e) => setCustomInputDraft(e.target.value)}
+                    placeholder="Enter custom input..."
+                  />
+                </div>
                 <button
-                  onClick={() => {
-                    // Handle language selection
-                    setIsDropdownOpen(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-zinc-600"
+                  className="px-4 py-1 rounded bg-blue-600 text-white text-xs"
+                  onClick={handleAddCustomTestcase}
+                  disabled={!customInputDraft.trim()}
                 >
-                  Python
-                </button>
-                <button
-                  onClick={() => {
-                    // Handle language selection
-                    setIsDropdownOpen(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-zinc-600"
-                >
-                  Java
+                  Add Testcase
                 </button>
               </div>
             )}
           </div>
-          <button className="text-slate-400 hover:bg-zinc-600 px-2 py-1.5 rounded-md text-sm">
-            Auto
-          </button>
-          <div className="flex space-x-1 ml-4">
-            <button className="text-slate-400 hover:bg-zinc-600 p-2 rounded-md flex items-center justify-center">
-              <AlignLeft className="h-4 w-4" />
-              <span className="sr-only">Format Code</span>
-            </button>
-            <button className="text-slate-400 hover:bg-zinc-600 p-2 rounded-md flex items-center justify-center">
-              <Bookmark className="h-4 w-4" />
-              <span className="sr-only">Bookmark</span>
-            </button>
-            <button className="text-slate-400 hover:bg-zinc-600 p-2 rounded-md flex items-center justify-center">
-              <Braces className="h-4 w-4" />
-              <span className="sr-only">Braces</span>
-            </button>
-            <button className="text-slate-400 hover:bg-zinc-600 p-2 rounded-md flex items-center justify-center">
-              <RotateCcw className="h-4 w-4" />
-              <span className="sr-only">Reset Code</span>
-            </button>
-            <button className="text-slate-400 hover:bg-zinc-600 p-2 rounded-md flex items-center justify-center">
-              <Maximize className="h-4 w-4" />
-              <span className="sr-only">Maximize</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Code Editor Area (Static) */}
-      <div className="flex-1 bg-slate-900 p-4 text-sm font-mono overflow-auto relative">
-        <div className="absolute top-0 left-0 w-8 text-right pr-2 text-slate-400 select-none">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i}>{i + 1}</div>
-          ))}
-        </div>
-        <pre className="ml-8 text-slate-400 text-left">
-          <code>
-            <span className="text-blue-400">class</span>{" "}
-            <span className="text-green-400">Solution</span> {"{"}
-            {"\n"} <span className="text-blue-400">public</span>:{"\n"}{" "}
-            <span className="text-blue-400">vector</span>
-            &lt;<span className="text-blue-400">int</span>&gt;{" "}
-            <span className="text-yellow-400">twoSum</span>(
-            <span className="text-blue-400">vector</span>&lt;
-            <span className="text-blue-400">int</span>&gt;&amp;{" "}
-            <span className="text-orange-400">nums</span>,{" "}
-            <span className="text-blue-400">int</span>{" "}
-            <span className="text-orange-400">target</span>) {"{"}
-            {"\n"}
-            {"\n"} {"}"};{"\n"}
-          </code>
-        </pre>
-        <div className="absolute bottom-2 right-4 text-zinc-500 text-xs">
-          Saved <span className="ml-2">Ln 6, Col 3</span>
-        </div>
-      </div>
-
-      {/* Testcase Section */}
-      <div className="bg-slate-900 border-t border-slate-800 px-4 py-6">
-        <div className="w-full">
-          <div className="grid w-full grid-cols-2 bg-slate-900 text-slate-400 rounded-md mb-4 gap-2">
-            {testcaseTabs.map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTestcaseTab(tab.value)}
-                className={`px-3 py-1.5 text-sm flex items-center justify-center space-x-1.5 rounded-sm transition-colors duration-200 ${
-                  activeTestcaseTab === tab.value
-                    ? "bg-slate-800 text-slate-400"
-                    : "hover:bg-slate-800"
-                }`}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {activeTestcaseTab === "testcase" && (
-            <div>
-              <div className="flex items-center space-x-2 mb-4 text-sm text-slate-400">
-                <button className="bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-md">
-                  Case 1
-                </button>
-                <button className="bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-md">
-                  Case 2
-                </button>
-                <button className="bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-md">
-                  Case 3
-                </button>
-                <button className="text-slate-400 p-2 rounded-md flex items-center justify-center">
-                  <Plus className="h-4 w-4" />
-                  <span className="sr-only">Add Test Case</span>
-                </button>
-              </div>
-              <div className="bg-slate-800 p-3 rounded-md text-sm font-mono text-left">
-                <p className="text-slate-400 mb-1">nums =</p>
-                <pre className="text-slate-400">[2,7,11,15]</pre>
-              </div>
+        )}
+        {activeTab === "custom" && (
+          <div>
+            <label
+              htmlFor="custom-input"
+              className="block text-xs text-gray-400 mb-1"
+            >
+              Custom Input (stdin):
+            </label>
+            <textarea
+              id="custom-input"
+              className="w-full min-h-[60px] bg-slate-800 text-gray-100 rounded p-2 font-mono text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={customInputDraft}
+              onChange={(e) => setCustomInputDraft(e.target.value)}
+              aria-label="Custom input"
+            />
+            <div className="text-xs text-gray-500 mt-1">
+              This input will be included in the next Run.
             </div>
-          )}
-          {activeTestcaseTab === "test-result" && (
-            <div className="text-slate-400 text-sm py-6">
-              Test Result content goes here.
+          </div>
+        )}
+        {activeTab === "output" && (
+          <div>
+            <div className="text-xs text-gray-400 mb-2">Last Run Output:</div>
+            <pre className="bg-slate-800 text-gray-100 font-mono text-xs rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-slate-700">
+              {runResults.length > 0
+                ? runResults
+                    .map(
+                      (r, i) =>
+                        `#${r.verdict === "Custom" ? "Custom" : i + 1}\nInput:\n${r.input}\nOutput:\n${r.output}\n${r.expected ? `Expected:\n${r.expected}\nVerdict: ${r.verdict}` : ""}\n${r.error ? `Error: ${r.error}` : ""}\n\n`
+                    )
+                    .join("")
+                : "No output yet. Click Run to test your code."}
+            </pre>
+          </div>
+        )}
+        {activeTab === "submit" && (
+          <div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-xs border border-slate-800 rounded">
+                <thead>
+                  <tr className="bg-slate-800">
+                    <th className="px-2 py-1 text-left">#</th>
+                    <th className="px-2 py-1 text-left">Input</th>
+                    <th className="px-2 py-1 text-left">Expected</th>
+                    <th className="px-2 py-1 text-left">Output</th>
+                    <th className="px-2 py-1 text-left">Verdict</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {submitResults.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="text-center text-gray-500 py-4"
+                      >
+                        No submission yet. Click Submit to judge your code.
+                      </td>
+                    </tr>
+                  )}
+                  {submitResults.map((res, idx) => (
+                    <tr key={idx} className="border-t border-slate-800">
+                      <td className="px-2 py-1">
+                        {res.hidden ? (
+                          <span className="italic text-gray-500">Hidden</span>
+                        ) : (
+                          idx +
+                          1 -
+                          submitResults.slice(0, idx).filter((r) => r.hidden)
+                            .length
+                        )}
+                      </td>
+                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs">
+                        {res.hidden ? (
+                          <span className="italic text-gray-500">Hidden</span>
+                        ) : (
+                          res.input
+                        )}
+                      </td>
+                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs">
+                        {res.hidden ? (
+                          <span className="italic text-gray-500">Hidden</span>
+                        ) : (
+                          res.expected
+                        )}
+                      </td>
+                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs">
+                        {res.output}
+                      </td>
+                      <td className="px-2 py-1">
+                        {res.verdict === "Passed" && (
+                          <span className="text-green-400 flex items-center">
+                            <CheckCircle2 className="w-4 h-4 mr-1" />
+                            Passed
+                          </span>
+                        )}
+                        {res.verdict === "Failed" && (
+                          <span className="text-red-400 flex items-center">
+                            <XCircle className="w-4 h-4 mr-1" />
+                            Failed
+                          </span>
+                        )}
+                        {res.verdict === "Error" && (
+                          <span className="text-yellow-400">Error</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
-        </div>
+            {submitResults.length > 0 && (
+              <div className="mt-2 text-xs">
+                <span className="font-semibold">Summary:</span>{" "}
+                {submitResults.filter((r) => r.verdict === "Passed").length} /{" "}
+                {submitResults.length} testcases passed.
+                {submitResults.every((r) => r.verdict === "Passed") && (
+                  <span className="ml-2 text-green-400 font-semibold">
+                    Accepted!
+                  </span>
+                )}
+                {submitResults.some(
+                  (r) => r.verdict === "Failed" || r.verdict === "Error"
+                ) && (
+                  <span className="ml-2 text-red-400 font-semibold">
+                    Not Accepted
+                  </span>
+                )}
+              </div>
+            )}
+            {submitResults.some((r) => r.error) && (
+              <div className="mt-2 text-red-400 text-xs">
+                {submitResults
+                  .filter((r) => r.error)
+                  .map((r, i) => (
+                    <div key={i} className="mb-1">
+                      <b>Error:</b> {r.error}
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+        )}
+        {error && <div className="mt-2 text-red-400 text-xs">{error}</div>}
       </div>
     </div>
   );
-}
+});
+
+export default CodeEditorPanel;

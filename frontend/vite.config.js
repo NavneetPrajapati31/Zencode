@@ -15,4 +15,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  server: {
+    proxy: {
+      "/compiler": "http://localhost:8000",
+    },
+  },
 });
