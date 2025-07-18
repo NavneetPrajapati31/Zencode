@@ -369,10 +369,10 @@ export default function ProblemsPage() {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
-        return "text-success";
+        return "text-green-400";
       case "Med.":
       case "Medium":
-        return "text-warning";
+        return "text-amber-400";
       case "Hard":
         return "text-destructive";
       default:

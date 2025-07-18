@@ -10,6 +10,7 @@ import data from "@/data.json";
 export default function Page() {
   return (
     <SidebarProvider
+      defaultOpen={false}
       style={{
         "--sidebar-width": "calc(var(--spacing) * 72)",
         "--header-height": "calc(var(--spacing) * 12)",
