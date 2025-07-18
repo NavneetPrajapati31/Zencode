@@ -26,19 +26,19 @@ export default function LandingPage() {
         <section className="relative h-[calc(100vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
           <div className="relative z-10 max-w-full mx-auto w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
             {/* Left Content */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl">
-              <span className="inline-flex items-center px-3 py-1 rounded-full bg-amber-600/20 text-amber-600 !text-sm font-medium mb-4">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl p-10 rounded-3xl border border-border bg-card">
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-sm font-medium mb-4">
                 01 Purpose
               </span>
-              <h1 className="font-poppins !text-4xl !md:text-6xl font-bold tracking-tight mb-6 leading-tight text-zinc-100">
+              <p className="font-poppins !text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground">
                 Zencode: Where Code Meets{" "}
-                <span className="text-amber-600">Focus</span>
-              </h1>
+                <span className="text-primary">Focus</span>
+              </p>
               <p className="!text-lg !md:text-xl text-muted-foreground mb-8">
                 The distraction-free platform that helps you achieve deep work
                 and master your skills.
               </p>
-              <Button className="bg-amber-600 hover:bg-amber-700 text-zinc-900 font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
+              <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
               </Button>
@@ -47,9 +47,9 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section className="py-16 md:py-24 px-4 bg-black">
+        <section id="features" className="py-16 md:py-24 px-4 bg-black">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-poppins text-3xl md:text-4xl font-bold text-center mb-12 text-amber-600">
+            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary">
               Features Designed for Focus
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -94,17 +94,17 @@ export default function LandingPage() {
         </section>
 
         {/* Progress Dashboard Showcase */}
-        <section className="py-16 md:py-24 px-4 bg-black">
+        <section id="dashboard" className="py-16 md:py-24 px-4 bg-black">
           <div className="max-w-6xl mx-auto text-center">
-            <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-4 text-amber-600">
+            <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-4 text-primary">
               See Your Progress Unfold
             </h2>
             <p className="text-lg text-zinc-300 mb-12 max-w-2xl mx-auto">
               Our intuitive dashboard provides clear insights into your coding
               habits and skill development.
             </p>
-            <Card className="border-zinc-800 shadow-lg rounded-xl">
-              <CardContent className="p-6 md:p-8">
+            <Card className="flex justify-center items-center !border-none shadow-none bg-transparent rounded-xl">
+              <CardContent className="p-6 md:p-8 max-w-5xl">
                 {/* <ProgressChart /> */}
                 <ChartBarInteractive />
               </CardContent>
@@ -113,9 +113,9 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-16 md:py-24 px-4 bg-black">
+        <section id="testimonials" className="py-16 md:py-24 px-4 bg-black">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-poppins text-3xl md:text-4xl font-bold text-center mb-12 text-amber-600">
+            <h2 className="font-poppins text-3xl md:text-4xl font-bold text-center mb-12 text-primary">
               What Developers Are Saying
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -146,14 +146,14 @@ export default function LandingPage() {
         {/* CTA Section */}
         <section className="py-16 md:py-24 px-4 bg-black text-center">
           <div className="max-w-3xl mx-auto">
-            <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-amber-600">
+            <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-primary">
               Ready to Achieve Deep Work?
             </h2>
             <p className="text-lg text-zinc-300 mb-8">
               Join Zencode today and experience a new level of coding focus and
               productivity.
             </p>
-            <Button className="bg-amber-600 hover:bg-amber-700 text-zinc-900 font-semibold py-3 px-8 rounded-lg text-lg shadow-lg transition-colors duration-300">
+            <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold py-3 px-8 rounded-lg text-lg shadow-lg transition-colors duration-300">
               Start Coding Now
             </Button>
           </div>

@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start">
           <a
             href="#"
-            className="flex items-center gap-2 text-2xl font-bold text-amber-600 mb-4"
+            className="flex items-center gap-2 text-2xl font-bold text-primary mb-4"
           >
             <Code className="h-7 w-7" />
             Zencode
@@ -28,7 +28,7 @@ export default function Footer() {
             <li>
               <a
                 href="#features"
-                className="hover:text-amber-600 transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 Features
               </a>
@@ -36,7 +36,7 @@ export default function Footer() {
             <li>
               <a
                 href="#dashboard"
-                className="hover:text-amber-600 transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 Dashboard
               </a>
@@ -44,7 +44,7 @@ export default function Footer() {
             <li>
               <a
                 href="#testimonials"
-                className="hover:text-amber-600 transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 Testimonials
               </a>
@@ -52,7 +52,7 @@ export default function Footer() {
             <li>
               <a
                 href="#pricing"
-                className="hover:text-amber-600 transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 Pricing
               </a>
@@ -60,7 +60,7 @@ export default function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-amber-600 transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200"
               >
                 Blog
               </a>
@@ -77,21 +77,21 @@ export default function Footer() {
             <a
               href="#"
               aria-label="GitHub"
-              className="text-zinc-400 hover:text-amber-600 transition-colors duration-200"
+              className="text-zinc-400 hover:text-primary transition-colors duration-200"
             >
               <Github className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Discord"
-              className="text-zinc-400 hover:text-amber-600 transition-colors duration-200"
+              className="text-zinc-400 hover:text-primary transition-colors duration-200"
             >
               <Discord className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Twitter"
-              className="text-zinc-400 hover:text-amber-600 transition-colors duration-200"
+              className="text-zinc-400 hover:text-primary transition-colors duration-200"
             >
               <Twitter className="h-6 w-6" />
             </a>

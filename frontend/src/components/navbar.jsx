@@ -12,12 +12,12 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-sm">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-3xl">
       <div className="container mx-auto h-16 flex items-center justify-between px-4">
         {/* Logo */}
         <a
           href="#"
-          className="flex items-center gap-2 text-xl font-bold text-amber-600"
+          className="flex items-center gap-2 text-xl font-bold text-primary"
         >
           <Code className="h-6 w-6" />
           Zencode
@@ -29,18 +29,15 @@ export default function Navbar() {
             <a
               key={link.name}
               href={link.href}
-              className="text-zinc-300 hover:text-amber-600 transition-colors duration-200"
+              className="text-zinc-300 hover:text-primary transition-colors duration-200"
             >
               {link.name}
             </a>
           ))}
-          <Button
-            variant="ghost"
-            className="text-zinc-300 hover:text-amber-600"
-          >
+          <Button variant="ghost" className="text-zinc-300 hover:text-primary">
             Login
           </Button>
-          <Button className="bg-amber-600 hover:bg-amber-700 text-zinc-900 font-semibold">
+          <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold">
             Sign Up
           </Button>
         </nav>
@@ -62,18 +59,18 @@ export default function Navbar() {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-lg font-medium text-zinc-100 hover:text-amber-600 transition-colors duration-200"
+                  className="text-lg font-medium text-zinc-100 hover:text-primary transition-colors duration-200"
                 >
                   {link.name}
                 </a>
               ))}
               <Button
                 variant="ghost"
-                className="text-lg font-medium text-zinc-100 hover:text-amber-600 justify-start"
+                className="text-lg font-medium text-zinc-100 hover:text-primary justify-start"
               >
                 Login
               </Button>
-              <Button className="bg-amber-600 hover:bg-amber-700 text-zinc-900 font-semibold text-lg justify-start">
+              <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold text-lg justify-start">
                 Sign Up
               </Button>
             </div>

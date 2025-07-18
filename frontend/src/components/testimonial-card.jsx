@@ -7,14 +7,14 @@ export default function TestimonialCard({
 }) {
   const cardClasses =
     variant === "gradient"
-      ? "bg-gradient-to-br from-black to-amber-600/30 border-zinc-800 shadow-lg rounded-xl"
-      : "bg-gradient-to-br from-black to-amber-600/30 border-zinc-800 shadow-lg rounded-xl";
+      ? "bg-gradient-to-br from-black to-primary/30 border-zinc-800 shadow-lg rounded-xl"
+      : "bg-gradient-to-br from-black to-primary/30 border-zinc-800 shadow-lg rounded-xl";
 
   return (
     <Card className={cardClasses}>
       <CardContent className="p-6">
         <p className="text-muted-foreground !text-md italic mb-4">"{quote}"</p>
-        <p className="text-amber-600 !text-md font-semibold text-right">
+        <p className="text-primary !text-md font-semibold text-right">
           - {author}
         </p>
       </CardContent>

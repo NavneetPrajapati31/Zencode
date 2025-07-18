@@ -14,6 +14,21 @@ body {
   @apply bg-zinc-900 text-zinc-100;
 }
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom Scrollbar Styles */
+
+  /* Firefox */
+  * {
+    scroll-behavior: smooth;
+    scrollbar-width: 50px;
+    scrollbar-color: var(--primary) #000000;
+  }
+}
+
 /* Utility layer for text-wrap: balance (Next.js specific, but good practice) */
 @layer utilities {
   .text-balance {
