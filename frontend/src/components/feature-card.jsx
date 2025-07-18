@@ -5,11 +5,11 @@ export default function FeatureCard({ icon: Icon, title, description }) {
     <Card className="bg-card border-border shadow-none hover:bg-popover hover:scale-105 transition-all duration-300 rounded-xl py-6">
       <CardHeader className="flex flex-col items-start px-6 text-left">
         {Icon && (
-          <div className="p-2 rounded-full bg-zinc-800/50 border border-zinc-800 mb-3">
+          <div className="p-2 rounded-full bg-popover border border-border mb-3">
             <Icon className="h-4 w-4 text-primary" />
           </div>
         )}
-        <CardTitle className="text-lg font-semibold text-zinc-100">
+        <CardTitle className="text-lg font-semibold text-foreground">
           {title}
         </CardTitle>
       </CardHeader>
