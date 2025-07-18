@@ -6,9 +6,17 @@ const protectedRoutes = require("./routes/protected");
 const problemRoutes = require("./routes/problem");
 const dotenv = require("dotenv");
 dotenv.config();
+const session = require("express-session");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GitHubStrategy = require("passport-github2").Strategy;
+const User = require("./models/User");
+const axios = require("axios");
 
 console.log("TEST_ENV:", process.env.TEST_ENV); // Debug: should print 'hello' if .env is loaded
 console.log("TEST_ENV:", process.env.TEST_ENV); // Add this for testing
+console.log("[DEBUG] GITHUB_CLIENT_ID:", process.env.GITHUB_CLIENT_ID);
+console.log("[DEBUG] GITHUB_CALLBACK_URL:", process.env.GITHUB_CALLBACK_URL);
 
 const app = express();
 
@@ -16,6 +24,92 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session middleware (for OAuth handshake only)
+app.use(
+  session({
+    secret: process.env.JWT_SECRET || "supersecretkey",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport serialize/deserialize
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+// Google Strategy
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const email =
+        profile.emails && profile.emails[0] && profile.emails[0].value;
+      if (!email) return done(null, false);
+      return done(null, { email });
+    }
+  )
+);
+
+// GitHub Strategy
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: process.env.GITHUB_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let email = null;
+        // Try to get email from profile
+        if (profile.emails && profile.emails.length > 0) {
+          email = profile.emails[0].value;
+        } else if (profile._json && profile._json.email) {
+          email = profile._json.email;
+        }
+        // If still no email, fetch from GitHub API
+        if (!email) {
+          const emailsRes = await axios.get(
+            "https://api.github.com/user/emails",
+            {
+              headers: { Authorization: `token ${accessToken}` },
+            }
+          );
+          const emails = emailsRes.data;
+          // Find primary, verified email
+          const primaryEmail = emails.find((e) => e.primary && e.verified);
+          if (primaryEmail) {
+            email = primaryEmail.email;
+          } else if (emails.length > 0) {
+            email = emails[0].email;
+          }
+        }
+        if (!email) {
+          console.error(
+            "[DEBUG] No email found for GitHub user after API call",
+            profile
+          );
+          return done(null, false);
+        }
+        return done(null, { email });
+      } catch (err) {
+        console.error("[DEBUG] Error in GitHubStrategy callback:", err);
+        return done(err, false);
+      }
+    }
+  )
+);
 
 // Initialize database connection
 databaseManager.connect();
