@@ -13,10 +13,10 @@ export default function TestimonialCard({
   return (
     <Card className={cardClasses}>
       <CardContent className="p-6">
-        <p className="text-muted-foreground text-left !text-md italic mb-4">
+        <p className="text-muted-foreground text-left !text-sm italic mb-4">
           "{quote}"
         </p>
-        <p className="text-primary !text-md font-semibold text-left">
+        <p className="text-primary !text-sm font-semibold text-left">
           - {author}
         </p>
       </CardContent>

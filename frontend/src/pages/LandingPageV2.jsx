@@ -52,7 +52,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex flex-col items-center md:items-start text-center md:text-left w-full p-10 lg:px-16 lg:py-12">
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-sm font-medium mb-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-4">
                   01 Purpose
                 </span>
                 <p className="font-poppins !text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground">
@@ -150,7 +150,7 @@ export default function LandingPage() {
             <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary">
               What Developers Are Saying
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <TestimonialCard
                 quote="Zencode has transformed my coding sessions. The focus mode is a game-changer, and the clean UI helps me stay productive for hours."
                 author="Jane Doe, Senior Developer"
