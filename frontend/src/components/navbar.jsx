@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Code } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const navLinks = [
@@ -19,7 +20,40 @@ export default function Navbar() {
           href="#"
           className="flex items-center gap-2 text-xl font-bold text-primary"
         >
-          <Code className="h-6 w-6" />
+          {/* <Code className="h-6 w-6" /> */}
+          <svg
+            width="36"
+            height="36"
+            viewBox="0 0 100 100"
+            aria-label="Petal Logo"
+            xmlns="http://www.w3.org/2000/svg"
+            className="text-primary rotate-135"
+          >
+            {/* Top Left Petal */}
+            <path
+              d="M50,50 Q20,20 50,5 Q35,35 50,50 Z"
+              fill="currentColor"
+              transform="rotate(0 50 50)"
+            />
+            {/* Top Right Petal */}
+            <path
+              d="M50,50 Q80,20 50,5 Q65,35 50,50 Z"
+              fill="currentColor"
+              transform="rotate(90 50 50)"
+            />
+            {/* Bottom Right Petal */}
+            <path
+              d="M50,50 Q80,80 95,50 Q65,65 50,50 Z"
+              fill="currentColor"
+              transform="rotate(180 50 50)"
+            />
+            {/* Bottom Left Petal */}
+            <path
+              d="M50,50 Q20,80 5,50 Q35,65 50,50 Z"
+              fill="currentColor"
+              transform="rotate(270 50 50)"
+            />
+          </svg>
           Zencode
         </a>
 
@@ -34,12 +68,19 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
-          <Button variant="ghost" className="text-zinc-300 hover:text-primary">
-            Login
-          </Button>
-          <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold">
-            Sign Up
-          </Button>
+          <Link to={"signin"}>
+            <Button
+              variant="ghost"
+              className="text-zinc-300 hover:text-primary"
+            >
+              Login
+            </Button>
+          </Link>
+          <Link to={"signup"}>
+            <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold">
+              Sign Up
+            </Button>
+          </Link>
         </nav>
 
         {/* Mobile Navigation */}

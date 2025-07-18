@@ -10,7 +10,40 @@ export default function Footer() {
             href="#"
             className="flex items-center gap-2 text-2xl font-bold text-primary mb-4"
           >
-            <Code className="h-7 w-7" />
+            {/* <Code className="h-7 w-7" /> */}
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 100 100"
+              aria-label="Petal Logo"
+              xmlns="http://www.w3.org/2000/svg"
+              className="text-primary rotate-135"
+            >
+              {/* Top Left Petal */}
+              <path
+                d="M50,50 Q20,20 50,5 Q35,35 50,50 Z"
+                fill="currentColor"
+                transform="rotate(0 50 50)"
+              />
+              {/* Top Right Petal */}
+              <path
+                d="M50,50 Q80,20 50,5 Q65,35 50,50 Z"
+                fill="currentColor"
+                transform="rotate(90 50 50)"
+              />
+              {/* Bottom Right Petal */}
+              <path
+                d="M50,50 Q80,80 95,50 Q65,65 50,50 Z"
+                fill="currentColor"
+                transform="rotate(180 50 50)"
+              />
+              {/* Bottom Left Petal */}
+              <path
+                d="M50,50 Q20,80 5,50 Q35,65 50,50 Z"
+                fill="currentColor"
+                transform="rotate(270 50 50)"
+              />
+            </svg>
             Zencode
           </a>
           <p className="text-zinc-400 max-w-xs">
@@ -47,22 +80,6 @@ export default function Footer() {
                 className="hover:text-primary transition-colors duration-200"
               >
                 Testimonials
-              </a>
-            </li>
-            <li>
-              <a
-                href="#pricing"
-                className="hover:text-primary transition-colors duration-200"
-              >
-                Pricing
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="hover:text-primary transition-colors duration-200"
-              >
-                Blog
               </a>
             </li>
           </ul>
