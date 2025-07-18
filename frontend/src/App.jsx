@@ -7,6 +7,7 @@ import ProblemsPage from "./pages/Problems";
 import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
 import Dashboard from "./pages/Dashboard";
+import OAuthCallback from "./pages/OAuthCallback";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/problems" element={<ProblemsPage />} />
           <Route path="/problems/:id" element={<ProblemDetail />} />
           <Route path="/compiler" element={<CodeRunnerPage />} />
+          <Route path="/oauth/callback" element={<OAuthCallback />} />
         </Routes>
       </BrowserRouter>
     </div>

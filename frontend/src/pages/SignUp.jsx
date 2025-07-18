@@ -14,19 +14,29 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Code2, Github, Mail, Check, X } from "lucide-react";
+import { FaGoogle } from "react-icons/fa";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
+
+const GITHUB_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/github`;
+const GOOGLE_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/google`;
+
+const handleGithubOAuth = () => {
+  window.location.href = GITHUB_OAUTH_URL;
+};
+
+const handleGoogleOAuth = () => {
+  window.location.href = GOOGLE_OAUTH_URL;
+};
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
-    userId: "",
     email: "",
     password: "",
     confirmPassword: "",
-    dob: "",
   });
 
   const [passwordValidation, setPasswordValidation] = useState({
@@ -71,11 +81,9 @@ export default function SignUp() {
       return;
     }
     const userData = {
-      userId: formData.userId,
-      password: formData.password,
-      email: formData.email,
-      dob: formData.dob,
       fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
     };
     try {
       await authAPI.signup(userData);
@@ -91,22 +99,24 @@ export default function SignUp() {
     formData.confirmPassword !== "";
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="w-full max-w-lg space-y-8">
         {/* Logo and Header */}
         <div className="text-center">
-          <p className="text-xl font-bold text-white">Join our community</p>
-          <p className="!text-md text-gray-400 mt-2">
+          <p className="text-xl font-bold text-foreground">
+            Join our community
+          </p>
+          <p className="!text-md text-muted-foreground mt-2">
             Create your coding account today
           </p>
         </div>
 
-        <Card className="!bg-slate-900 !border-slate-800">
-          <CardHeader className="space-y-1  !border-slate-800">
-            <CardTitle className="!text-xl text-center text-white">
+        <Card className="bg-card border-border">
+          <CardHeader className="space-y-1 border-border">
+            <CardTitle className="text-xl text-center text-foreground">
               Create account
             </CardTitle>
-            <CardDescription className="text-center text-gray-400">
+            <CardDescription className="text-center text-muted-foreground">
               Enter your information to get started
             </CardDescription>
           </CardHeader>
@@ -115,26 +125,30 @@ export default function SignUp() {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="!bg-slate-900 !border-slate-800 !text-white"
+                className="bg-card border-border text-foreground"
+                onClick={handleGithubOAuth}
+                type="button"
               >
                 <Github className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
               <Button
                 variant="outline"
-                className="!bg-slate-900 !border-slate-800 !text-white"
+                className="bg-card border-border text-foreground"
+                onClick={handleGoogleOAuth}
+                type="button"
               >
-                <Mail className="mr-2 h-4 w-4" />
+                <FaGoogle className="mr-2 h-4 w-4" />
                 Google
               </Button>
             </div>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full !bg-slate-800" />
+                <Separator className="w-full bg-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-slate-900 px-2 text-gray-400">
+                <span className="bg-card px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
@@ -143,44 +157,28 @@ export default function SignUp() {
             {/* Sign Up Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="text-red-500 text-sm mb-2" role="alert">
+                <div className="text-destructive text-sm mb-2" role="alert">
                   {error}
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-white">
-                  Full Name
+                <Label htmlFor="fullName" className="text-foreground">
+                  Name
                 </Label>
                 <Input
                   id="fullName"
                   name="fullName"
                   type="text"
-                  placeholder="Enter your full name"
+                  placeholder="Enter your name"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="userId" className="text-white">
-                  User ID
-                </Label>
-                <Input
-                  id="userId"
-                  name="userId"
-                  type="text"
-                  placeholder="Choose a unique user ID"
-                  value={formData.userId}
-                  onChange={handleInputChange}
-                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">
+                <Label htmlFor="email" className="text-foreground">
                   Email
                 </Label>
                 <Input
@@ -190,28 +188,13 @@ export default function SignUp() {
                   placeholder="john@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="!bg-slate-900 !border-slate-800  text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dob" className="text-white">
-                  Date of Birth
-                </Label>
-                <Input
-                  id="dob"
-                  name="dob"
-                  type="date"
-                  value={formData.dob}
-                  onChange={handleInputChange}
-                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">
+                <Label htmlFor="password" className="text-foreground">
                   Password
                 </Label>
                 <div className="relative">
@@ -222,14 +205,14 @@ export default function SignUp() {
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
+                    className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-gray-400 hover:text-white"
+                    className="absolute right-0 top-0 h-full px-3 py-2 bg-transparent text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -245,15 +228,15 @@ export default function SignUp() {
                   <div className="space-y-1 text-xs">
                     <div className="flex items-center space-x-2">
                       {passwordValidation.length ? (
-                        <Check className="h-3 w-3 text-green-500" />
+                        <Check className="h-3 w-3 text-emerald-500" />
                       ) : (
-                        <X className="h-3 w-3 text-red-500" />
+                        <X className="h-3 w-3 text-destructive" />
                       )}
                       <span
                         className={
                           passwordValidation.length
-                            ? "text-green-500"
-                            : "text-red-500"
+                            ? "text-emerald-500"
+                            : "text-destructive"
                         }
                       >
                         At least 8 characters
@@ -261,15 +244,15 @@ export default function SignUp() {
                     </div>
                     <div className="flex items-center space-x-2">
                       {passwordValidation.uppercase ? (
-                        <Check className="h-3 w-3 text-green-500" />
+                        <Check className="h-3 w-3 text-emerald-500" />
                       ) : (
-                        <X className="h-3 w-3 text-red-500" />
+                        <X className="h-3 w-3 text-destructive" />
                       )}
                       <span
                         className={
                           passwordValidation.uppercase
-                            ? "text-green-500"
-                            : "text-red-500"
+                            ? "text-emerald-500"
+                            : "text-destructive"
                         }
                       >
                         One uppercase letter
@@ -277,15 +260,15 @@ export default function SignUp() {
                     </div>
                     <div className="flex items-center space-x-2">
                       {passwordValidation.lowercase ? (
-                        <Check className="h-3 w-3 text-green-500" />
+                        <Check className="h-3 w-3 text-emerald-500" />
                       ) : (
-                        <X className="h-3 w-3 text-red-500" />
+                        <X className="h-3 w-3 text-destructive" />
                       )}
                       <span
                         className={
                           passwordValidation.lowercase
-                            ? "text-green-500"
-                            : "text-red-500"
+                            ? "text-emerald-500"
+                            : "text-destructive"
                         }
                       >
                         One lowercase letter
@@ -293,15 +276,15 @@ export default function SignUp() {
                     </div>
                     <div className="flex items-center space-x-2">
                       {passwordValidation.number ? (
-                        <Check className="h-3 w-3 text-green-500" />
+                        <Check className="h-3 w-3 text-emerald-500" />
                       ) : (
-                        <X className="h-3 w-3 text-red-500" />
+                        <X className="h-3 w-3 text-destructive" />
                       )}
                       <span
                         className={
                           passwordValidation.number
-                            ? "text-green-500"
-                            : "text-red-500"
+                            ? "text-emerald-500"
+                            : "text-destructive"
                         }
                       >
                         One number
@@ -309,15 +292,15 @@ export default function SignUp() {
                     </div>
                     <div className="flex items-center space-x-2">
                       {passwordValidation.special ? (
-                        <Check className="h-3 w-3 text-green-500" />
+                        <Check className="h-3 w-3 text-emerald-500" />
                       ) : (
-                        <X className="h-3 w-3 text-red-500" />
+                        <X className="h-3 w-3 text-destructive" />
                       )}
                       <span
                         className={
                           passwordValidation.special
-                            ? "text-green-500"
-                            : "text-red-500"
+                            ? "text-emerald-500"
+                            : "text-destructive"
                         }
                       >
                         One special character
@@ -328,7 +311,7 @@ export default function SignUp() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-white">
+                <Label htmlFor="confirmPassword" className="text-foreground">
                   Confirm password
                 </Label>
                 <div className="relative">
@@ -339,14 +322,14 @@ export default function SignUp() {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
+                    className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-gray-400 hover:text-white"
+                    className="absolute right-0 top-0 h-full px-3 py-2 bg-transparent text-muted-foreground hover:text-foreground"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -359,13 +342,15 @@ export default function SignUp() {
                 {formData.confirmPassword && (
                   <div className="flex items-center space-x-2 text-xs">
                     {doPasswordsMatch ? (
-                      <Check className="h-3 w-3 text-green-500" />
+                      <Check className="h-3 w-3 text-emerald-500" />
                     ) : (
-                      <X className="h-3 w-3 text-red-500" />
+                      <X className="h-3 w-3 text-destructive" />
                     )}
                     <span
                       className={
-                        doPasswordsMatch ? "text-green-500" : "text-red-500"
+                        doPasswordsMatch
+                          ? "text-emerald-500"
+                          : "text-destructive"
                       }
                     >
                       Passwords match
@@ -378,21 +363,24 @@ export default function SignUp() {
                 <input
                   id="terms"
                   type="checkbox"
-                  className="rounded border-gray-700 bg-gray-800 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-border bg-muted text-primary focus:ring-primary"
                   required
                 />
-                <Label htmlFor="terms" className="text-sm text-gray-400">
+                <Label
+                  htmlFor="terms"
+                  className="text-sm text-muted-foreground"
+                >
                   I agree to the{" "}
                   <Link
                     to="/terms"
-                    className="text-blue-400 hover:text-blue-300 hover:underline"
+                    className="text-primary hover:text-primary/80 hover:underline"
                   >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
                   <Link
                     to="/privacy"
-                    className="text-blue-400 hover:text-blue-300 hover:underline"
+                    className="text-primary hover:text-primary/80 hover:underline"
                   >
                     Privacy Policy
                   </Link>
@@ -401,7 +389,7 @@ export default function SignUp() {
 
               <Button
                 type="submit"
-                className="w-full !bg-blue-600 !hover:bg-blue-700 !text-white"
+                className="w-full bg-primary hover:bg-primary/90 text-foreground"
                 disabled={!isPasswordValid || !doPasswordsMatch}
               >
                 Create account
@@ -409,11 +397,11 @@ export default function SignUp() {
             </form>
 
             <div className="text-center">
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
                 <Link
                   to="/signin"
-                  className="text-blue-400 hover:text-blue-300 hover:underline font-medium"
+                  className="text-primary hover:text-primary/80 hover:underline font-medium"
                 >
                   Sign in
                 </Link>
@@ -423,14 +411,14 @@ export default function SignUp() {
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-xs text-gray-500">
+        <div className="text-center text-xs text-muted-foreground">
           <p>
             By creating an account, you agree to our{" "}
-            <Link href="/terms" className="hover:text-gray-400 underline">
+            <Link to="/terms" className="hover:text-primary underline">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="hover:text-gray-400 underline">
+            <Link to="/privacy" className="hover:text-primary underline">
               Privacy Policy
             </Link>
           </p>

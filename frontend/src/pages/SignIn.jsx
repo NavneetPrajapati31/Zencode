@@ -16,6 +16,18 @@ import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Code2, Github, Mail } from "lucide-react";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
+import { FaGoogle } from "react-icons/fa";
+
+const GITHUB_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/github`;
+const GOOGLE_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/google`;
+
+const handleGithubOAuth = () => {
+  window.location.href = GITHUB_OAUTH_URL;
+};
+
+const handleGoogleOAuth = () => {
+  window.location.href = GOOGLE_OAUTH_URL;
+};
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -51,50 +63,56 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="w-full max-w-lg space-y-8">
         {/* Logo and Header */}
         <div className="text-center">
-          <p className="text-xl font-bold text-white">Welcome back, Coder!</p>
-          <p className="!text-md text-gray-400 mt-2">
+          <p className="text-xl font-bold text-foreground">
+            Welcome back, Coder!
+          </p>
+          <p className="!text-md text-muted-foreground mt-2">
             Sign in to access coding challenges
           </p>
         </div>
 
-        <Card className="!bg-slate-900 !border-slate-800">
-          <CardHeader className="space-y-1 !border-slate-800">
-            <CardTitle className="!text-xl text-center text-white">
+        <Card className="bg-card border-border">
+          <CardHeader className="space-y-1 border-border">
+            <CardTitle className="text-xl text-center text-foreground">
               Sign in
             </CardTitle>
-            <CardDescription className="text-center text-gray-400">
+            <CardDescription className="text-center text-muted-foreground">
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Social Login Buttons */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="!bg-slate-900 !border-slate-800 !text-white"
+                className="bg-card border-border text-foreground"
+                onClick={handleGithubOAuth}
+                type="button"
               >
                 <Github className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
               <Button
                 variant="outline"
-                className="!bg-slate-900 !border-slate-800  !text-white !hover:bg-gray-700"
+                className="bg-card border-border text-foreground hover:bg-muted"
+                onClick={handleGoogleOAuth}
+                type="button"
               >
-                <Mail className="mr-2 h-4 w-4" />
+                <FaGoogle className="mr-2 h-4 w-4" />
                 Google
               </Button>
             </div>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full !bg-slate-800" />
+                <Separator className="w-full bg-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-slate-900 px-2 text-gray-400">
+                <span className="bg-card px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
@@ -103,7 +121,7 @@ export default function SignIn() {
             {/* Sign In Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">
+                <Label htmlFor="email" className="text-primary-foreground">
                   Email
                 </Label>
                 <Input
@@ -113,13 +131,13 @@ export default function SignIn() {
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500"
+                  className="bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white">
+                <Label htmlFor="password" className="text-primary-foreground">
                   Password
                 </Label>
                 <div className="relative">
@@ -130,14 +148,12 @@ export default function SignIn() {
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="!bg-slate-900 !border-slate-800 text-white placeholder:text-gray-400 focus:border-blue-500 pr-10"
+                    className="bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
                     required
                   />
                   <Button
-                    type="button"
-                    variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent !text-gray-400 hover:text-white"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-muted-foreground !hover:bg-transparent hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -154,43 +170,43 @@ export default function SignIn() {
                   <input
                     id="remember"
                     type="checkbox"
-                    className="rounded border-gray-700 bg-gray-800 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-border bg-muted text-primary focus:ring-primary"
                   />
                   <Label
                     htmlFor="remember"
-                    className="text-sm text-gray-400 !bg-slate-900"
+                    className="text-sm text-muted-foreground bg-card"
                   >
                     Remember me
                   </Label>
                 </div>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-blue-400 hover:text-blue-300 hover:underline"
+                  className="text-sm text-primary hover:text-primary/80 hover:underline"
                 >
                   Forgot password?
                 </Link>
               </div>
 
               {error && (
-                <div className="text-red-500 text-sm mb-2" role="alert">
+                <div className="text-destructive text-sm mb-2" role="alert">
                   {error}
                 </div>
               )}
 
               <Button
                 type="submit"
-                className="w-full !bg-blue-600 !hover:bg-blue-700 text-white"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 Sign in
               </Button>
             </form>
 
             <div className="text-center">
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-blue-400 hover:text-blue-300 hover:underline font-medium"
+                  className="text-primary hover:text-primary/80 hover:underline font-medium"
                 >
                   Sign up
                 </Link>
@@ -200,14 +216,14 @@ export default function SignIn() {
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-xs text-gray-500">
+        <div className="text-center text-xs text-muted-foreground">
           <p>
             By signing in, you agree to our{" "}
-            <Link to="/terms" className="hover:text-gray-400 underline">
+            <Link to="/terms" className="hover:text-primary underline">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link to="/privacy" className="hover:text-gray-400 underline">
+            <Link to="/privacy" className="hover:text-primary underline">
               Privacy Policy
             </Link>
           </p>

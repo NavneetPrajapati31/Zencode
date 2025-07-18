@@ -15,43 +15,47 @@ import {
 
 export default function ProblemDescription({ problem }) {
   if (!problem) {
-    return <div className="p-4 text-zinc-300">No problem data available.</div>;
+    return (
+      <div className="p-4 text-muted-foreground">
+        No problem data available.
+      </div>
+    );
   }
   return (
-    <div className="p-4 overflow-y-auto bg-slate-950 text-slate-400">
+    <div className="p-4 overflow-y-auto bg-card text-foreground">
       {/* Tabs */}
       <div className="w-full">
         <div>
           {/* Problem Title and Solved Status */}
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl text-left font-bold text-slate-400">
+            <h1 className="text-xl text-left font-bold text-primary">
               {problem.title}
             </h1>
             {problem.solved && (
-              <span className="text-green-500 flex items-center space-x-1">
+              <span className="text-success flex items-center space-x-1">
                 Solved <CheckCircle className="h-5 w-5" />
               </span>
             )}
           </div>
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-6">
-            <span className="bg-green-600/20 text-green-400 text-xs font-medium px-2.5 py-0.5 rounded-full">
+            <span className="bg-success/20 text-success text-xs font-medium px-2.5 py-0.5 rounded-full">
               {problem.difficulty || "Unknown"}
             </span>
             {/* Add more tags if available in problem object */}
           </div>
           {/* Problem Statement */}
-          <div className="text-slate-400 leading-relaxed space-y-4 text-md text-left">
+          <div className="text-foreground leading-relaxed space-y-4 text-md text-left">
             <p>{problem.description}</p>
             {/* Render examples if available */}
             {problem.examples && problem.examples.length > 0 && (
               <div className="space-y-4">
                 {problem.examples.map((ex, i) => (
                   <div key={i}>
-                    <h3 className="font-semibold text-slate-400 text-md mb-2">
+                    <h3 className="font-semibold text-foreground text-md mb-2">
                       Example {i + 1}:
                     </h3>
-                    <div className="bg-slate-900 p-3 rounded-md text-sm">
+                    <div className="bg-muted p-3 rounded-md text-sm">
                       <pre className="whitespace-pre-wrap break-words">
                         <code className="block">Input: {ex.input}</code>
                         <code className="block">Output: {ex.output}</code>
@@ -69,7 +73,7 @@ export default function ProblemDescription({ problem }) {
             {/* Constraints */}
             {problem.constraints && problem.constraints.length > 0 && (
               <div className="space-y-2">
-                <h3 className="font-semibold text-slate-400 text-md">
+                <h3 className="font-semibold text-foreground text-md">
                   Constraints:
                 </h3>
                 <ul className="list-disc list-inside text-md space-y-1">

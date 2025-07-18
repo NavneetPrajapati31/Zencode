@@ -25,7 +25,7 @@ import { AuthContext } from "@/components/auth-context";
 const ProgressBar = () => (
   <div className="flex space-x-0.5">
     {Array.from({ length: 10 }).map((_, i) => (
-      <div key={i} className="w-1 h-4 bg-gray-500 rounded-sm" />
+      <div key={i} className="w-1 h-4 bg-muted rounded-sm" />
     ))}
   </div>
 );
@@ -89,16 +89,16 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-slate-900 rounded-lg shadow-lg w-full max-w-2xl h-[80vh] overflow-auto p-6 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80">
+      <div className="bg-background rounded-lg shadow-lg w-full max-w-2xl h-[80vh] overflow-auto p-6 relative">
         <button
-          className="absolute top-3 right-3 text-slate-400 hover:text-white"
+          className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
           onClick={onClose}
           aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
-        <h2 className="text-lg font-semibold mb-4 text-white">
+        <h2 className="text-lg font-semibold mb-4 text-foreground">
           {initialData ? "Edit Problem" : "Add Problem"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -116,7 +116,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
               value={form.description}
               onChange={handleChange}
               placeholder="Description"
-              className="w-full rounded-md bg-slate-800 border border-slate-700 p-2 text-zinc-100 min-h-[60px]"
+              className="w-full rounded-md bg-muted border border-muted p-2 text-foreground min-h-[60px]"
               required
             />
           </div>
@@ -125,7 +125,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
               name="difficulty"
               value={form.difficulty}
               onChange={handleChange}
-              className="rounded-md bg-slate-800 border border-slate-700 p-2 text-zinc-100"
+              className="rounded-md bg-muted border border-muted p-2 text-foreground"
               required
             >
               <option value="Easy">Easy</option>
@@ -149,7 +149,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
           </div>
           {/* Testcases */}
           <div>
-            <label className="block text-sm text-zinc-300 mb-1">
+            <label className="block text-sm text-muted-foreground mb-1">
               Testcases
             </label>
             {form.testcases.map((tc, idx) => (
@@ -180,7 +180,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="text-red-400"
+                  className="text-destructive"
                   onClick={() => handleRemoveArrayItem("testcases", idx)}
                   aria-label="Remove testcase"
                 >
@@ -202,7 +202,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
           </div>
           {/* Constraints */}
           <div>
-            <label className="block text-sm text-zinc-300 mb-1">
+            <label className="block text-sm text-muted-foreground mb-1">
               Constraints
             </label>
             {form.constraints.map((c, idx) => (
@@ -223,7 +223,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="text-red-400"
+                  className="text-destructive"
                   onClick={() => handleRemoveArrayItem("constraints", idx)}
                   aria-label="Remove constraint"
                 >
@@ -243,7 +243,9 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
           </div>
           {/* Examples */}
           <div>
-            <label className="block text-sm text-zinc-300 mb-1">Examples</label>
+            <label className="block text-sm text-muted-foreground mb-1">
+              Examples
+            </label>
             {form.examples.map((ex, idx) => (
               <div key={idx} className="flex gap-2 mb-2">
                 <Input
@@ -278,7 +280,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="text-red-400"
+                  className="text-destructive"
                   onClick={() => handleRemoveArrayItem("examples", idx)}
                   aria-label="Remove example"
                 >
@@ -303,7 +305,9 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
             </Button>
           </div>
           {/* Boilerplate and Harness can be added similarly if needed */}
-          {error && <div className="text-red-400 text-sm mt-2">{error}</div>}
+          {error && (
+            <div className="text-destructive text-sm mt-2">{error}</div>
+          )}
           <div className="flex justify-end gap-2 mt-4">
             <Button type="button" variant="ghost" onClick={onClose}>
               Cancel
@@ -365,14 +369,14 @@ export default function ProblemsPage() {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
-        return "text-green-400";
+        return "text-success";
       case "Med.":
       case "Medium":
-        return "text-yellow-400";
+        return "text-warning";
       case "Hard":
-        return "text-red-400";
+        return "text-destructive";
       default:
-        return "text-gray-400";
+        return "text-muted-foreground";
     }
   };
 
@@ -433,38 +437,38 @@ export default function ProblemsPage() {
 
   if (loading || authLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-slate-400">Loading problems...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground">Loading problems...</div>
       </div>
     );
   }
   if (error) {
     return (
-      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-        <div className="text-red-500">{error}</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-destructive">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-400 px-4">
+    <div className="min-h-screen bg-background text-foreground px-4">
       <div className="max-w-full mx-auto rounded-lg shadow-lg p-4 sm:p-6">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3">
           <Link to={"/dashboard"}>
             <Button
-              className="!bg-blue-600/30 !text-blue-300 font-medium flex items-center gap-2"
+              className="font-medium flex items-center gap-2"
               aria-label="back to dashboard"
             >
               <ChevronLeft className="w-4 h-4" /> Back to Dashboard
             </Button>
           </Link>
           <div className="relative flex-grow w-full sm:w-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search questions"
-              className="pl-10 pr-4 py-2 rounded-md !bg-slate-900 border !border-slate-800 text-zinc-100 !placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+              className="pl-10 pr-4 py-2 rounded-md bg-background border border-muted text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search problems"
@@ -472,7 +476,7 @@ export default function ProblemsPage() {
           </div>
           {isAuthenticated && (
             <Button
-              className="!bg-blue-600/30 !text-blue-300 font-medium flex items-center gap-2"
+              className="font-medium flex items-center gap-2"
               onClick={() => {
                 setEditProblem(null);
                 setShowModal(true);
@@ -495,9 +499,9 @@ export default function ProblemsPage() {
                 (typeof problem.createdBy === "object" &&
                   problem.createdBy._id === user.id));
             return (
-              <card
+              <Card
                 key={problem._id}
-                className="flex flex-row items-center justify-between !p-4 rounded-md cursor-pointer transition-colors duration-200 !bg-slate-900 !border-slate-800 focus-within:ring-0 focus-within:outline-0"
+                className="flex flex-row items-center justify-between p-4 rounded-md cursor-pointer transition-colors duration-200 bg-card border border-border focus-within:ring-0 focus-within:outline-0"
               >
                 <Link
                   to={`/problems/${problem._id}`}
@@ -507,14 +511,14 @@ export default function ProblemsPage() {
                 >
                   <div className="flex items-center min-w-0 max-w-[70%] flex-shrink-0">
                     {isSolved(problem) ? (
-                      <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-success shrink-0" />
                     ) : (
-                      <span className="h-5 w-5 border-2 border-slate-800 rounded-full shrink-0 inline-block mr-3" />
+                      <span className="h-5 w-5 border-2 border-muted rounded-full shrink-0 inline-block mr-3" />
                     )}
-                    <span className="text-base font-medium text-slate-400 mr-2 shrink-0">
+                    <span className="text-base font-medium text-foreground mr-2 shrink-0">
                       {idx + 1}.
                     </span>
-                    <span className="text-base font-medium text-slate-400 truncate min-w-0">
+                    <span className="text-base font-medium text-foreground truncate min-w-0">
                       {problem.title}
                     </span>
                   </div>
@@ -536,7 +540,7 @@ export default function ProblemsPage() {
                   <div className="flex gap-2 ml-4">
                     <Button
                       size="sm"
-                      className="flex items-center gap-1 !bg-blue-600/30 !text-blue-300"
+                      className="flex items-center gap-1"
                       onClick={() => handleEdit(problem)}
                       aria-label="Edit problem"
                     >
@@ -544,25 +548,28 @@ export default function ProblemsPage() {
                     </Button>
                     <Button
                       size="sm"
-                      className="flex items-center gap-1 !bg-red-600/30 !text-red-400"
+                      className="flex items-center gap-1"
                       onClick={() => setDeleteId(problem._id)}
                       aria-label="Delete problem"
+                      variant="destructive"
                     >
                       <Trash2 className="w-4 h-4" /> Delete
                     </Button>
                   </div>
                 )}
-              </card>
+              </Card>
             );
           })}
         </div>
         {filteredProblems.length === 0 && (
           <div className="text-center py-12">
-            <Search className="mx-auto h-12 w-12 text-gray-600 mb-4" />
-            <h3 className="text-lg font-medium text-white mb-2">
+            <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">
               No problems found
             </h3>
-            <p className="text-gray-400">Try adjusting your search terms.</p>
+            <p className="text-muted-foreground">
+              Try adjusting your search terms.
+            </p>
           </div>
         )}
       </div>
@@ -579,12 +586,12 @@ export default function ProblemsPage() {
       />
       {/* Delete Confirmation Modal */}
       {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-slate-900 rounded-lg shadow-lg w-full max-w-sm p-6 relative">
-            <h2 className="text-lg font-semibold mb-4 text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80">
+          <div className="bg-background rounded-lg shadow-lg w-full max-w-sm p-6 relative">
+            <h2 className="text-lg font-semibold mb-4 text-foreground">
               Delete Problem
             </h2>
-            <p className="mb-4 text-slate-300">
+            <p className="mb-4 text-muted-foreground">
               Are you sure you want to delete this problem? This action cannot
               be undone.
             </p>
