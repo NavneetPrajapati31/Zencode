@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Code, Sun, Moon } from "lucide-react";
+import { Menu, Code, Sun, Moon, ChevronRight } from "lucide-react";
 import { RiFocus2Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAuth } from "./use-auth";
@@ -32,59 +32,32 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-3xl">
       <div className="container mx-auto h-24 flex items-center justify-between px-4 lg:px-8">
-        {/* Logo */}
-        <Link
-          to={"/"}
-          className="flex items-center gap-2 text-xl font-bold text-primary"
-        >
-          {/* <Code className="h-6 w-6" /> */}
-          <RiFocus2Line className="h-10 w-10" />
-          {/* <svg
-            width="36"
-            height="36"
-            viewBox="0 0 100 100"
-            aria-label="Petal Logo"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-primary rotate-135"
+        {/* Left: Logo */}
+        <div className="flex-1 flex items-center">
+          <Link
+            to={"/"}
+            className="flex items-center gap-2 text-xl font-bold text-primary"
           >
-            <path
-              d="M50,50 Q20,20 50,5 Q35,35 50,50 Z"
-              fill="currentColor"
-              transform="rotate(0 50 50)"
-            />
+            <RiFocus2Line className="h-10 w-10" />
+            Zencode
+          </Link>
+        </div>
 
-            <path
-              d="M50,50 Q80,20 50,5 Q65,35 50,50 Z"
-              fill="currentColor"
-              transform="rotate(90 50 50)"
-            />
-
-            <path
-              d="M50,50 Q80,80 95,50 Q65,65 50,50 Z"
-              fill="currentColor"
-              transform="rotate(180 50 50)"
-            />
-
-            <path
-              d="M50,50 Q20,80 5,50 Q35,65 50,50 Z"
-              fill="currentColor"
-              transform="rotate(270 50 50)"
-            />
-          </svg> */}
-          Zencode
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        {/* Center: Nav Links */}
+        <nav className="hidden md:flex items-center gap-6 justify-center flex-none">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
             >
               {link.name}
             </a>
           ))}
+        </nav>
+
+        {/* Right: Theme Toggler and Auth */}
+        <div className="flex-1 flex items-center justify-end gap-2">
           {/* Theme Toggler */}
           <button
             onClick={toggleTheme}
@@ -98,28 +71,34 @@ export default function Navbar() {
                 toggleTheme();
               }
             }}
-            className="ml-2 p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-200 flex items-center justify-center hover:cursor-pointer"
+            className={`ml-2 p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-200 flex items-center justify-center hover:cursor-pointer ${theme === "dark" ? "bg-primary hover:bg-primary/85" : "bg-card border border-border"}`}
           >
             {theme === "dark" ? (
-              <Sun className="h-5 w-5 text-amber-400" />
+              <Sun className="h-4 w-4 text-primary-foreground" />
             ) : (
-              <Moon className="h-5 w-5 text-muted-foreground" />
+              <Moon className="h-4 w-4 text-foreground" />
             )}
           </button>
+          <Link to={"/problems"}>
+            <button className="flex flex-row justify-center items-center bg-primary hover:bg-primary/85 text-primary-foreground font-semibold !py-2 pl-3 pr-2 rounded-full text-xs shadow-none transition-colors duration-300 group hover:cursor-pointer">
+              Solve now
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </button>
+          </Link>
           {!isAuthenticated ? (
             <>
-              <Link to={"signin"}>
+              {/* <Link to={"signin"}>
                 <Button
                   variant="ghost"
                   className="text-muted-foreground hover:text-primary"
                 >
                   Login
                 </Button>
-              </Link>
+              </Link> */}
               <Link to={"signup"}>
-                <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold">
+                <button className="bg-card text-card-foreground border border-border font-semibold !py-2 !px-3 rounded-full text-xs shadow-none transition-colors duration-300 group hover:cursor-pointer">
                   Sign Up
-                </Button>
+                </button>
               </Link>
             </>
           ) : (
@@ -131,7 +110,7 @@ export default function Navbar() {
                   aria-label="User menu"
                 >
                   {console.log("Avatar src:", user?.avatar)}
-                  <Avatar className="h-9 w-9">
+                  <Avatar className="h-8 w-8">
                     <AvatarImage
                       src={user?.avatar}
                       alt={user?.name || user?.email || "User"}
@@ -201,7 +180,7 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-        </nav>
+        </div>
 
         {/* Mobile Navigation */}
         <Sheet>

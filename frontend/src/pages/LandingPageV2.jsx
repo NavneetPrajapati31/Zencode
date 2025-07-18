@@ -28,25 +28,48 @@ export default function LandingPage() {
         {/* Hero Section - Replicated Design */}
         <section className="relative h-[calc(90vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
           <div className="relative z-10 max-w-full mx-auto w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
-            {/* Left Content */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl p-10 lg:px-16 lg:py-12 rounded-3xl border border-border bg-card hover:scale-105 transition-all duration-300">
-              <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-sm font-medium mb-4">
-                01 Purpose
-              </span>
-              <p className="font-poppins !text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground">
-                Zencode: Where Code Meets{" "}
-                <span className="text-primary">Focus</span>
-              </p>
-              <p className="!text-lg !md:text-xl text-muted-foreground mb-8">
-                The distraction-free platform that helps you achieve deep work
-                and master your skills.
-              </p>
-              <Link to={"/problems"}>
-                <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-                </Button>
-              </Link>
+            {/* Hero Content */}
+            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl p-0 lg:px-0 lg:py-0 rounded-2xl border border-border bg-card hover:scale-105 transition-all duration-300">
+              {/* Browser-style header bar INSIDE the card */}
+              <div
+                className="w-full h-10 rounded-t-2xl bg-card flex items-center px-6 border-b border-border"
+                aria-label="Window controls"
+                tabIndex={0}
+              >
+                <div className="flex space-x-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full bg-red-500  "
+                    aria-label="Close"
+                  />
+                  <span
+                    className="w-2.5 h-2.5 rounded-full bg-yellow-500  "
+                    aria-label="Minimize"
+                  />
+                  <span
+                    className="w-2.5 h-2.5 rounded-full bg-green-500"
+                    aria-label="Maximize"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col items-center md:items-start text-center md:text-left w-full p-10 lg:px-16 lg:py-12">
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-sm font-medium mb-4">
+                  01 Purpose
+                </span>
+                <p className="font-poppins !text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground">
+                  Zencode: Where Code Meets{" "}
+                  <span className="text-primary">Focus</span>
+                </p>
+                <p className="!text-lg !md:text-xl text-muted-foreground mb-8">
+                  The distraction-free platform that helps you achieve deep work
+                  and master your skills.
+                </p>
+                <Link to={"/problems"}>
+                  <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
+                    Get Started
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -57,7 +80,7 @@ export default function LandingPage() {
             <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary">
               Features Designed for Focus
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               <FeatureCard
                 icon={Code}
                 title="Minimal Editor UI"
