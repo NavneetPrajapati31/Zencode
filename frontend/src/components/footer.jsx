@@ -3,7 +3,7 @@ import { RiFocus2Line } from "react-icons/ri";
 
 export default function Footer() {
   return (
-    <footer className="bg-black py-12 px-12">
+    <footer className="bg-background py-12 px-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
         {/* Logo and Description */}
         <div className="flex flex-col items-center">
@@ -48,7 +48,7 @@ export default function Footer() {
             </svg> */}
             Zencode
           </a>
-          <p className="text-zinc-400 max-w-xs">
+          <p className="text-muted-foreground max-w-xs">
             Your calm, distraction-free platform for deep coding and skill
             improvement.
           </p>
@@ -56,10 +56,10 @@ export default function Footer() {
 
         {/* Navigation Links */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold text-zinc-100 mb-4">
+          <h3 className="text-lg font-semibold text-foreground mb-4">
             Quick Links
           </h3>
-          <ul className="space-y-2 text-zinc-400">
+          <ul className="space-y-2 text-muted-foreground">
             <li>
               <a
                 href="#features"
@@ -89,33 +89,33 @@ export default function Footer() {
 
         {/* Social Links */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold text-zinc-100 mb-4">
+          <h3 className="text-lg font-semibold text-foreground mb-4">
             Connect With Us
           </h3>
           <div className="flex justify-center md:justify-start gap-6">
             <a
               href="#"
               aria-label="GitHub"
-              className="text-zinc-400 hover:text-primary transition-colors duration-200"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200"
             >
               <Github className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Discord"
-              className="text-zinc-400 hover:text-primary transition-colors duration-200"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200"
             >
               <Discord className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Twitter"
-              className="text-zinc-400 hover:text-primary transition-colors duration-200"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200"
             >
               <Twitter className="h-6 w-6" />
             </a>
           </div>
-          <p className="text-zinc-400 mt-8">
+          <p className="text-muted-foreground mt-8">
             &copy; {new Date().getFullYear()} Zencode. All rights reserved.
           </p>
         </div>

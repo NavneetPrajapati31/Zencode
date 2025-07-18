@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { AuthProvider } from "@/components/auth-context";
+import ThemeProvider from "@/components/theme-context";
 
 // Set default theme to dark before React renders
 if (typeof document !== "undefined") {
@@ -11,8 +12,10 @@ if (typeof document !== "undefined") {
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ThemeProvider>
   </StrictMode>
 );

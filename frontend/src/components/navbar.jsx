@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Code } from "lucide-react";
+import { Menu, Code, Sun, Moon } from "lucide-react";
 import { RiFocus2Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAuth } from "./use-auth";
@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { useTheme } from "./theme-context-utils";
 
 export default function Navbar() {
   const navLinks = [
@@ -24,6 +25,7 @@ export default function Navbar() {
   ];
 
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-3xl">
@@ -76,23 +78,44 @@ export default function Navbar() {
             <a
               key={link.name}
               href={link.href}
-              className="text-zinc-300 hover:text-primary transition-colors duration-200"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200"
             >
               {link.name}
             </a>
           ))}
+          {/* Theme Toggler */}
+          <button
+            onClick={toggleTheme}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleTheme();
+              }
+            }}
+            className="ml-2 p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-200 flex items-center justify-center"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5 text-amber-400" />
+            ) : (
+              <Moon className="h-5 w-5 text-muted-foreground" />
+            )}
+          </button>
           {!isAuthenticated ? (
             <>
               <Link to={"signin"}>
                 <Button
                   variant="ghost"
-                  className="text-zinc-300 hover:text-primary"
+                  className="text-muted-foreground hover:text-primary"
                 >
                   Login
                 </Button>
               </Link>
               <Link to={"signup"}>
-                <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold">
+                <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold">
                   Sign Up
                 </Button>
               </Link>
@@ -167,31 +190,57 @@ export default function Navbar() {
         <Sheet>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
-              <Menu className="h-6 w-6 text-zinc-100" />
+              <Menu className="h-6 w-6 text-foreground" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="bg-zinc-900 border-zinc-800 text-zinc-100"
+            className="bg-background border-border text-foreground"
           >
             <div className="flex flex-col gap-4 py-6">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-lg font-medium text-zinc-100 hover:text-primary transition-colors duration-200"
+                  className="text-lg font-medium text-foreground hover:text-primary transition-colors duration-200"
                 >
                   {link.name}
                 </a>
               ))}
+              {/* Theme Toggler Mobile */}
+              <button
+                onClick={toggleTheme}
+                aria-label={
+                  theme === "dark"
+                    ? "Switch to light mode"
+                    : "Switch to dark mode"
+                }
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleTheme();
+                  }
+                }}
+                className="p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-200 flex items-center justify-center w-fit"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-5 w-5 text-amber-400" />
+                ) : (
+                  <Moon className="h-5 w-5 text-muted-foreground" />
+                )}
+                <span className="ml-2 text-sm">
+                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                </span>
+              </button>
               <Button
                 variant="ghost"
-                className="text-lg font-medium text-zinc-100 hover:text-primary justify-start"
+                className="text-lg font-medium text-foreground hover:text-primary justify-start"
               >
                 Login
               </Button>
-              <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold text-lg justify-start">
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold text-lg justify-start">
                 Sign Up
               </Button>
             </div>

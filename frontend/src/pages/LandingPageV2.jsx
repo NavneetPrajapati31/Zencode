@@ -19,7 +19,7 @@ import { ChartBarMultiple } from "@/components/chart-bar-multiple";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white font-sans hide-scrollbar">
+    <div className="min-h-screen flex flex-col bg-background text-foreground font-sans hide-scrollbar">
       {/* Navbar */}
       <Navbar />
 
@@ -40,7 +40,7 @@ export default function LandingPage() {
                 The distraction-free platform that helps you achieve deep work
                 and master your skills.
               </p>
-              <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
               </Button>
@@ -49,7 +49,7 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-16 md:py-24 px-4 bg-black">
+        <section id="features" className="py-16 md:py-24 px-4 bg-background">
           <div className="max-w-6xl mx-auto">
             <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary">
               Features Designed for Focus
@@ -96,12 +96,12 @@ export default function LandingPage() {
         </section>
 
         {/* Progress Dashboard Showcase */}
-        <section id="dashboard" className="py-16 md:py-24 px-4 bg-black">
+        <section id="dashboard" className="py-16 md:py-24 px-4 bg-background">
           <div className="max-w-6xl mx-auto text-center">
             <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-4 text-primary">
               See Your Progress Unfold
             </h2>
-            <p className="text-lg text-zinc-300 mb-12 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
               Our intuitive dashboard provides clear insights into your coding
               habits and skill development.
             </p>
@@ -116,9 +116,12 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="py-16 md:py-24 px-4 bg-black">
+        <section
+          id="testimonials"
+          className="py-16 md:py-24 px-4 bg-background"
+        >
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-poppins text-3xl md:text-4xl font-bold text-center mb-12 text-primary">
+            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary">
               What Developers Are Saying
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -147,16 +150,16 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 md:py-24 px-4 bg-black text-center">
+        <section className="py-16 md:py-24 px-4 bg-background text-center">
           <div className="!max-w-3xl mx-auto">
             <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-6 text-primary">
               Ready to Achieve Deep Work?
             </h2>
-            <p className="!text-lg text-zinc-300 mb-8">
+            <p className="!text-lg text-muted-foreground mb-8">
               Join Zencode today and experience a new level of coding focus and
               productivity.
             </p>
-            <button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold !py-3 !px-8 rounded-lg !text-lg shadow-lg transition-colors duration-300">
+            <button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-3 !px-8 rounded-lg !text-lg shadow-lg transition-colors duration-300">
               Start Coding Now
             </button>
           </div>
