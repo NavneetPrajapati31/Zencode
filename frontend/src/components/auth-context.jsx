@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { protectedAPI } from "@/utils/api";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -20,6 +21,7 @@ export function AuthProvider({ children }) {
     try {
       const userData = await protectedAPI.getProtected();
       setUser(userData.user || null);
+      console.log("[Auth] User loaded from backend:", userData.user);
     } catch {
       localStorage.removeItem("token");
       setUser(null);
@@ -30,6 +32,13 @@ export function AuthProvider({ children }) {
 
   const login = async (token) => {
     localStorage.setItem("token", token);
+    // Debug: decode and log user from token
+    try {
+      const decoded = jwtDecode(token);
+      console.log("[Auth] Decoded user from JWT:", decoded);
+    } catch {
+      console.log("[Auth] Could not decode JWT");
+    }
     await fetchUserProfile();
   };
 

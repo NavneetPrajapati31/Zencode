@@ -147,8 +147,8 @@ export default function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-56">
                 <DropdownMenuLabel>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
+                  <div className="flex items-center text-lg gap-1">
+                    <Avatar className="h-10 w-10">
                       <AvatarImage
                         src={user?.avatar}
                         alt={user?.name || user?.email || "User"}

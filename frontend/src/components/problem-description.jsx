@@ -21,6 +21,21 @@ export default function ProblemDescription({ problem }) {
       </div>
     );
   }
+
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case "Easy":
+        return "bg-green-600/30 text-green-500";
+      case "Med.":
+      case "Medium":
+        return "bg-amber-600/30 text-amber-500";
+      case "Hard":
+        return "bg-red-600/30 text-destructive";
+      default:
+        return "bg-muted text-muted-foreground";
+    }
+  };
+
   return (
     <div className="p-4 overflow-y-auto bg-card text-foreground">
       {/* Tabs */}
@@ -28,9 +43,7 @@ export default function ProblemDescription({ problem }) {
         <div>
           {/* Problem Title and Solved Status */}
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl text-left font-bold text-primary">
-              {problem.title}
-            </h1>
+            <h1 className="text-xl text-left font-bold">{problem.title}</h1>
             {problem.solved && (
               <span className="text-success flex items-center space-x-1">
                 Solved <CheckCircle className="h-5 w-5" />
@@ -39,7 +52,9 @@ export default function ProblemDescription({ problem }) {
           </div>
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-6">
-            <span className="bg-success/20 text-success text-xs font-medium px-2.5 py-0.5 rounded-full">
+            <span
+              className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getDifficultyColor(problem.difficulty)}`}
+            >
               {problem.difficulty || "Unknown"}
             </span>
             {/* Add more tags if available in problem object */}

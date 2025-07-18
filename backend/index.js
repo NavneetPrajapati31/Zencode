@@ -55,8 +55,11 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       const email =
         profile.emails && profile.emails[0] && profile.emails[0].value;
+      const photo =
+        profile.photos && profile.photos[0] && profile.photos[0].value;
+      const name = profile.displayName || "";
       if (!email) return done(null, false);
-      return done(null, { email });
+      return done(null, { email, photo, name });
     }
   )
 );
@@ -95,6 +98,8 @@ passport.use(
             email = emails[0].email;
           }
         }
+        const photo = profile._json && profile._json.avatar_url;
+        const name = profile.displayName || profile.username || "";
         if (!email) {
           console.error(
             "[DEBUG] No email found for GitHub user after API call",
@@ -102,7 +107,7 @@ passport.use(
           );
           return done(null, false);
         }
-        return done(null, { email });
+        return done(null, { email, photo, name });
       } catch (err) {
         console.error("[DEBUG] Error in GitHubStrategy callback:", err);
         return done(err, false);

@@ -25,7 +25,7 @@ import { AuthContext } from "@/components/auth-context";
 const ProgressBar = () => (
   <div className="flex space-x-0.5">
     {Array.from({ length: 10 }).map((_, i) => (
-      <div key={i} className="w-1 h-4 bg-muted rounded-sm" />
+      <div key={i} className="w-1 h-4 bg-primary rounded-sm" />
     ))}
   </div>
 );
@@ -369,10 +369,10 @@ export default function ProblemsPage() {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
-        return "text-green-400";
+        return "text-green-500";
       case "Med.":
       case "Medium":
-        return "text-amber-400";
+        return "text-amber-500";
       case "Hard":
         return "text-destructive";
       default:
@@ -540,6 +540,7 @@ export default function ProblemsPage() {
                   <div className="flex gap-2 ml-4">
                     <Button
                       size="sm"
+                      variant={"outline"}
                       className="flex items-center gap-1"
                       onClick={() => handleEdit(problem)}
                       aria-label="Edit problem"

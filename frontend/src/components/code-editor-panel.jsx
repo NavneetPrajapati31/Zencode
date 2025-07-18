@@ -544,7 +544,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                         Verdict:
                       </span>
                       <span
-                        className={`ml-2 font-semibold text-sm ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-success" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-warning"}`}
+                        className={`ml-2 font-semibold text-sm ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-500" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-warning"}`}
                       >
                         {runResults[activeTestcaseIdx].verdict}
                       </span>
@@ -744,7 +744,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       </td>
                       <td className="px-2 py-1">
                         {res.verdict === "Passed" && (
-                          <span className="text-success flex items-center">
+                          <span className="text-green-500 flex items-center">
                             <CheckCircle2 className="w-4 h-4 mr-1" />
                             Passed
                           </span>
