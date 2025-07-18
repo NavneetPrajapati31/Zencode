@@ -3,7 +3,7 @@ import { RiFocus2Line } from "react-icons/ri";
 
 export default function Footer() {
   return (
-    <footer className="bg-background py-12 px-12">
+    <footer className="bg-background py-12 px-12 border-t border-border">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
         {/* Logo and Description */}
         <div className="flex flex-col items-center">

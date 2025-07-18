@@ -16,6 +16,7 @@ import {
 import { ChartBarInteractive } from "@/components/ui/chart-bar-interactive";
 import Page from "@/components/Dashboard01";
 import { ChartBarMultiple } from "@/components/chart-bar-multiple";
+import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
@@ -40,10 +41,12 @@ export default function LandingPage() {
                 The distraction-free platform that helps you achieve deep work
                 and master your skills.
               </p>
-              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-              </Button>
+              <Link to={"/problems"}>
+                <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -159,9 +162,11 @@ export default function LandingPage() {
               Join Zencode today and experience a new level of coding focus and
               productivity.
             </p>
-            <button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-3 !px-8 rounded-lg !text-lg shadow-lg transition-colors duration-300">
-              Start Coding Now
-            </button>
+            <Link to={"/problems"}>
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-lg !text-md shadow-lg transition-colors duration-300">
+                Start Coding Now
+              </Button>
+            </Link>
           </div>
         </section>
       </main>

@@ -31,8 +31,8 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full backdrop-blur-3xl">
       <div className="container mx-auto h-24 flex items-center justify-between px-4 lg:px-8">
         {/* Logo */}
-        <a
-          href="#"
+        <Link
+          to={"/"}
           className="flex items-center gap-2 text-xl font-bold text-primary"
         >
           {/* <Code className="h-6 w-6" /> */}
@@ -70,7 +70,7 @@ export default function Navbar() {
             />
           </svg> */}
           Zencode
-        </a>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
@@ -96,7 +96,7 @@ export default function Navbar() {
                 toggleTheme();
               }
             }}
-            className="ml-2 p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-200 flex items-center justify-center"
+            className="ml-2 p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors duration-200 flex items-center justify-center hover:cursor-pointer"
           >
             {theme === "dark" ? (
               <Sun className="h-5 w-5 text-amber-400" />
@@ -124,7 +124,7 @@ export default function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full"
+                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full hover:cursor-pointer"
                   tabIndex={0}
                   aria-label="User menu"
                 >
