@@ -25,7 +25,7 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section - Replicated Design */}
-        <section className="relative h-[calc(100vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
+        <section className="relative h-[calc(90vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
           <div className="relative z-10 max-w-full mx-auto w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
             {/* Left Content */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl p-10 rounded-3xl border border-border bg-card">

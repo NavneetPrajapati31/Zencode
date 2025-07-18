@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/components/use-auth";
 import { problemsAPI } from "@/utils/api";
 import TopNavbar from "@/components/top-navbar";
 import ProblemDescription from "@/components/problem-description";
@@ -7,10 +8,18 @@ import CodeEditorPanel from "@/components/code-editor-panel";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const codeEditorRef = useRef();
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      navigate("/signin");
+    }
+  }, [authLoading, isAuthenticated, navigate]);
 
   useEffect(() => {
     if (!id) return;
@@ -23,7 +32,7 @@ export default function ProblemDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
         Loading problem...
