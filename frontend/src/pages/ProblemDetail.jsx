@@ -11,7 +11,6 @@ export default function ProblemDetailPage() {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [problem, setProblem] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const codeEditorRef = useRef();
 
@@ -23,13 +22,11 @@ export default function ProblemDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
     setError("");
     problemsAPI
       .getById(id)
       .then(setProblem)
-      .catch((err) => setError(err.message || "Failed to fetch problem."))
-      .finally(() => setLoading(false));
+      .catch((err) => setError(err.message || "Failed to fetch problem."));
   }, [id]);
 
   if (authLoading) {
@@ -59,6 +56,7 @@ export default function ProblemDetailPage() {
       <TopNavbar
         onRun={() => codeEditorRef.current?.run()}
         onSubmit={() => codeEditorRef.current?.submit()}
+        codeEditorRef={codeEditorRef}
       />
       <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
         {/* Left Panel: Problem Description */}

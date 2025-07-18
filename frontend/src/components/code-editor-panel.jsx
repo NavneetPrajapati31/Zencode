@@ -344,6 +344,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
   useImperativeHandle(ref, () => ({
     run: handleRun,
     submit: handleSubmit,
+    getCode: () => code,
   }));
 
   if (!problem) {
