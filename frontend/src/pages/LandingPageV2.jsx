@@ -28,7 +28,7 @@ export default function LandingPage() {
         <section className="relative h-[calc(90vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
           <div className="relative z-10 max-w-full mx-auto w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
             {/* Left Content */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl p-10 rounded-3xl border border-border bg-card">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl p-10 lg:px-16 lg:py-12 rounded-3xl border border-border bg-card hover:bg-popover hover:scale-105 transition-all duration-300">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-sm font-medium mb-4">
                 01 Purpose
               </span>
@@ -148,17 +148,17 @@ export default function LandingPage() {
 
         {/* CTA Section */}
         <section className="py-16 md:py-24 px-4 bg-black text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="font-poppins text-3xl md:text-4xl font-bold mb-6 text-primary">
+          <div className="!max-w-3xl mx-auto">
+            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-6 text-primary">
               Ready to Achieve Deep Work?
             </h2>
-            <p className="text-lg text-zinc-300 mb-8">
+            <p className="!text-lg text-zinc-300 mb-8">
               Join Zencode today and experience a new level of coding focus and
               productivity.
             </p>
-            <Button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold py-3 px-8 rounded-lg text-lg shadow-lg transition-colors duration-300">
+            <button className="bg-primary hover:bg-amber-700 text-zinc-900 font-semibold !py-3 !px-8 rounded-lg !text-lg shadow-lg transition-colors duration-300">
               Start Coding Now
-            </Button>
+            </button>
           </div>
         </section>
       </main>

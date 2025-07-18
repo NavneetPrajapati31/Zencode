@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function FeatureCard({ icon: Icon, title, description }) {
   return (
-    <Card className="bg-black border-zinc-800 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl py-6">
+    <Card className="bg-card border-border shadow-none hover:bg-popover hover:scale-105 transition-all duration-300 rounded-xl py-6">
       <CardHeader className="flex flex-col items-start px-6 text-left">
         {Icon && (
           <div className="p-2 rounded-full bg-zinc-800/50 border border-zinc-800 mb-3">
