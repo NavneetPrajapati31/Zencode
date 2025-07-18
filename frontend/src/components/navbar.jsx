@@ -27,6 +27,8 @@ export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  console.log("Navbar user:", user); // Log user object
+
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-3xl">
       <div className="container mx-auto h-24 flex items-center justify-between px-4 lg:px-8">
@@ -128,10 +130,18 @@ export default function Navbar() {
                   tabIndex={0}
                   aria-label="User menu"
                 >
+                  {console.log("Avatar src:", user?.avatar)}
                   <Avatar className="h-9 w-9">
                     <AvatarImage
                       src={user?.avatar}
                       alt={user?.name || user?.email || "User"}
+                      onError={(e) => {
+                        console.error(
+                          "Failed to load avatar image:",
+                          user?.avatar,
+                          e
+                        );
+                      }}
                     />
                     <AvatarFallback>
                       {user?.name
@@ -152,6 +162,13 @@ export default function Navbar() {
                       <AvatarImage
                         src={user?.avatar}
                         alt={user?.name || user?.email || "User"}
+                        onError={(e) => {
+                          console.error(
+                            "Failed to load avatar image:",
+                            user?.avatar,
+                            e
+                          );
+                        }}
                       />
                       <AvatarFallback>
                         {user?.name
