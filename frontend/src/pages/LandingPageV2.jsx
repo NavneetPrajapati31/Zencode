@@ -14,6 +14,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { ChartBarInteractive } from "@/components/ui/chart-bar-interactive";
+import Page from "@/components/Dashboard01";
+import { ChartBarMultiple } from "@/components/chart-bar-multiple";
 
 export default function LandingPage() {
   return (
@@ -106,7 +108,8 @@ export default function LandingPage() {
             <Card className="flex justify-center items-center !border-none shadow-none bg-transparent rounded-xl">
               <CardContent className="p-6 md:p-8 max-w-5xl">
                 {/* <ProgressChart /> */}
-                <ChartBarInteractive />
+                {/* <ChartBarInteractive /> */}
+                <ChartBarMultiple />
               </CardContent>
             </Card>
           </div>
