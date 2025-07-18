@@ -7,8 +7,8 @@ export default function TestimonialCard({
 }) {
   const cardClasses =
     variant === "gradient"
-      ? "bg-gradient-to-br from-black to-primary/20 border-zinc-800 shadow-lg rounded-xl"
-      : "bg-gradient-to-br from-black to-primary/20 border-zinc-800 shadow-lg rounded-xl";
+      ? "bg-card border-border shadow-none rounded-xl"
+      : "bg-card border-border shadow-none rounded-xl";
 
   return (
     <Card className={cardClasses}>

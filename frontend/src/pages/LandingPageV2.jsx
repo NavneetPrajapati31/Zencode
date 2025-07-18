@@ -28,7 +28,7 @@ export default function LandingPage() {
         <section className="relative h-[calc(90vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
           <div className="relative z-10 max-w-full mx-auto w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
             {/* Left Content */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl p-10 lg:px-16 lg:py-12 rounded-3xl border border-border bg-card hover:bg-popover hover:scale-105 transition-all duration-300">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-3xl p-10 lg:px-16 lg:py-12 rounded-3xl border border-border bg-card hover:scale-105 transition-all duration-300">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-sm font-medium mb-4">
                 01 Purpose
               </span>
