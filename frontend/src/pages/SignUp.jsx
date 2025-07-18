@@ -122,7 +122,7 @@ export default function SignUp() {
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Social Login Buttons */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button
                 variant="outline"
                 className="bg-card border-border text-foreground"

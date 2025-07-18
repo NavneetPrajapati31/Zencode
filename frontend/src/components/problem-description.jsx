@@ -25,10 +25,10 @@ export default function ProblemDescription({ problem }) {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
-        return "bg-green-600/30 text-green-500";
+        return "bg-green-600/20 text-green-600";
       case "Med.":
       case "Medium":
-        return "bg-amber-600/30 text-amber-500";
+        return "bg-primary/20 text-primary";
       case "Hard":
         return "bg-red-600/30 text-destructive";
       default:
@@ -37,7 +37,7 @@ export default function ProblemDescription({ problem }) {
   };
 
   return (
-    <div className="p-4 overflow-y-auto bg-card text-foreground">
+    <div className="p-4 overflow-y-auto bg-background text-foreground">
       {/* Tabs */}
       <div className="w-full">
         <div>
@@ -53,7 +53,7 @@ export default function ProblemDescription({ problem }) {
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-6">
             <span
-              className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${getDifficultyColor(problem.difficulty)}`}
+              className={`text-xs font-medium px-3 py-0.5 rounded-full ${getDifficultyColor(problem.difficulty)}`}
             >
               {problem.difficulty || "Unknown"}
             </span>

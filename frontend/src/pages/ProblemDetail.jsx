@@ -60,7 +60,7 @@ export default function ProblemDetailPage() {
       />
       <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
         {/* Left Panel: Problem Description */}
-        <div className="w-full lg:w-1/2 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border bg-card">
+        <div className="w-full lg:w-1/2 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border bg-background">
           <ProblemDescription problem={problem} />
         </div>
         {/* Right Panel: Code Editor and Test Cases */}

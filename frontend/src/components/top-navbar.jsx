@@ -11,11 +11,14 @@ import {
   Bell,
   User,
   Loader2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { LuX } from "react-icons/lu";
 import { RiGeminiFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAuth } from "./use-auth";
+import { useTheme } from "./theme-context-utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +44,7 @@ const cleanMarkdown = (str) =>
 
 export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAiReviewing, setIsAiReviewing] = useState(false);
@@ -166,7 +170,7 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
           <span className="text-sm">Submit</span>
         </button>
         <button
-          className="bg-transparent text-cyan-300 px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 border border-cyan-300"
+          className="bg-primary/20 text-primary px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 border border-none"
           onClick={handleAiReview}
           aria-label="AI Review code"
           disabled={isAiReviewing}
@@ -227,7 +231,7 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="focus:outline-none focus-visible:ring-0 rounded-full"
+              className="focus:outline-none focus-visible:ring-0 rounded-full hover:cursor-pointer"
               tabIndex={0}
               aria-label="User menu"
             >
@@ -248,7 +252,7 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
               </Avatar>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-56">
+          <DropdownMenuContent align="end" className="min-w-56 shadow-none">
             <DropdownMenuLabel>
               <div className="flex items-center text-lg gap-2">
                 <Avatar className="h-10 w-10">
@@ -277,6 +281,31 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={toggleTheme}
+              className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground"
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleTheme();
+                }
+              }}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4 text-amber-400" />
+              ) : (
+                <Moon className="h-4 w-4 text-muted-foreground" />
+              )}
+              <span className="text-sm">
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </span>
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={logout}
               className="text-destructive focus:text-destructive cursor-pointer"
