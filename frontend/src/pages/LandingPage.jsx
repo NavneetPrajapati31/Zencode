@@ -191,7 +191,7 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-800/30">
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 border bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-800/30">
               <CardContent className="p-0">
                 <div className="w-12 h-12 bg-blue-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Code2 className="w-6 h-6 text-blue-600" />
@@ -206,7 +206,7 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-800/30">
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-800/30">
               <CardContent className="p-0">
                 <div className="w-12 h-12 bg-purple-800/50 rounded-xl flex items-center justify-center mb-4">
                   <Trophy className="w-6 h-6 text-purple-600" />
