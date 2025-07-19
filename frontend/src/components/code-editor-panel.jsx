@@ -725,6 +725,27 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
         {activeTab === "submit" && (
           <div className="theme-transition">
             <div className="overflow-x-auto">
+              {submitResults.length > 0 && (
+                <div className="mb-4 text-sm theme-transition text-left">
+                  <span className="font-semibold theme-transition">
+                    Summary:
+                  </span>{" "}
+                  {submitResults.filter((r) => r.verdict === "Passed").length} /{" "}
+                  {submitResults.length} testcases passed.
+                  {submitResults.every((r) => r.verdict === "Passed") && (
+                    <span className="ml-2 text-success font-semibold theme-transition">
+                      Accepted!
+                    </span>
+                  )}
+                  {submitResults.some(
+                    (r) => r.verdict === "Failed" || r.verdict === "Error"
+                  ) && (
+                    <span className="ml-2 text-destructive font-semibold theme-transition">
+                      Not Accepted
+                    </span>
+                  )}
+                </div>
+              )}
               <table className="min-w-full text-sm border border-border rounded text-foreground theme-transition">
                 <thead>
                   <tr className="bg-muted text-foreground theme-transition">
@@ -816,25 +837,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                 </tbody>
               </table>
             </div>
-            {submitResults.length > 0 && (
-              <div className="mt-2 text-sm theme-transition">
-                <span className="font-semibold theme-transition">Summary:</span>{" "}
-                {submitResults.filter((r) => r.verdict === "Passed").length} /{" "}
-                {submitResults.length} testcases passed.
-                {submitResults.every((r) => r.verdict === "Passed") && (
-                  <span className="ml-2 text-success font-semibold theme-transition">
-                    Accepted!
-                  </span>
-                )}
-                {submitResults.some(
-                  (r) => r.verdict === "Failed" || r.verdict === "Error"
-                ) && (
-                  <span className="ml-2 text-destructive font-semibold theme-transition">
-                    Not Accepted
-                  </span>
-                )}
-              </div>
-            )}
+
             {submitResults.some((r) => r.error) && (
               <div className="mt-2 text-destructive text-sm theme-transition">
                 {submitResults
