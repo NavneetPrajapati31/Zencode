@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import LandingPage from "./pages/LandingPageV2";
 import SignIn from "./pages/SignIn";
@@ -19,19 +19,17 @@ function AppContent() {
     <div
       className={`font-inter min-h-screen bg-background text-foreground ${!isInitialized ? "theme-not-initialized" : ""}`}
     >
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/profile/:username" element={<Profile />} />
-          <Route path="/problems" element={<ProblemsPage />} />
-          <Route path="/problems/:id" element={<ProblemDetail />} />
-          <Route path="/compiler" element={<CodeRunnerPage />} />
-          <Route path="/oauth/callback" element={<OAuthCallback />} />
-          <Route path="/leaderboard" element={<LeaderboardPage />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/problems" element={<ProblemsPage />} />
+        <Route path="/problems/:id" element={<ProblemDetail />} />
+        <Route path="/compiler" element={<CodeRunnerPage />} />
+        <Route path="/oauth/callback" element={<OAuthCallback />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
+      </Routes>
     </div>
   );
 }

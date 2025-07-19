@@ -18,7 +18,7 @@ import { useTheme } from "./theme-context-utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Navbar() {
+export default function Navbar({ sticky = false }) {
   const navLinks = [
     { name: "Features", href: "#features" },
     { name: "Dashboard", href: "#dashboard" },
@@ -33,8 +33,10 @@ export default function Navbar() {
   console.log("Navbar user:", user); // Log user object
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-3xl theme-transition">
-      <div className="container mx-auto h-24 flex items-center justify-between px-4 lg:px-8">
+    <header
+      className={`${sticky ? "sticky top-0" : "relative"} z-50 w-full backdrop-blur-3xl theme-transition`}
+    >
+      <div className="container mx-auto h-20 flex items-center justify-between px-4 lg:px-8">
         {/* Left: Logo */}
         <div className="flex-1 flex items-center">
           <Link

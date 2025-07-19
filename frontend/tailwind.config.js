@@ -23,6 +23,7 @@ export default {
     },
     extend: {
       fontFamily: {
+        sans: ["Inter", "Poppins", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
         inter: ["Inter", "sans-serif"],
       },

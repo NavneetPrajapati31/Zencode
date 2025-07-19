@@ -22,7 +22,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground font-sans hide-scrollbar theme-transition">
       {/* Navbar */}
-      <Navbar />
+      <Navbar sticky="true" />
 
       <main className="flex-1">
         {/* Hero Section - Replicated Design */}

@@ -7,13 +7,6 @@ html {
   color-scheme: dark;
 }
 
-/* Apply global background and text colors */
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  /* These Tailwind classes are applied globally */
-  @apply bg-background text-foreground;
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -478,6 +471,11 @@ body {
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+}
+
+/* Apply global background and text colors */
+body {
+  @apply font-inter bg-background text-foreground;
 }
 
 /* Monospace override for prose containers */
