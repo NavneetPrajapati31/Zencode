@@ -6,7 +6,7 @@ import SignUp from "./pages/SignUp";
 import ProblemsPage from "./pages/Problems";
 import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/DashboardV2";
 import OAuthCallback from "./pages/OAuthCallback";
 import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
 import { useTheme } from "./components/theme-context-utils";
