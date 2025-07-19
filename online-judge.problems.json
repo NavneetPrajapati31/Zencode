@@ -1,0 +1,160 @@
+[{
+  "_id": {
+    "$oid": "687b0a949d02d8c3fee673ef"
+  },
+  "statement": "Longest Substring Without Repeating Characters\n\nGiven a string, find the length of the longest substring without repeating characters.",
+  "name": "Longest Substring Without Repeating Characters",
+  "code": "def lengthOfLongestSubstring(s):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:40.443Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:40.443Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a949d02d8c3fee673f9"
+  },
+  "statement": "Container With Most Water\n\nGiven n non-negative integers a1, a2, ..., an, find two lines that together with the x-axis form a container, such that the container contains the most water.",
+  "name": "Container With Most Water",
+  "code": "def maxArea(height):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:40.612Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:40.612Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a949d02d8c3fee67403"
+  },
+  "statement": "Integer to Roman\n\nConvert an integer to a Roman numeral.",
+  "name": "Integer to Roman",
+  "code": "def intToRoman(num):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:40.893Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:40.893Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a959d02d8c3fee6740e"
+  },
+  "statement": "Reverse Integer\n\nGiven a signed 32-bit integer x, return x with its digits reversed.",
+  "name": "Reverse Integer",
+  "code": "def reverse(x):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:41.113Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:41.113Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a959d02d8c3fee67419"
+  },
+  "statement": "Palindrome Number\n\nGiven an integer x, return true if x is a palindrome, and false otherwise.",
+  "name": "Palindrome Number",
+  "code": "def isPalindrome(x):\n    # your code here\n    pass",
+  "difficulty": "Easy",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:41.296Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:41.296Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a959d02d8c3fee67424"
+  },
+  "statement": "Find the Maximum Length of Valid Subsequence I\n\nGiven an array of integers, find the maximum length of a valid subsequence according to the problem's rules.",
+  "name": "Find the Maximum Length of Valid Subsequence I",
+  "code": "def maximumLength(nums):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:41.532Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:41.532Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a959d02d8c3fee6742e"
+  },
+  "statement": "Two Sum\n\nGiven an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+  "name": "Two Sum",
+  "code": "def twoSum(nums, target):\n    # your code here\n    pass",
+  "difficulty": "Easy",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:41.824Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:41.824Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a969d02d8c3fee67439"
+  },
+  "statement": "Longest Palindromic Substring\n\nGiven a string s, return the longest palindromic substring in s.",
+  "name": "Longest Palindromic Substring",
+  "code": "def longestPalindrome(s):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:42.097Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:42.097Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a969d02d8c3fee67443"
+  },
+  "statement": "Zigzag Conversion\n\nConvert a given string to a zigzag pattern on a given number of rows.",
+  "name": "Zigzag Conversion",
+  "code": "def convert(s, numRows):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:42.442Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:42.442Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "687b0a969d02d8c3fee6744e"
+  },
+  "statement": "Add Two Numbers\n\nYou are given two non-empty linked lists representing two non-negative integers. Add the two numbers and return the sum as a linked list.",
+  "name": "Add Two Numbers",
+  "code": "def addTwoNumbers(l1, l2):\n    # your code here\n    pass",
+  "difficulty": "Medium",
+  "createdAt": {
+    "$date": "2025-07-19T03:01:42.657Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-19T03:01:42.657Z"
+  },
+  "__v": 0
+}]

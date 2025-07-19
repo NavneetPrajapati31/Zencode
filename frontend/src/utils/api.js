@@ -63,6 +63,71 @@ export const problemsAPI = {
     }),
 };
 
+// Problem Details API calls
+export const problemDetailsAPI = {
+  getAll: () => apiCall("/problem-details"),
+  getById: (id) => apiCall(`/problem-details/${id}`),
+  getByProblemId: (problemId) =>
+    apiCall(`/problem-details/problem/${problemId}`),
+  getFullProblem: (problemId) => apiCall(`/problem-details/full/${problemId}`),
+  create: (detailsData) =>
+    apiCall("/problem-details", {
+      method: "POST",
+      body: JSON.stringify(detailsData),
+    }),
+  update: (id, detailsData) =>
+    apiCall(`/problem-details/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(detailsData),
+    }),
+  delete: (id) =>
+    apiCall(`/problem-details/${id}`, {
+      method: "DELETE",
+    }),
+};
+
+// Test Cases API calls
+export const testCasesAPI = {
+  getAll: () => apiCall("/testcases"),
+  getById: (id) => apiCall(`/testcases/${id}`),
+  getByProblemId: (problemId) => apiCall(`/testcases/problem/${problemId}`),
+  create: (testCaseData) =>
+    apiCall("/testcases", {
+      method: "POST",
+      body: JSON.stringify(testCaseData),
+    }),
+  update: (id, testCaseData) =>
+    apiCall(`/testcases/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(testCaseData),
+    }),
+  delete: (id) =>
+    apiCall(`/testcases/${id}`, {
+      method: "DELETE",
+    }),
+};
+
+// Submissions API calls
+export const submissionsAPI = {
+  getAll: () => apiCall("/submissions"),
+  getById: (id) => apiCall(`/submissions/${id}`),
+  getByProblemId: (problemId) => apiCall(`/submissions/problem/${problemId}`),
+  create: (submissionData) =>
+    apiCall("/submissions", {
+      method: "POST",
+      body: JSON.stringify(submissionData),
+    }),
+  update: (id, submissionData) =>
+    apiCall(`/submissions/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(submissionData),
+    }),
+  delete: (id) =>
+    apiCall(`/submissions/${id}`, {
+      method: "DELETE",
+    }),
+};
+
 // Protected API calls (for user info, etc.)
 export const protectedAPI = {
   getProtected: () => apiCall("/protected"),

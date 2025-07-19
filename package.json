@@ -1,5 +1,5 @@
 {
-  "name": "mern-online-judge",
+  "name": "Zencode",
   "version": "1.0.0",
   "description": "Online Judge MERN Stack Application",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "keywords": [
     "mern",
-    "online-judge",
+    "Zencode",
     "react",
     "express",
     "mongodb"

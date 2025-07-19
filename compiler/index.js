@@ -32,7 +32,13 @@ const runners = {
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
 
 app.post("/compiler", async (req, res) => {
-  const { language = "cpp", code, input = "", problemId } = req.body;
+  const {
+    language = "cpp",
+    code,
+    input = "",
+    problemId,
+    harness = "",
+  } = req.body;
 
   console.log("[Compiler] Received problemId:", problemId);
 
@@ -54,7 +60,13 @@ app.post("/compiler", async (req, res) => {
   }
 
   let finalCode = code;
-  if (problemId) {
+
+  // Use harness from frontend if provided
+  if (harness && harness.trim()) {
+    console.log("[Compiler] Using harness from frontend");
+    finalCode = harness.replace("// USER_CODE", code);
+  } else if (problemId) {
+    // Fallback to fetching from backend
     try {
       const resp = await fetch(`${BACKEND_URL}/api/problems/${problemId}`);
       if (resp.ok) {

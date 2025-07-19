@@ -122,7 +122,7 @@ export default function Navbar() {
                         );
                       }}
                     />
-                    <AvatarFallback>
+                    <AvatarFallback className="text-sm border border-border">
                       {user?.name
                         ? user.name
                             .split(" ")

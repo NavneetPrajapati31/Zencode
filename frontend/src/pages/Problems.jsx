@@ -1,27 +1,29 @@
 "use client";
 
-import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/components/use-auth";
+import { problemsAPI } from "@/utils/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Sheet as Dialog,
+  SheetContent as DialogContent,
+  SheetHeader as DialogHeader,
+  SheetTitle as DialogTitle,
+  SheetFooter as DialogFooter,
+} from "@/components/ui/sheet";
 import {
   Search,
-  ArrowUpDown,
-  Filter,
-  Shuffle,
-  CheckCircle,
-  LayoutDashboard,
-  Folder,
-  X,
   Plus,
   Edit,
   Trash2,
+  CheckCircle,
   ChevronLeft,
 } from "lucide-react";
-import { problemsAPI } from "@/utils/api";
-import { AuthContext } from "@/components/auth-context";
 
+// Progress bar component for demo
 const ProgressBar = () => (
   <div className="flex space-x-0.5">
     {Array.from({ length: 10 }).map((_, i) => (
@@ -30,309 +32,118 @@ const ProgressBar = () => (
   </div>
 );
 
-const initialFormState = {
-  title: "",
-  description: "",
-  difficulty: "Easy",
-  tags: [],
-  testcases: [{ input: "", output: "" }],
-  hiddenTestcases: [],
-  constraints: [],
-  examples: [],
-  boilerplate: {},
-  harness: {},
-};
-
+// Problem form modal component
 function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
-  const [form, setForm] = useState(initialData || initialFormState);
-  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    statement: "",
+    name: "",
+    code: "",
+    difficulty: "Medium",
+  });
 
   useEffect(() => {
-    setForm(initialData || initialFormState);
-    setError("");
-  }, [initialData, open]);
+    if (initialData) {
+      setForm({
+        statement: initialData.statement || "",
+        name: initialData.name || "",
+        code: initialData.code || "",
+        difficulty: initialData.difficulty || "Medium",
+      });
+    } else {
+      setForm({
+        statement: "",
+        name: "",
+        code: "",
+        difficulty: "Medium",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleArrayChange = (field, idx, key, value) => {
-    setForm((prev) => {
-      const arr = [...(prev[field] || [])];
-      arr[idx][key] = value;
-      return { ...prev, [field]: arr };
-    });
-  };
-
-  const handleAddArrayItem = (field, item) => {
-    setForm((prev) => ({ ...prev, [field]: [...(prev[field] || []), item] }));
-  };
-
-  const handleRemoveArrayItem = (field, idx) => {
-    setForm((prev) => {
-      const arr = [...(prev[field] || [])];
-      arr.splice(idx, 1);
-      return { ...prev, [field]: arr };
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title || !form.description || !form.difficulty) {
-      setError("Title, description, and difficulty are required.");
-      return;
-    }
-    setError("");
-    await onSubmit(form, setError);
+    await onSubmit(form);
   };
 
-  if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80">
-      <div className="bg-background rounded-lg shadow-lg w-full max-w-2xl h-[80vh] overflow-auto p-6 relative">
-        <button
-          className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <X className="w-5 h-5" />
-        </button>
-        <h2 className="text-lg font-semibold mb-4 text-foreground">
-          {initialData ? "Edit Problem" : "Add Problem"}
-        </h2>
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>
+            {initialData ? "Edit Problem" : "Create New Problem"}
+          </DialogTitle>
+        </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
+            <label className="block text-sm font-medium mb-2">Name</label>
             <Input
-              name="title"
-              value={form.title}
+              name="name"
+              value={form.name}
               onChange={handleChange}
-              placeholder="Title"
-              className="mb-2"
-              required
-            />
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              placeholder="Description"
-              className="w-full rounded-md bg-muted border border-muted p-2 text-foreground min-h-[60px]"
+              placeholder="Problem name"
               required
             />
           </div>
-          <div className="flex gap-2">
+          <div>
+            <label className="block text-sm font-medium mb-2">Statement</label>
+            <textarea
+              name="statement"
+              value={form.statement}
+              onChange={handleChange}
+              placeholder="Problem statement"
+              className="w-full min-h-[100px] p-3 border rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Code Template
+            </label>
+            <textarea
+              name="code"
+              value={form.code}
+              onChange={handleChange}
+              placeholder="Code template"
+              className="w-full min-h-[100px] p-3 border rounded-md font-mono"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Difficulty</label>
             <select
               name="difficulty"
               value={form.difficulty}
               onChange={handleChange}
-              className="rounded-md bg-muted border border-muted p-2 text-foreground"
-              required
+              className="w-full p-3 border rounded-md"
             >
               <option value="Easy">Easy</option>
               <option value="Medium">Medium</option>
               <option value="Hard">Hard</option>
             </select>
-            <Input
-              name="tags"
-              value={form.tags.join(", ")}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  tags: e.target.value
-                    .split(",")
-                    .map((t) => t.trim())
-                    .filter(Boolean),
-                }))
-              }
-              placeholder="Tags (comma separated)"
-            />
           </div>
-          {/* Testcases */}
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1">
-              Testcases
-            </label>
-            {form.testcases.map((tc, idx) => (
-              <div key={idx} className="flex gap-2 mb-2">
-                <Input
-                  value={tc.input}
-                  onChange={(e) =>
-                    handleArrayChange("testcases", idx, "input", e.target.value)
-                  }
-                  placeholder="Input"
-                  className="flex-1"
-                  required
-                />
-                <Input
-                  value={tc.output}
-                  onChange={(e) =>
-                    handleArrayChange(
-                      "testcases",
-                      idx,
-                      "output",
-                      e.target.value
-                    )
-                  }
-                  placeholder="Output"
-                  className="flex-1"
-                  required
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="text-destructive"
-                  onClick={() => handleRemoveArrayItem("testcases", idx)}
-                  aria-label="Remove testcase"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() =>
-                handleAddArrayItem("testcases", { input: "", output: "" })
-              }
-              className="mt-1"
-            >
-              Add Testcase
-            </Button>
-          </div>
-          {/* Constraints */}
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1">
-              Constraints
-            </label>
-            {form.constraints.map((c, idx) => (
-              <div key={idx} className="flex gap-2 mb-2">
-                <Input
-                  value={c}
-                  onChange={(e) =>
-                    handleArrayChange(
-                      "constraints",
-                      idx,
-                      undefined,
-                      e.target.value
-                    )
-                  }
-                  placeholder="Constraint"
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="text-destructive"
-                  onClick={() => handleRemoveArrayItem("constraints", idx)}
-                  aria-label="Remove constraint"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() => handleAddArrayItem("constraints", "")}
-              className="mt-1"
-            >
-              Add Constraint
-            </Button>
-          </div>
-          {/* Examples */}
-          <div>
-            <label className="block text-sm text-muted-foreground mb-1">
-              Examples
-            </label>
-            {form.examples.map((ex, idx) => (
-              <div key={idx} className="flex gap-2 mb-2">
-                <Input
-                  value={ex.input || ""}
-                  onChange={(e) =>
-                    handleArrayChange("examples", idx, "input", e.target.value)
-                  }
-                  placeholder="Input"
-                  className="flex-1"
-                />
-                <Input
-                  value={ex.output || ""}
-                  onChange={(e) =>
-                    handleArrayChange("examples", idx, "output", e.target.value)
-                  }
-                  placeholder="Output"
-                  className="flex-1"
-                />
-                <Input
-                  value={ex.explanation || ""}
-                  onChange={(e) =>
-                    handleArrayChange(
-                      "examples",
-                      idx,
-                      "explanation",
-                      e.target.value
-                    )
-                  }
-                  placeholder="Explanation"
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="text-destructive"
-                  onClick={() => handleRemoveArrayItem("examples", idx)}
-                  aria-label="Remove example"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() =>
-                handleAddArrayItem("examples", {
-                  input: "",
-                  output: "",
-                  explanation: "",
-                })
-              }
-              className="mt-1"
-            >
-              Add Example
-            </Button>
-          </div>
-          {/* Boilerplate and Harness can be added similarly if needed */}
-          {error && (
-            <div className="text-destructive text-sm mt-2">{error}</div>
-          )}
-          <div className="flex justify-end gap-2 mt-4">
-            <Button type="button" variant="ghost" onClick={onClose}>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" variant="default" disabled={loading}>
+            <Button type="submit" disabled={loading}>
               {loading ? "Saving..." : initialData ? "Update" : "Create"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 export default function ProblemsPage() {
+  const { isAuthenticated, user, loading: authLoading } = useAuth();
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const {
-    user,
-    isAuthenticated,
-    loading: authLoading,
-  } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [editProblem, setEditProblem] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
@@ -340,14 +151,10 @@ export default function ProblemsPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      navigate("/signin");
+    if (!authLoading) {
+      fetchProblems();
     }
-  }, [authLoading, isAuthenticated, navigate]);
-
-  useEffect(() => {
-    fetchProblems();
-  }, []);
+  }, [authLoading]);
 
   const fetchProblems = async () => {
     setError("");
@@ -380,16 +187,13 @@ export default function ProblemsPage() {
     }
   };
 
-  // Restore solvedCount and totalCount for header UI
-  // const solvedCount = problems.filter(isSolved).length;
-  // const totalCount = problems.length;
-
+  // Filter problems based on search term (search in name and statement)
   const filteredProblems = problems.filter(
     (problem) =>
-      (problem.title &&
-        problem.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (problem.description &&
-        problem.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      (problem.name &&
+        problem.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (problem.statement &&
+        problem.statement.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleCreate = async (form, setError) => {
@@ -506,7 +310,7 @@ export default function ProblemsPage() {
                 <Link
                   to={`/problems/${problem._id}`}
                   tabIndex={0}
-                  aria-label={`Open problem ${problem.title}`}
+                  aria-label={`Open problem ${problem.name}`}
                   className="flex flex-row items-center justify-between focus:outline-none focus:ring-0 rounded-md flex-1 min-w-0"
                 >
                   <div className="flex items-center min-w-0 max-w-[70%] flex-shrink-0">
@@ -519,7 +323,7 @@ export default function ProblemsPage() {
                       {idx + 1}.
                     </span>
                     <span className="text-base font-medium text-foreground truncate min-w-0">
-                      {problem.title}
+                      {problem.name}
                     </span>
                   </div>
                   {/* Right: Difficulty badge and ProgressBar */}
@@ -549,10 +353,10 @@ export default function ProblemsPage() {
                     </Button>
                     <Button
                       size="sm"
-                      className="flex items-center gap-1"
+                      variant={"outline"}
+                      className="flex items-center gap-1 text-destructive"
                       onClick={() => setDeleteId(problem._id)}
                       aria-label="Delete problem"
-                      variant="destructive"
                     >
                       <Trash2 className="w-4 h-4" /> Delete
                     </Button>
@@ -562,19 +366,18 @@ export default function ProblemsPage() {
             );
           })}
         </div>
-        {filteredProblems.length === 0 && (
-          <div className="text-center py-12">
-            <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">
-              No problems found
-            </h3>
-            <p className="text-muted-foreground">
-              Try adjusting your search terms.
-            </p>
+
+        {/* Empty state */}
+        {filteredProblems.length === 0 && !loading && (
+          <div className="text-center py-8 text-muted-foreground">
+            {searchTerm
+              ? "No problems found matching your search."
+              : "No problems available."}
           </div>
         )}
       </div>
-      {/* Create/Edit Modal */}
+
+      {/* Problem Form Modal */}
       <ProblemFormModal
         open={showModal}
         onClose={() => {
@@ -585,32 +388,31 @@ export default function ProblemsPage() {
         initialData={editProblem}
         loading={modalLoading}
       />
+
       {/* Delete Confirmation Modal */}
-      {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80">
-          <div className="bg-background rounded-lg shadow-lg w-full max-w-sm p-6 relative">
-            <h2 className="text-lg font-semibold mb-4 text-foreground">
-              Delete Problem
-            </h2>
-            <p className="mb-4 text-muted-foreground">
-              Are you sure you want to delete this problem? This action cannot
-              be undone.
-            </p>
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => setDeleteId(null)}>
-                Cancel
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={handleDelete}
-                disabled={deleteLoading}
-              >
-                {deleteLoading ? "Deleting..." : "Delete"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Problem</DialogTitle>
+          </DialogHeader>
+          <p>
+            Are you sure you want to delete this problem? This action cannot be
+            undone.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleteLoading}
+            >
+              {deleteLoading ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

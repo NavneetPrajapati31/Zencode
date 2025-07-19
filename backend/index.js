@@ -4,6 +4,9 @@ const databaseManager = require("./config/database");
 const authRoutes = require("./routes/auth");
 const protectedRoutes = require("./routes/protected");
 const problemRoutes = require("./routes/problem");
+const submissionRoutes = require("./routes/submission");
+const testcaseRoutes = require("./routes/testcase");
+const problemDetailsRoutes = require("./routes/problemDetails");
 const dotenv = require("dotenv");
 dotenv.config();
 const session = require("express-session");
@@ -128,6 +131,9 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/protected", protectedRoutes);
 app.use("/api/problems", problemRoutes);
+app.use("/api/submissions", submissionRoutes);
+app.use("/api/testcases", testcaseRoutes);
+app.use("/api/problem-details", problemDetailsRoutes);
 app.get("/api/test", (req, res) => {
   res.json({ message: "API is working!" });
 });

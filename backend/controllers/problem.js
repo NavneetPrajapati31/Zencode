@@ -3,37 +3,19 @@ const Problem = require("../models/Problem");
 // Create a new problem
 const createProblem = async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      difficulty,
-      tags,
-      testcases,
-      hiddenTestcases,
-      constraints,
-      examples,
-      boilerplate,
-      harness,
-    } = req.body;
+    const { statement, name, code, difficulty } = req.body;
 
-    if (!title || !description || !difficulty) {
+    if (!statement || !name || !code) {
       return res
         .status(400)
-        .json({ message: "Title, description, and difficulty are required." });
+        .json({ message: "Statement, name, and code are required." });
     }
 
     const problem = new Problem({
-      title,
-      description,
+      statement,
+      name,
+      code,
       difficulty,
-      tags,
-      testcases,
-      hiddenTestcases,
-      constraints,
-      examples,
-      boilerplate,
-      harness,
-      createdBy: req.user.id,
     });
     await problem.save();
     res.status(201).json(problem);
@@ -45,7 +27,7 @@ const createProblem = async (req, res) => {
 // Get all problems
 const getProblems = async (req, res) => {
   try {
-    const problems = await Problem.find().populate("createdBy", "username");
+    const problems = await Problem.find();
     res.json(problems);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
@@ -55,10 +37,7 @@ const getProblems = async (req, res) => {
 // Get a single problem by ID
 const getProblemById = async (req, res) => {
   try {
-    const problem = await Problem.findById(req.params.id).populate(
-      "createdBy",
-      "username"
-    );
+    const problem = await Problem.findById(req.params.id);
     if (!problem) return res.status(404).json({ message: "Problem not found" });
     res.json(problem);
   } catch (error) {
@@ -71,33 +50,13 @@ const updateProblem = async (req, res) => {
   try {
     const problem = await Problem.findById(req.params.id);
     if (!problem) return res.status(404).json({ message: "Problem not found" });
-    if (problem.createdBy.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
-    const {
-      title,
-      description,
-      difficulty,
-      tags,
-      testcases,
-      hiddenTestcases,
-      constraints,
-      examples,
-      boilerplate,
-      harness,
-    } = req.body;
 
-    if (title !== undefined) problem.title = title;
-    if (description !== undefined) problem.description = description;
+    const { statement, name, code, difficulty } = req.body;
+
+    if (statement !== undefined) problem.statement = statement;
+    if (name !== undefined) problem.name = name;
+    if (code !== undefined) problem.code = code;
     if (difficulty !== undefined) problem.difficulty = difficulty;
-    if (tags !== undefined) problem.tags = tags;
-    if (testcases !== undefined) problem.testcases = testcases;
-    if (hiddenTestcases !== undefined)
-      problem.hiddenTestcases = hiddenTestcases;
-    if (constraints !== undefined) problem.constraints = constraints;
-    if (examples !== undefined) problem.examples = examples;
-    if (boilerplate !== undefined) problem.boilerplate = boilerplate;
-    if (harness !== undefined) problem.harness = harness;
 
     await problem.save();
     res.json(problem);
@@ -111,9 +70,6 @@ const deleteProblem = async (req, res) => {
   try {
     const problem = await Problem.findById(req.params.id);
     if (!problem) return res.status(404).json({ message: "Problem not found" });
-    if (problem.createdBy.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
     await problem.deleteOne();
     res.json({ message: "Problem deleted" });
   } catch (error) {

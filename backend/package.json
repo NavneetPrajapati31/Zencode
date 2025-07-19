@@ -6,7 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "check-mongodb": "node scripts/check-mongodb.js"
+    "check-mongodb": "node scripts/check-mongodb.js",
+    "import-problems": "node scripts/import-problems.js",
+    "import-problems-advanced": "node scripts/import-problems-advanced.js"
   },
   "keywords": [],
   "author": "",

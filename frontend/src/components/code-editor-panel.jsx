@@ -77,11 +77,11 @@ const getFileIcon = (lang) => {
 };
 
 const compilerAPI = {
-  runCode: async ({ language, code, input, problemId }) => {
+  runCode: async ({ language, code, input, problemId, harness }) => {
     const res = await fetch("/compiler", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ language, code, input, problemId }),
+      body: JSON.stringify({ language, code, input, problemId, harness }),
     });
     if (!res.ok) throw new Error("Compiler error");
     return res.json();
@@ -170,6 +170,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           code,
           input: tc.input,
           problemId: getProblemId(),
+          harness: problem?.harness?.[language] || "",
         });
         let output = "";
         if (typeof res.output?.stdout === "string" && res.output.stdout) {
@@ -213,6 +214,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
             code,
             input: customTestcases[i].input,
             problemId: getProblemId(),
+            harness: problem?.harness?.[language] || "",
           });
           let output = "";
           if (typeof res.output?.stdout === "string" && res.output.stdout) {
@@ -259,6 +261,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           code,
           input: tc.input,
           problemId: getProblemId(),
+          harness: problem?.harness?.[language] || "",
         });
         let output = "";
         if (typeof res.output?.stdout === "string" && res.output.stdout) {
@@ -511,7 +514,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               <div className="space-y-3 text-left">
                 <div>
                   <span className="text-muted-foreground text-sm">Input:</span>
-                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap text-left">
+                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap text-left min-h-8">
                     {publicTestcases[activeTestcaseIdx].input}
                   </div>
                 </div>
@@ -536,7 +539,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       <span className="text-muted-foreground text-sm">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8">
                         {runResults[activeTestcaseIdx].output}
                       </div>
                     </div>
@@ -571,7 +574,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       onChange={(e) => setCustomEditInput(e.target.value)}
                     />
                   ) : (
-                    <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                    <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8">
                       {customTestcases[activeTestcaseIdx].input}
                     </div>
                   )}
@@ -612,7 +615,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       <span className="text-muted-foreground text-sm">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8">
                         {customTestcases[activeTestcaseIdx].result.output}
                       </div>
                     </div>
