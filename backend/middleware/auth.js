@@ -17,4 +17,14 @@ const authenticateJWT = (req, res, next) => {
   }
 };
 
-module.exports = authenticateJWT;
+// Role-based authorization middleware
+const authorizeRole = (role) => (req, res, next) => {
+  if (!req.user || req.user.role !== role) {
+    return res
+      .status(403)
+      .json({ message: "Forbidden: Insufficient privileges." });
+  }
+  next();
+};
+
+module.exports = { authenticateJWT, authorizeRole };

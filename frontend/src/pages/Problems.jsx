@@ -278,7 +278,7 @@ export default function ProblemsPage() {
               aria-label="Search problems"
             />
           </div>
-          {isAuthenticated && (
+          {isAuthenticated && user?.role === "admin" && (
             <Button
               className="font-medium flex items-center gap-2"
               onClick={() => {
@@ -294,14 +294,6 @@ export default function ProblemsPage() {
         {/* Problems List */}
         <div className="space-y-3">
           {filteredProblems.map((problem, idx) => {
-            const isAuthor =
-              isAuthenticated &&
-              user &&
-              problem.createdBy &&
-              ((typeof problem.createdBy === "string" &&
-                problem.createdBy === user.id) ||
-                (typeof problem.createdBy === "object" &&
-                  problem.createdBy._id === user.id));
             return (
               <Card
                 key={problem._id}
@@ -340,7 +332,7 @@ export default function ProblemsPage() {
                 </Link>
 
                 {/* Author controls */}
-                {isAuthor && (
+                {isAuthenticated && user?.role === "admin" && (
                   <div className="flex gap-2 ml-4">
                     <Button
                       size="sm"
@@ -354,7 +346,7 @@ export default function ProblemsPage() {
                     <Button
                       size="sm"
                       variant={"outline"}
-                      className="flex items-center gap-1 text-destructive"
+                      className="flex items-center gap-1 text-destructive hover:text-destructive"
                       onClick={() => setDeleteId(problem._id)}
                       aria-label="Delete problem"
                     >

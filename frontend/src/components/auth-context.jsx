@@ -20,7 +20,20 @@ export function AuthProvider({ children }) {
   const fetchUserProfile = async () => {
     try {
       const userData = await protectedAPI.getProtected();
-      setUser(userData.user || null);
+      // Ensure role is present, fallback to JWT decode if not
+      let user = userData.user || null;
+      if (user && !user.role) {
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            const decoded = jwtDecode(token);
+            user = { ...user, role: decoded.role };
+          } catch {
+            // Ignore decode errors, role will be missing
+          }
+        }
+      }
+      setUser(user);
       console.log("[Auth] User loaded from backend:", userData.user);
     } catch {
       localStorage.removeItem("token");
