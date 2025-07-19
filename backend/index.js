@@ -15,6 +15,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 const User = require("./models/User");
 const axios = require("axios");
+const leaderboardRoutes = require("./routes/leaderboard");
 
 console.log("TEST_ENV:", process.env.TEST_ENV); // Debug: should print 'hello' if .env is loaded
 console.log("TEST_ENV:", process.env.TEST_ENV); // Add this for testing
@@ -134,6 +135,7 @@ app.use("/api/problems", problemRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/testcases", testcaseRoutes);
 app.use("/api/problem-details", problemDetailsRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
 app.get("/api/test", (req, res) => {
   res.json({ message: "API is working!" });
 });

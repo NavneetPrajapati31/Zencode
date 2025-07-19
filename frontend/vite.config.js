@@ -18,6 +18,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/compiler": "http://localhost:8000",
+      "/api": "http://localhost:5000",
     },
   },
 });
