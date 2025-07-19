@@ -31,6 +31,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Button } from "./ui/button";
+import { useProblemsSidebar } from "./problems-sidebar-context";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Sanitize markdown: remove code fences, normalize line breaks, remove non-breaking spaces, trim leading spaces
 const cleanMarkdown = (str) =>
@@ -42,15 +44,26 @@ const cleanMarkdown = (str) =>
     .replace(/^[ \t]+/gm, "")
     .trim();
 
-export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
+export default function TopNavbar({
+  onRun,
+  onSubmit,
+  codeEditorRef,
+  onPrevious,
+  onNext,
+  canGoPrevious = false,
+  canGoNext = false,
+}) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { toggleSidebar } = useProblemsSidebar();
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAiReviewing, setIsAiReviewing] = useState(false);
   const [aiReviewModalOpen, setAiReviewModalOpen] = useState(false);
   const [aiReviewResult, setAiReviewResult] = useState("");
   const [aiReviewError, setAiReviewError] = useState("");
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleRun = async () => {
     setIsRunning(true);
@@ -69,6 +82,19 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
       setIsSubmitting(false);
     }
   };
+
+  const handlePrevious = () => {
+    if (canGoPrevious && onPrevious) {
+      onPrevious();
+    }
+  };
+
+  const handleNext = () => {
+    if (canGoNext && onNext) {
+      onNext();
+    }
+  };
+
   const handleAiReview = async () => {
     setIsAiReviewing(true);
     setAiReviewError("");
@@ -110,34 +136,39 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
     setAiReviewError("");
   };
 
+  const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
+  const handleCloseSettingsModal = () => setIsSettingsModalOpen(false);
+
   return (
     <nav className="flex items-center justify-between p-4 border-b border-border bg-background theme-transition">
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="theme-transition-fast"
-          aria-label="Toggle sidebar"
-        >
-          <List className="h-5 w-5" />
-        </Button>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
+          <button
             size="icon"
-            className="theme-transition-fast"
-            aria-label="Previous"
+            className="bg-accent text-accent-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+            onClick={toggleSidebar}
+            aria-label="Toggle problems sidebar"
+          >
+            <List className="h-4 w-4" />
+          </button>
+          <button
+            size="icon"
+            className="bg-accent text-accent-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+            aria-label="Previous problem"
+            onClick={handlePrevious}
+            disabled={!canGoPrevious}
           >
             <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
+          </button>
+          <button
             size="icon"
-            className="theme-transition-fast"
-            aria-label="Next"
+            className="bg-accent text-accent-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+            aria-label="Next problem"
+            onClick={handleNext}
+            disabled={!canGoNext}
           >
             <ChevronRight className="h-4 w-4" />
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -225,24 +256,67 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
         </div>
       )}
 
+      {/* Settings Modal */}
+      {isSettingsModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md transition-all duration-300"
+          onClick={handleCloseSettingsModal}
+        >
+          <div
+            className="!bg-card border border-border text-foreground rounded-lg shadow-lg max-w-md w-full py-4 px-6 pb-6 relative"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
+          >
+            <button
+              className="absolute top-5 right-5 text-foreground hover:cursor-pointer"
+              onClick={handleCloseSettingsModal}
+              aria-label="Close settings modal"
+              tabIndex={0}
+            >
+              <LuX className="h-5 w-5" />
+            </button>
+            <h2 className="text-lg font-semibold mb-3">Settings</h2>
+            <div className="flex flex-col gap-4 mt-4">
+              <button
+                className="w-full text-left px-4 py-2 rounded-md bg-accent hover:bg-accent/80 transition-colors text-accent-foreground"
+                tabIndex={0}
+                aria-label="Profile settings"
+              >
+                Profile
+              </button>
+              <button
+                className="w-full text-left px-4 py-2 rounded-md bg-accent hover:bg-accent/80 transition-colors text-accent-foreground"
+                tabIndex={0}
+                aria-label="Preferences settings"
+              >
+                Preferences
+              </button>
+              {/* Add more settings options here */}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center gap-2">
         <Button
           variant="ghost"
           size="icon"
           className="theme-transition-fast"
-          aria-label="Notifications"
-        >
-          <Bell className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="theme-transition-fast"
           aria-label="Settings"
+          tabIndex={0}
+          onClick={handleOpenSettingsModal}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleOpenSettingsModal();
+            }
+          }}
         >
           <Settings className="h-4 w-4" />
         </Button>
-        <DropdownMenu>
+        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <button
               className="focus:outline-none focus-visible:ring-0 rounded-full hover:cursor-pointer"
@@ -266,71 +340,84 @@ export default function TopNavbar({ onRun, onSubmit, codeEditorRef }) {
               </Avatar>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="min-w-56 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-          >
-            <DropdownMenuLabel className="theme-transition">
-              <div className="flex items-center text-lg gap-2 theme-transition">
-                <Avatar className="h-10 w-10 theme-transition">
-                  <AvatarImage
-                    src={user?.avatar}
-                    alt={user?.name || user?.email || "User"}
-                  />
-                  <AvatarFallback className="text-sm border border-border theme-transition">
-                    {user?.name
-                      ? user.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()
-                      : "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col theme-transition">
-                  <span className="font-medium text-sm theme-transition">
-                    {user?.name || "User"}
-                  </span>
-                  <span className="text-xs text-muted-foreground theme-transition">
-                    {user?.email}
-                  </span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator className="theme-transition" />
-            <DropdownMenuItem
-              onClick={toggleTheme}
-              className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground theme-transition"
-              aria-label={
-                theme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  toggleTheme();
-                }
-              }}
-            >
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4 text-primary theme-transition" />
-              ) : (
-                <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
-              )}
-              <span className="text-sm theme-transition">
-                {theme === "dark" ? "Light Mode" : "Dark Mode"}
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={logout}
-              className="text-destructive focus:text-destructive cursor-pointer theme-transition"
-              aria-label="Logout"
-            >
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+          <AnimatePresence>
+            {dropdownOpen && (
+              <DropdownMenuContent
+                align="end"
+                className="min-w-56 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                asChild
+                forceMount
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  <DropdownMenuLabel className="theme-transition">
+                    <div className="flex items-center text-lg gap-2 theme-transition">
+                      <Avatar className="h-10 w-10 theme-transition">
+                        <AvatarImage
+                          src={user?.avatar}
+                          alt={user?.name || user?.email || "User"}
+                        />
+                        <AvatarFallback className="text-sm border border-border theme-transition">
+                          {user?.name
+                            ? user.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase()
+                            : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col theme-transition">
+                        <span className="font-medium text-sm theme-transition">
+                          {user?.name || "User"}
+                        </span>
+                        <span className="text-xs text-muted-foreground theme-transition">
+                          {user?.email}
+                        </span>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="theme-transition" />
+                  <DropdownMenuItem
+                    onClick={toggleTheme}
+                    className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground theme-transition"
+                    aria-label={
+                      theme === "dark"
+                        ? "Switch to light mode"
+                        : "Switch to dark mode"
+                    }
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleTheme();
+                      }
+                    }}
+                  >
+                    {theme === "dark" ? (
+                      <Sun className="h-4 w-4 text-primary theme-transition" />
+                    ) : (
+                      <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
+                    )}
+                    <span className="text-sm theme-transition">
+                      {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="text-destructive focus:text-destructive cursor-pointer theme-transition"
+                    aria-label="Logout"
+                  >
+                    Log out
+                  </DropdownMenuItem>
+                </motion.div>
+              </DropdownMenuContent>
+            )}
+          </AnimatePresence>
         </DropdownMenu>
       </div>
     </nav>

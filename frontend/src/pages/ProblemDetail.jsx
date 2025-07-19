@@ -5,6 +5,8 @@ import { problemsAPI, problemDetailsAPI, testCasesAPI } from "@/utils/api";
 import TopNavbar from "@/components/top-navbar";
 import ProblemDescription from "@/components/problem-description";
 import CodeEditorPanel from "@/components/code-editor-panel";
+import { ProblemsSidebar } from "@/components/problems-sidebar";
+import { ProblemsSidebarProvider } from "@/components/problems-sidebar-context";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -14,6 +16,8 @@ export default function ProblemDetailPage() {
   const [problemDetails, setProblemDetails] = useState(null);
   const [testcases, setTestcases] = useState([]);
   const [error, setError] = useState("");
+  const [allProblems, setAllProblems] = useState([]);
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(-1);
   const codeEditorRef = useRef();
 
   useEffect(() => {
@@ -21,6 +25,28 @@ export default function ProblemDetailPage() {
       navigate("/signin");
     }
   }, [authLoading, isAuthenticated, navigate]);
+
+  // Fetch all problems for navigation
+  useEffect(() => {
+    const fetchAllProblems = async () => {
+      try {
+        const problems = await problemsAPI.getAll();
+        setAllProblems(problems);
+      } catch (error) {
+        console.error("Failed to fetch all problems:", error);
+      }
+    };
+
+    fetchAllProblems();
+  }, []);
+
+  // Find current problem index when problems and current id are available
+  useEffect(() => {
+    if (allProblems.length > 0 && id) {
+      const index = allProblems.findIndex((p) => p._id === id);
+      setCurrentProblemIndex(index);
+    }
+  }, [allProblems, id]);
 
   useEffect(() => {
     if (!id) return;
@@ -55,6 +81,25 @@ export default function ProblemDetailPage() {
 
     fetchProblemData();
   }, [id]);
+
+  // Navigation handlers
+  const handlePrevious = () => {
+    if (currentProblemIndex > 0) {
+      const previousProblem = allProblems[currentProblemIndex - 1];
+      navigate(`/problems/${previousProblem._id}`);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentProblemIndex < allProblems.length - 1) {
+      const nextProblem = allProblems[currentProblemIndex + 1];
+      navigate(`/problems/${nextProblem._id}`);
+    }
+  };
+
+  const canGoPrevious = currentProblemIndex > 0;
+  const canGoNext =
+    currentProblemIndex >= 0 && currentProblemIndex < allProblems.length - 1;
 
   if (authLoading) {
     return (
@@ -98,22 +143,29 @@ export default function ProblemDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col theme-transition">
-      <TopNavbar
-        onRun={() => codeEditorRef.current?.run()}
-        onSubmit={() => codeEditorRef.current?.submit()}
-        codeEditorRef={codeEditorRef}
-      />
-      <div className="flex flex-1 overflow-hidden flex-col lg:flex-row theme-transition">
-        {/* Left Panel: Problem Description */}
-        <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar border-b lg:border-b-0 lg:border-r border-border bg-background theme-transition">
-          <ProblemDescription problem={combinedProblem} />
-        </div>
-        {/* Right Panel: Code Editor and Test Cases */}
-        <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar bg-card theme-transition">
-          <CodeEditorPanel ref={codeEditorRef} problem={combinedProblem} />
+    <ProblemsSidebarProvider>
+      <ProblemsSidebar />
+      <div className="min-h-screen bg-background text-foreground flex flex-col theme-transition">
+        <TopNavbar
+          onRun={() => codeEditorRef.current?.run()}
+          onSubmit={() => codeEditorRef.current?.submit()}
+          codeEditorRef={codeEditorRef}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          canGoPrevious={canGoPrevious}
+          canGoNext={canGoNext}
+        />
+        <div className="flex flex-1 overflow-hidden flex-col lg:flex-row theme-transition">
+          {/* Left Panel: Problem Description */}
+          <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar border-b lg:border-b-0 lg:border-r border-border bg-background theme-transition">
+            <ProblemDescription problem={combinedProblem} />
+          </div>
+          {/* Right Panel: Code Editor and Test Cases */}
+          <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar bg-card theme-transition">
+            <CodeEditorPanel ref={codeEditorRef} problem={combinedProblem} />
+          </div>
         </div>
       </div>
-    </div>
+    </ProblemsSidebarProvider>
   );
 }
