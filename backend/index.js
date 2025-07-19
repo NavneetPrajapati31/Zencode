@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const databaseManager = require("./config/database");
 const authRoutes = require("./routes/auth");
-const protectedRoutes = require("./routes/protected");
+const profileRoutes = require("./routes/profile");
 const problemRoutes = require("./routes/problem");
 const submissionRoutes = require("./routes/submission");
 const testcaseRoutes = require("./routes/testcase");
@@ -130,7 +130,7 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/protected", protectedRoutes);
+app.use("/api/profile", profileRoutes);
 app.use("/api/problems", problemRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/testcases", testcaseRoutes);

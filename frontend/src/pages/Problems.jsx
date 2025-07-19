@@ -140,6 +140,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
 
 export default function ProblemsPage() {
   const { isAuthenticated, user, loading: authLoading } = useAuth();
+  const username = user?.username;
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -259,12 +260,12 @@ export default function ProblemsPage() {
       <div className="max-w-full mx-auto rounded-lg shadow-lg p-4 sm:p-6">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3">
-          <Link to={"/dashboard"}>
+          <Link to={`/profile/${username}`}>
             <Button
               className="font-medium flex items-center gap-2"
               aria-label="back to dashboard"
             >
-              <ChevronLeft className="w-4 h-4" /> Back to Dashboard
+              <ChevronLeft className="w-4 h-4" /> Back to Profile
             </Button>
           </Link>
           <div className="relative flex-grow w-full sm:w-auto">

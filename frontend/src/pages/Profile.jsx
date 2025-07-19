@@ -22,8 +22,10 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Navbar from "@/components/navbar";
+import { useParams } from "react-router-dom";
 
-export default function Dashboard() {
+export default function Profile() {
+  const { username } = useParams();
   const challenges = [
     {
       title: "Two Sum",
@@ -304,7 +306,7 @@ export default function Dashboard() {
         {/* Header */}
         <div className="space-y-1">
           <h1 className="text-2xl md:text-3xl font-bold text-primary">
-            Good morning, James
+            Profile: {username}
           </h1>
           <p className="text-muted-foreground">
             Ready to tackle today's coding challenges?

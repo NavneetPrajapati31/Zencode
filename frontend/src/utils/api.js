@@ -128,9 +128,9 @@ export const submissionsAPI = {
     }),
 };
 
-// Protected API calls (for user info, etc.)
-export const protectedAPI = {
-  getProtected: () => apiCall("/protected"),
+// Profile API calls
+export const profileAPI = {
+  getProfile: (username) => apiCall(`/profile/${username}`),
 };
 
 // Compiler API calls

@@ -4,7 +4,7 @@ import { AuthContext } from "@/components/auth-context";
 import ProfileCompletionModal from "@/components/profile-completion-modal";
 
 const OAuthCallback = () => {
-  const { login } = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [token, setToken] = useState("");
@@ -38,13 +38,20 @@ const OAuthCallback = () => {
       (async () => {
         try {
           await login(t);
-          navigate("/dashboard");
+          // Navigation will happen in the next useEffect
         } catch {
           navigate("/signin");
         }
       })();
     }
   }, [login, navigate]);
+
+  // Navigate to profile after login when user is set
+  useEffect(() => {
+    if (user && user.username) {
+      navigate(`/profile/${user.username}`);
+    }
+  }, [user, navigate]);
 
   const handleProfileInputChange = (e) => {
     const { name, value } = e.target;
@@ -74,7 +81,7 @@ const OAuthCallback = () => {
       if (!res.ok) throw new Error(data.message || "Profile completion failed");
       await login(data.token);
       setShowProfileModal(false);
-      navigate("/dashboard");
+      // Navigation will happen in the next useEffect
     } catch (err) {
       setError(err.message);
     } finally {

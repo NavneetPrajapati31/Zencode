@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { protectedAPI } from "@/utils/api";
+import { profileAPI } from "@/utils/api";
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
@@ -19,19 +19,15 @@ export function AuthProvider({ children }) {
 
   const fetchUserProfile = async () => {
     try {
-      const userData = await protectedAPI.getProtected();
-      // Ensure role is present, fallback to JWT decode if not
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No token");
+      const decoded = jwtDecode(token);
+      const username = decoded.username;
+      if (!username) throw new Error("No username in token");
+      const userData = await profileAPI.getProfile(username);
       let user = userData.user || null;
-      if (user && !user.role) {
-        const token = localStorage.getItem("token");
-        if (token) {
-          try {
-            const decoded = jwtDecode(token);
-            user = { ...user, role: decoded.role };
-          } catch {
-            // Ignore decode errors, role will be missing
-          }
-        }
+      if (user && !user.role && decoded.role) {
+        user = { ...user, role: decoded.role };
       }
       setUser(user);
       console.log("[Auth] User loaded from backend:", userData.user);

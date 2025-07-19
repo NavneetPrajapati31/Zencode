@@ -6,7 +6,7 @@ import SignUp from "./pages/SignUp";
 import ProblemsPage from "./pages/Problems";
 import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
-import Dashboard from "./pages/DashboardV2";
+import Profile from "./pages/Profile";
 import OAuthCallback from "./pages/OAuthCallback";
 import LeaderboardPage from "./pages/Leaderboard";
 import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
@@ -24,7 +24,7 @@ function AppContent() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile/:username" element={<Profile />} />
           <Route path="/problems" element={<ProblemsPage />} />
           <Route path="/problems/:id" element={<ProblemDetail />} />
           <Route path="/compiler" element={<CodeRunnerPage />} />
