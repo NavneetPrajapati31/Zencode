@@ -174,7 +174,8 @@ export default function TopNavbar({
 
       <div className="flex items-center gap-2">
         <button
-          className="bg-accent text-muted-foreground border-none px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+          className="bg-accent text-muted-foreground border-none px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer
+          hover:bg-muted disabled:opacity-60 theme-transition"
           onClick={handleRun}
           aria-label="Run code"
           disabled={isRunning}
@@ -187,7 +188,7 @@ export default function TopNavbar({
           <span className="text-sm font-medium">Run</span>
         </button>
         <button
-          className="bg-green-600/20 text-green-500 px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60"
+          className="bg-green-600/20 text-green-500 px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer hover:bg-green-500/30 disabled:opacity-60"
           onClick={handleSubmit}
           aria-label="Submit code"
           disabled={isSubmitting}
@@ -238,11 +239,13 @@ export default function TopNavbar({
                 aria-label="Window controls"
                 tabIndex={0}
               >
-                <div className="flex space-x-2">
+                <div
+                  className="flex space-x-2 cursor-pointer"
+                  onClick={handleCloseModal}
+                >
                   <span
                     className="w-2.5 h-2.5 rounded-full bg-red-500 theme-transition-fast"
                     aria-label="Close"
-                    onClick={handleCloseModal}
                   />
                   <span
                     className="w-2.5 h-2.5 rounded-full bg-yellow-500 theme-transition-fast"
@@ -333,7 +336,7 @@ export default function TopNavbar({
         <Button
           variant="ghost"
           size="icon"
-          className="theme-transition-fast"
+          className="theme-transition-fast cursor-pointer"
           aria-label="Settings"
           tabIndex={0}
           onClick={handleOpenSettingsModal}
@@ -374,7 +377,7 @@ export default function TopNavbar({
             {dropdownOpen && (
               <DropdownMenuContent
                 align="end"
-                className="min-w-56 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                className="min-w-56 mt-2 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
                 asChild
                 forceMount
               >

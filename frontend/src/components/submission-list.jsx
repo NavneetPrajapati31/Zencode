@@ -63,7 +63,7 @@ export default function SubmissionList({ problemId, refreshKey }) {
       {loading ? (
         <div className="text-muted-foreground">Loading submissions...</div>
       ) : submissions.length === 0 ? (
-        <div className="text-muted-foreground">No submissions yet.</div>
+        <div className="text-muted-foreground p-8">No submissions yet.</div>
       ) : selectedId ? (
         <div className="bg-card border border-border rounded-lg p-0 overflow-x-auto no-scrollbar h-full max-h-[78vh] theme-transition">
           <div

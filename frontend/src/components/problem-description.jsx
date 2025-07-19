@@ -245,8 +245,7 @@ export default function ProblemDescription({ problem }) {
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  variant={"outline"}
-                  className="flex items-center gap-1"
+                  className="bg-accent text-muted-foreground flex items-center gap-1 hover:bg-muted shadow-none theme-transition"
                   onClick={() => handleEdit(problem)}
                   aria-label="Edit problem"
                 >
@@ -254,8 +253,7 @@ export default function ProblemDescription({ problem }) {
                 </Button>
                 <Button
                   size="sm"
-                  variant={"outline"}
-                  className="flex items-center gap-1 text-destructive hover:text-destructive"
+                  className="bg-accent flex items-center gap-1 text-destructive hover:text-destructive hover:bg-destructive/20 theme-transition shadow-none"
                   onClick={() => setDeleteId(problem._id)}
                   aria-label="Delete problem"
                 >
