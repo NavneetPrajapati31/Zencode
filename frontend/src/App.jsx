@@ -8,6 +8,7 @@ import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
 import Dashboard from "./pages/DashboardV2";
 import OAuthCallback from "./pages/OAuthCallback";
+import LeaderboardPage from "./pages/Leaderboard";
 import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
 import { useTheme } from "./components/theme-context-utils";
 
@@ -28,6 +29,7 @@ function AppContent() {
           <Route path="/problems/:id" element={<ProblemDetail />} />
           <Route path="/compiler" element={<CodeRunnerPage />} />
           <Route path="/oauth/callback" element={<OAuthCallback />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Routes>
       </BrowserRouter>
     </div>
