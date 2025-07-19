@@ -9,10 +9,10 @@ export default function Footer() {
         <div className="flex flex-col items-center">
           <a
             href="#"
-            className="flex items-center gap-2 text-2xl font-bold text-primary mb-4 theme-transition"
+            className="flex items-center gap-2 text-lg font-bold text-primary mb-4 theme-transition"
           >
             {/* <Code className="h-7 w-7" /> */}
-            <RiFocus2Line className="h-10 w-10" />
+            <RiFocus2Line className="h-8 w-8" />
             {/* <svg
               width="36"
               height="36"
@@ -48,7 +48,7 @@ export default function Footer() {
             </svg> */}
             Zencode
           </a>
-          <p className="text-muted-foreground max-w-xs theme-transition">
+          <p className="text-muted-foreground text-sm max-w-sm theme-transition">
             Your calm, distraction-free platform for deep coding and skill
             improvement.
           </p>
@@ -56,10 +56,10 @@ export default function Footer() {
 
         {/* Navigation Links */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold text-foreground mb-4 theme-transition">
+          <h3 className="text-md font-semibold text-foreground mb-4 theme-transition">
             Quick Links
           </h3>
-          <ul className="space-y-2 text-muted-foreground">
+          <ul className="space-y-2 text-muted-foreground text-sm">
             <li>
               <a
                 href="#features"
@@ -89,33 +89,33 @@ export default function Footer() {
 
         {/* Social Links */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold text-foreground mb-4 theme-transition">
+          <h3 className="text-md font-semibold text-foreground mb-4 theme-transition">
             Connect With Us
           </h3>
-          <div className="flex justify-center md:justify-start gap-6">
+          <div className="flex justify-center md:justify-start gap-4 text-sm">
             <a
               href="#"
               aria-label="GitHub"
               className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
             >
-              <Github className="h-6 w-6" />
+              <Github className="h-5 w-5" />
             </a>
             <a
               href="#"
               aria-label="Discord"
               className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
             >
-              <Discord className="h-6 w-6" />
+              <Discord className="h-5 w-5" />
             </a>
             <a
               href="#"
               aria-label="Twitter"
               className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
             >
-              <Twitter className="h-6 w-6" />
+              <Twitter className="h-5 w-5" />
             </a>
           </div>
-          <p className="text-muted-foreground mt-8 theme-transition">
+          <p className="text-sm text-muted-foreground mt-8 theme-transition">
             &copy; {new Date().getFullYear()} Zencode. All rights reserved.
           </p>
         </div>

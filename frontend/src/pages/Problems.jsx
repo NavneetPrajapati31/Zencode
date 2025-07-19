@@ -256,24 +256,24 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground px-4">
-      <div className="max-w-full mx-auto rounded-lg shadow-lg p-4 sm:p-6">
+    <div className="min-h-screen bg-background text-foreground px-4 theme-transition">
+      <div className="max-w-full mx-auto rounded-lg shadow-none px-4 sm:px-6 mb-8 theme-transition">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3 theme-transition">
           <Link to={`/profile/${username}`}>
             <Button
-              className="font-medium flex items-center gap-2"
+              className="bg-card text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 theme-transition"
               aria-label="back to dashboard"
             >
               <ChevronLeft className="w-4 h-4" /> Back to Profile
             </Button>
           </Link>
-          <div className="relative flex-grow w-full sm:w-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <div className="relative flex-grow w-full sm:w-auto theme-transition">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground theme-transition" />
             <Input
               type="text"
               placeholder="Search questions"
-              className="pl-10 pr-4 py-2 rounded-md bg-background border border-muted text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent w-full"
+              className="pl-10 pr-4 py-2 rounded-md !bg-card border border-border !text-card-foreground placeholder:text-muted-foreground !focus:ring-0 focus:border-transparent w-full theme-transition"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search problems"
@@ -281,7 +281,7 @@ export default function ProblemsPage() {
           </div>
           {isAuthenticated && user?.role === "admin" && (
             <Button
-              className="font-medium flex items-center gap-2"
+              className="bg-card text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 theme-transition"
               onClick={() => {
                 setEditProblem(null);
                 setShowModal(true);
@@ -298,7 +298,7 @@ export default function ProblemsPage() {
             return (
               <Card
                 key={problem._id}
-                className="flex flex-row items-center justify-between p-4 rounded-md cursor-pointer transition-colors duration-200 bg-card border border-border focus-within:ring-0 focus-within:outline-0"
+                className="flex flex-row items-center justify-between p-4 rounded-md cursor-pointer bg-card border border-border focus-within:ring-0 focus-within:outline-0 theme-transition hover:bg-accent/50 shadow-none"
               >
                 <Link
                   to={`/problems/${problem._id}`}
@@ -325,20 +325,19 @@ export default function ProblemsPage() {
                       className={`text-sm font-semibold ${getDifficultyColor(problem.difficulty)}`}
                     >
                       {problem.difficulty === "Medium"
-                        ? "Med."
+                        ? "Medium"
                         : problem.difficulty}
                     </span>
-                    <ProgressBar />
+                    {/* <ProgressBar /> */}
                   </div>
                 </Link>
 
                 {/* Author controls */}
                 {isAuthenticated && user?.role === "admin" && (
-                  <div className="flex gap-2 ml-4">
+                  <div className="flex gap-2 ml-0">
                     <Button
                       size="sm"
-                      variant={"outline"}
-                      className="flex items-center gap-1"
+                      className="bg-accent text-muted-foreground flex items-center gap-1 hover:bg-muted shadow-none theme-transition"
                       onClick={() => handleEdit(problem)}
                       aria-label="Edit problem"
                     >
@@ -346,8 +345,7 @@ export default function ProblemsPage() {
                     </Button>
                     <Button
                       size="sm"
-                      variant={"outline"}
-                      className="flex items-center gap-1 text-destructive hover:text-destructive"
+                      className="bg-accent flex items-center gap-1 text-destructive hover:text-destructive hover:bg-destructive/20 theme-transition shadow-none"
                       onClick={() => setDeleteId(problem._id)}
                       aria-label="Delete problem"
                     >

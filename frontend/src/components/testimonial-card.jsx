@@ -16,7 +16,7 @@ export default function TestimonialCard({
         <p className="text-muted-foreground text-left !text-sm italic mb-4 theme-transition">
           "{quote}"
         </p>
-        <p className="text-primary !text-sm font-semibold text-left theme-transition">
+        <p className="text-foreground !text-sm font-semibold text-left theme-transition">
           - {author}
         </p>
       </CardContent>

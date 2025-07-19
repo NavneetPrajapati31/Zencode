@@ -55,7 +55,7 @@ export default function LandingPage() {
                 <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-4 theme-transition">
                   01 Purpose
                 </span>
-                <p className="font-poppins !text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground theme-transition">
+                <p className="!text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground theme-transition">
                   Zencode: Where Code Meets{" "}
                   <span className="text-primary">Focus</span>
                 </p>
@@ -80,7 +80,7 @@ export default function LandingPage() {
           className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary theme-transition">
+            <h2 className="!text-2xl !md:text-4xl font-semibold text-center mb-12 text-foreground theme-transition">
               Features Designed for Focus
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -130,10 +130,10 @@ export default function LandingPage() {
           className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
           <div className="max-w-6xl mx-auto text-center">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-4 text-primary theme-transition">
+            <h2 className="!text-2xl !md:text-4xl font-semibold mb-4 text-foreground theme-transition">
               See Your Progress Unfold
             </h2>
-            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto theme-transition">
+            <p className="text-md text-muted-foreground mb-12 max-w-2xl mx-auto theme-transition">
               Our intuitive dashboard provides clear insights into your coding
               habits and skill development.
             </p>
@@ -153,7 +153,7 @@ export default function LandingPage() {
           className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary theme-transition">
+            <h2 className="!text-2xl !md:text-4xl font-semibold text-center mb-12 text-foreground theme-transition">
               What Developers Are Saying
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -184,15 +184,15 @@ export default function LandingPage() {
         {/* CTA Section */}
         <section className="py-16 md:py-24 px-4 bg-background text-center theme-transition">
           <div className="!max-w-3xl mx-auto">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-6 text-primary theme-transition">
+            <h2 className="!text-2xl !md:text-4xl font-semibold mb-6 text-foreground theme-transition">
               Ready to Achieve Deep Work?
             </h2>
-            <p className="!text-lg text-muted-foreground mb-8 theme-transition">
+            <p className="!text-md text-muted-foreground mb-8 theme-transition">
               Join Zencode today and experience a new level of coding focus and
               productivity.
             </p>
             <Link to={"/problems"}>
-              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-lg !text-md shadow-lg theme-transition-fast">
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-lg !text-md shadow-lg theme-transition">
                 Start Coding Now
               </Button>
             </Link>

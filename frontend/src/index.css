@@ -317,7 +317,8 @@ html {
 /* Base layer for shadcn/ui CSS variables (for light mode) */
 @layer base {
   :root {
-    --background: oklch(1 0 0);
+    /* --background: oklch(1 0 0); */
+    --background: #ffffff;
     --foreground: oklch(0.145 0 0);
     --card: oklch(0.985 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -471,11 +472,6 @@ html {
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-}
-
-/* Apply global background and text colors */
-body {
-  @apply font-inter bg-background text-foreground;
 }
 
 /* Monospace override for prose containers */

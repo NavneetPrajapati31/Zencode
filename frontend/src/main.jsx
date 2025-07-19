@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { AuthProvider } from "@/components/auth-context";
 import ThemeProvider from "@/components/theme-context";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/navbar-v2";
 import Footer from "@/components/footer";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import { useMemo } from "react";
@@ -21,7 +21,7 @@ const RootLayout = () => {
   );
 
   return (
-    <div className="font-inter min-h-screen bg-background text-foreground">
+    <div className="font-inter min-h-screen bg-background text-foreground theme-transition">
       <ThemeProvider>
         <AuthProvider>
           {!hideNavFooter && <Navbar />}
