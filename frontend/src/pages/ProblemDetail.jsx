@@ -58,21 +58,21 @@ export default function ProblemDetailPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground theme-transition">
         Loading problem...
       </div>
     );
   }
   if (error) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center text-destructive">
+      <div className="min-h-screen bg-background flex items-center justify-center text-destructive theme-transition">
         {error}
       </div>
     );
   }
   if (!problem) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground theme-transition">
         Problem not found.
       </div>
     );
@@ -98,19 +98,19 @@ export default function ProblemDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col theme-transition">
       <TopNavbar
         onRun={() => codeEditorRef.current?.run()}
         onSubmit={() => codeEditorRef.current?.submit()}
         codeEditorRef={codeEditorRef}
       />
-      <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
+      <div className="flex flex-1 overflow-hidden flex-col lg:flex-row theme-transition">
         {/* Left Panel: Problem Description */}
-        <div className="w-full lg:w-1/2 overflow-y-auto border-b lg:border-b-0 lg:border-r border-border bg-background">
+        <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar border-b lg:border-b-0 lg:border-r border-border bg-background theme-transition">
           <ProblemDescription problem={combinedProblem} />
         </div>
         {/* Right Panel: Code Editor and Test Cases */}
-        <div className="w-full lg:w-1/2 overflow-y-auto bg-card">
+        <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar bg-card theme-transition">
           <CodeEditorPanel ref={codeEditorRef} problem={combinedProblem} />
         </div>
       </div>

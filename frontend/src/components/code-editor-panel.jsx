@@ -360,19 +360,19 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
 
   // --- UI ---
   return (
-    <div className="flex flex-col h-full bg-background text-foreground rounded-none">
+    <div className="flex flex-col h-full bg-background text-foreground rounded-none theme-transition">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border ">
-        <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-border theme-transition">
+        <div className="flex items-center space-x-2 theme-transition">
           {getFileIcon(language)}
-          <span className="font-medium text-muted-foreground text-sm">
+          <span className="font-medium text-muted-foreground text-sm theme-transition">
             {problem.title || "Code"}
           </span>
         </div>
         <div className="flex items-center space-x-2">
           <div className="relative">
             <button
-              className="text-muted-foreground hover:bg-muted px-2 py-1.5 rounded-md flex items-center space-x-1 text-sm"
+              className="text-muted-foreground hover:bg-muted px-2 py-1.5 rounded-md flex items-center space-x-1 text-sm theme-transition"
               aria-label="Select language"
               tabIndex={0}
               onClick={() => setIsDropdownOpen((v) => !v)}
@@ -380,16 +380,16 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                 e.key === "Enter" && setIsDropdownOpen((v) => !v)
               }
             >
-              <span>{langObj.name}</span>
-              <ChevronDown className="h-4 w-4" />
+              <span className="theme-transition">{langObj.name}</span>
+              <ChevronDown className="h-4 w-4 theme-transition" />
             </button>
             {isDropdownOpen && (
-              <div className="absolute top-full right-0 mt-1 bg-card border border-border text-sm text-foreground rounded-md shadow-none z-10 min-w-[120px]">
+              <div className="absolute top-full right-0 mt-1 bg-card border border-border text-sm text-foreground rounded-md shadow-none z-10 min-w-[120px] theme-transition">
                 {SUPPORTED_LANGUAGES.map((lang) => (
                   <button
                     key={lang.prism}
                     onClick={() => handleLanguageChange(lang.prism)}
-                    className="block w-full text-left px-4 py-2 hover:bg-muted"
+                    className="block w-full text-left px-4 py-2 hover:bg-muted theme-transition"
                   >
                     {lang.name}
                   </button>
@@ -401,12 +401,12 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
       </div>
 
       {/* Editor */}
-      <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 relative bg-background border-b border-border">
-          <div className="absolute inset-0 flex h-full overflow-auto">
+      <div className="flex-1 flex flex-col min-h-0 theme-transition">
+        <div className="flex-1 relative bg-background border-b border-border theme-transition">
+          <div className="absolute inset-0 flex h-full overflow-y-auto no-scrollbar">
             <div className="flex w-full h-full">
               {/* Line Numbers */}
-              <div className="w-auto px-2 h-full flex flex-col text-right text-sm text-muted-foreground py-[14px] select-none">
+              <div className="w-auto px-2 h-full flex flex-col text-right text-sm text-muted-foreground py-[14px] select-none theme-transition">
                 {Array.from({ length: code.split("\n").length || 1 }).map(
                   (_, i) => (
                     <div
@@ -420,9 +420,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                 )}
               </div>
               {/* Code Area */}
-              <div className="flex-1 relative min-w-0 h-full">
-                <div className="p-1 font-mono text-md leading-6 min-h-full text-foreground">
-                  <div ref={editorRootRef} className="h-full">
+              <div className="flex-1 relative min-w-0 h-full theme-transition">
+                <div className="p-1 font-mono text-md leading-6 min-h-full text-foreground theme-transition">
+                  <div ref={editorRootRef} className="h-full theme-transition">
                     <Editor
                       value={code}
                       onValueChange={setCode}
@@ -431,8 +431,8 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       }
                       padding={10}
                       textareaId="codeArea"
-                      textareaClassName="outline-none bg-transparent w-full h-full"
-                      className="min-h-full bg-transparent text-foreground"
+                      textareaClassName="outline-none bg-transparent w-full h-full theme-transition"
+                      className="min-h-full bg-transparent text-foreground theme-transition"
                       aria-label="Code editor"
                       tabIndex={0}
                       onClick={updateCursorPosition}
@@ -446,23 +446,23 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           </div>
         </div>
         {/* Status Bar */}
-        <div className="h-8 flex items-center justify-end px-4 text-xs text-muted-foreground">
-          <span>
+        <div className="h-8 flex items-center justify-end px-4 text-xs text-muted-foreground theme-transition">
+          <span className="theme-transition">
             Ln {cursorPosition.line}, Col {cursorPosition.column}
           </span>
         </div>
       </div>
 
       {/* Tab Content */}
-      <div className="bg-background border-t border-border px-4 py-4 h-1/2 overflow-y-auto">
+      <div className="bg-background border-t border-border px-4 py-4 h-1/2 overflow-y-auto no-scrollbar theme-transition">
         {activeTab === "testcases" && (
           <div>
             {/* Testcase Tabs */}
-            <div className="flex items-center space-x-2 mb-4">
+            <div className="flex items-center space-x-2 mb-4 theme-transition">
               {publicTestcases.map((tc, idx) => (
                 <button
                   key={idx}
-                  className={`text-sm px-5 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-muted text-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                  className={`text-sm px-5 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-muted text-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
                   onClick={() => {
                     setActiveTestcaseType("public");
                     setActiveTestcaseIdx(idx);
@@ -474,9 +474,12 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                 </button>
               ))}
               {customTestcases.map((tc, idx) => (
-                <div key={idx} className="relative flex items-center">
+                <div
+                  key={idx}
+                  className="relative flex items-center theme-transition"
+                >
                   <button
-                    className={`text-sm px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer  ${activeTestcaseType === "custom" && activeTestcaseIdx === idx ? "bg-muted text-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                    className={`text-sm px-4 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition ${activeTestcaseType === "custom" && activeTestcaseIdx === idx ? "bg-muted text-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
                     onClick={() => {
                       setActiveTestcaseType("custom");
                       setActiveTestcaseIdx(idx);
@@ -487,7 +490,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                     Custom {idx + 1}
                   </button>
                   <button
-                    className="absolute -right-1.5 -top-2 text-muted-foreground bg-muted rounded-full px-1.5 hover:cursor-pointer text-sm"
+                    className="absolute -right-1.5 -top-2 text-muted-foreground bg-muted rounded-full px-1.5 hover:cursor-pointer text-sm theme-transition"
                     onClick={() => handleRemoveCustomTestcase(idx)}
                     aria-label="Remove custom testcase"
                   >
@@ -497,7 +500,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               ))}
               {/* Add (+) tab */}
               <button
-                className={`text-sm px-3 py-1 rounded font-bold bg-card text-muted-foreground hover:bg-muted focus:outline-none`}
+                className={`text-sm px-3 py-1 rounded font-bold bg-card text-muted-foreground hover:bg-muted focus:outline-none theme-transition`}
                 onClick={() => {
                   setActiveTestcaseType("add");
                   setActiveTestcaseIdx(-1);
@@ -511,18 +514,20 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
             {/* Testcase Details */}
             {activeTestcaseType === "public" &&
             publicTestcases[activeTestcaseIdx] ? (
-              <div className="space-y-3 text-left">
-                <div>
-                  <span className="text-muted-foreground text-sm">Input:</span>
-                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap text-left min-h-8">
+              <div className="space-y-3 text-left theme-transition">
+                <div className="theme-transition">
+                  <span className="text-muted-foreground text-sm theme-transition">
+                    Input:
+                  </span>
+                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap text-left min-h-8 theme-transition">
                     {publicTestcases[activeTestcaseIdx].input}
                   </div>
                 </div>
-                <div>
-                  <span className="text-muted-foreground text-sm">
+                <div className="theme-transition">
+                  <span className="text-muted-foreground text-sm theme-transition">
                     Expected Output:
                   </span>
-                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap">
+                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap theme-transition">
                     {publicTestcases[activeTestcaseIdx].output}
                   </div>
                 </div>
@@ -534,27 +539,27 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                 )} */}
                 {/* Show run result for this testcase if available */}
                 {runResults[activeTestcaseIdx] && (
-                  <div className="space-y-1">
-                    <div>
-                      <span className="text-muted-foreground text-sm">
+                  <div className="space-y-1 theme-transition">
+                    <div className="theme-transition">
+                      <span className="text-muted-foreground text-sm theme-transition">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8">
+                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8 theme-transition">
                         {runResults[activeTestcaseIdx].output}
                       </div>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground text-sm">
+                    <div className="theme-transition">
+                      <span className="text-muted-foreground text-sm theme-transition">
                         Verdict:
                       </span>
                       <span
-                        className={`ml-2 font-semibold text-sm ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-500" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-warning"}`}
+                        className={`ml-2 font-semibold text-sm theme-transition ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-500" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-warning"}`}
                       >
                         {runResults[activeTestcaseIdx].verdict}
                       </span>
                     </div>
                     {runResults[activeTestcaseIdx].error && (
-                      <div className="text-xs text-destructive mt-1">
+                      <div className="text-xs text-destructive mt-1 theme-transition">
                         Error: {runResults[activeTestcaseIdx].error}
                       </div>
                     )}
@@ -564,26 +569,28 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
             ) : null}
             {activeTestcaseType === "custom" &&
             customTestcases[activeTestcaseIdx] ? (
-              <div className="space-y-3 text-left">
-                <div>
-                  <span className="text-muted-foreground">Input:</span>
+              <div className="space-y-3 text-left theme-transition">
+                <div className="theme-transition">
+                  <span className="text-muted-foreground theme-transition">
+                    Input:
+                  </span>
                   {customEditIdx === activeTestcaseIdx ? (
                     <textarea
-                      className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-xs border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-xs border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
                       value={customEditInput}
                       onChange={(e) => setCustomEditInput(e.target.value)}
                     />
                   ) : (
-                    <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8">
+                    <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8 theme-transition">
                       {customTestcases[activeTestcaseIdx].input}
                     </div>
                   )}
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 theme-transition">
                   {customEditIdx === activeTestcaseIdx ? (
                     <>
                       <button
-                        className="px-3 py-1 rounded bg-primary/20 text-primary text-xs"
+                        className="px-3 py-1 rounded bg-primary/20 text-primary text-xs theme-transition"
                         onClick={() =>
                           handleSaveEditCustomTestcase(activeTestcaseIdx)
                         }
@@ -591,7 +598,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                         Save
                       </button>
                       <button
-                        className="px-3 py-1 rounded bg-muted text-muted-foreground text-xs"
+                        className="px-3 py-1 rounded bg-muted text-muted-foreground text-xs theme-transition"
                         onClick={() => setCustomEditIdx(null)}
                       >
                         Cancel
@@ -599,7 +606,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                     </>
                   ) : (
                     <button
-                      className="px-3 py-1 rounded bg-muted text-muted-foreground text-xs hover:cursor-pointer"
+                      className="px-3 py-1 rounded bg-muted text-muted-foreground text-xs hover:cursor-pointer theme-transition"
                       onClick={() =>
                         handleEditCustomTestcase(activeTestcaseIdx)
                       }
@@ -629,18 +636,20 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               </div>
             ) : null}
             {activeTestcaseType === "add" && (
-              <div className="space-y-3 text-left">
-                <div>
-                  <span className="text-muted-foreground text-sm">Input:</span>
+              <div className="space-y-3 text-left theme-transition">
+                <div className="theme-transition">
+                  <span className="text-muted-foreground text-sm theme-transition">
+                    Input:
+                  </span>
                   <textarea
-                    className="w-full min-h-[60px] bg-muted text-muted-foreground rounded p-2 font-mono text-sm border border-border focus:outline-none mt-2"
+                    className="w-full min-h-[60px] bg-muted text-muted-foreground rounded p-2 font-mono text-sm border border-border focus:outline-none mt-2 theme-transition"
                     value={customInputDraft}
                     onChange={(e) => setCustomInputDraft(e.target.value)}
                     placeholder="Enter custom input..."
                   />
                 </div>
                 <button
-                  className="px-4 py-1 rounded bg-primary/20 text-primary text-xs hover:cursor-pointer"
+                  className="px-4 py-1 rounded bg-primary/20 text-primary text-xs hover:cursor-pointer theme-transition"
                   onClick={handleAddCustomTestcase}
                   disabled={!customInputDraft.trim()}
                 >
@@ -651,31 +660,31 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           </div>
         )}
         {activeTab === "custom" && (
-          <div>
+          <div className="theme-transition">
             <label
               htmlFor="custom-input"
-              className="block text-xs text-muted-foreground mb-1"
+              className="block text-xs text-muted-foreground mb-1 theme-transition"
             >
               Custom Input (stdin):
             </label>
             <textarea
               id="custom-input"
-              className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-xs border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-xs border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
               value={customInputDraft}
               onChange={(e) => setCustomInputDraft(e.target.value)}
               aria-label="Custom input"
             />
-            <div className="text-xs text-muted-foreground mt-1">
+            <div className="text-xs text-muted-foreground mt-1 theme-transition">
               This input will be included in the next Run.
             </div>
           </div>
         )}
         {activeTab === "output" && (
-          <div>
-            <div className="text-xs text-muted-foreground mb-2">
+          <div className="theme-transition">
+            <div className="text-xs text-muted-foreground mb-2 theme-transition">
               Last Run Output:
             </div>
-            <pre className="bg-muted text-foreground font-mono text-xs rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-border">
+            <pre className="bg-muted text-foreground font-mono text-xs rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-border theme-transition">
               {runResults.length > 0
                 ? runResults
                     .map(
@@ -688,16 +697,24 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           </div>
         )}
         {activeTab === "submit" && (
-          <div>
+          <div className="theme-transition">
             <div className="overflow-x-auto">
-              <table className="min-w-full text-xs border border-border rounded text-foreground">
+              <table className="min-w-full text-xs border border-border rounded text-foreground theme-transition">
                 <thead>
-                  <tr className="bg-muted text-foreground">
-                    <th className="px-2 py-1 text-left">#</th>
-                    <th className="px-2 py-1 text-left">Input</th>
-                    <th className="px-2 py-1 text-left">Expected</th>
-                    <th className="px-2 py-1 text-left">Output</th>
-                    <th className="px-2 py-1 text-left">Verdict</th>
+                  <tr className="bg-muted text-foreground theme-transition">
+                    <th className="px-2 py-1 text-left theme-transition">#</th>
+                    <th className="px-2 py-1 text-left theme-transition">
+                      Input
+                    </th>
+                    <th className="px-2 py-1 text-left theme-transition">
+                      Expected
+                    </th>
+                    <th className="px-2 py-1 text-left theme-transition">
+                      Output
+                    </th>
+                    <th className="px-2 py-1 text-left theme-transition">
+                      Verdict
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -705,17 +722,20 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                     <tr>
                       <td
                         colSpan={5}
-                        className="text-center text-muted-foreground py-4"
+                        className="text-center text-muted-foreground py-4 theme-transition"
                       >
                         No submission yet. Click Submit to judge your code.
                       </td>
                     </tr>
                   )}
                   {submitResults.map((res, idx) => (
-                    <tr key={idx} className="border-t border-border">
-                      <td className="px-2 py-1">
+                    <tr
+                      key={idx}
+                      className="border-t border-border theme-transition"
+                    >
+                      <td className="px-2 py-1 theme-transition">
                         {res.hidden ? (
-                          <span className="italic text-muted-foreground">
+                          <span className="italic text-muted-foreground theme-transition">
                             Hidden
                           </span>
                         ) : (
@@ -725,42 +745,44 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                             .length
                         )}
                       </td>
-                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs">
+                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs theme-transition">
                         {res.hidden ? (
-                          <span className="italic text-muted-foreground">
+                          <span className="italic text-muted-foreground theme-transition">
                             Hidden
                           </span>
                         ) : (
                           res.input
                         )}
                       </td>
-                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs">
+                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs theme-transition">
                         {res.hidden ? (
-                          <span className="italic text-muted-foreground">
+                          <span className="italic text-muted-foreground theme-transition">
                             Hidden
                           </span>
                         ) : (
                           res.expected
                         )}
                       </td>
-                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs">
+                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs theme-transition">
                         {res.output}
                       </td>
-                      <td className="px-2 py-1">
+                      <td className="px-2 py-1 theme-transition">
                         {res.verdict === "Passed" && (
-                          <span className="text-green-500 flex items-center">
-                            <CheckCircle2 className="w-4 h-4 mr-1" />
+                          <span className="text-green-500 flex items-center theme-transition">
+                            <CheckCircle2 className="w-4 h-4 mr-1 theme-transition" />
                             Passed
                           </span>
                         )}
                         {res.verdict === "Failed" && (
-                          <span className="text-destructive flex items-center">
-                            <XCircle className="w-4 h-4 mr-1" />
+                          <span className="text-destructive flex items-center theme-transition">
+                            <XCircle className="w-4 h-4 mr-1 theme-transition" />
                             Failed
                           </span>
                         )}
                         {res.verdict === "Error" && (
-                          <span className="text-warning">Error</span>
+                          <span className="text-warning theme-transition">
+                            Error
+                          </span>
                         )}
                       </td>
                     </tr>
@@ -769,30 +791,30 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               </table>
             </div>
             {submitResults.length > 0 && (
-              <div className="mt-2 text-xs">
-                <span className="font-semibold">Summary:</span>{" "}
+              <div className="mt-2 text-xs theme-transition">
+                <span className="font-semibold theme-transition">Summary:</span>{" "}
                 {submitResults.filter((r) => r.verdict === "Passed").length} /{" "}
                 {submitResults.length} testcases passed.
                 {submitResults.every((r) => r.verdict === "Passed") && (
-                  <span className="ml-2 text-success font-semibold">
+                  <span className="ml-2 text-success font-semibold theme-transition">
                     Accepted!
                   </span>
                 )}
                 {submitResults.some(
                   (r) => r.verdict === "Failed" || r.verdict === "Error"
                 ) && (
-                  <span className="ml-2 text-destructive font-semibold">
+                  <span className="ml-2 text-destructive font-semibold theme-transition">
                     Not Accepted
                   </span>
                 )}
               </div>
             )}
             {submitResults.some((r) => r.error) && (
-              <div className="mt-2 text-destructive text-xs">
+              <div className="mt-2 text-destructive text-xs theme-transition">
                 {submitResults
                   .filter((r) => r.error)
                   .map((r, i) => (
-                    <div key={i} className="mb-1">
+                    <div key={i} className="mb-1 theme-transition">
                       <b>Error:</b> {r.error}
                     </div>
                   ))}
@@ -800,7 +822,11 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
             )}
           </div>
         )}
-        {error && <div className="mt-2 text-destructive text-xs">{error}</div>}
+        {error && (
+          <div className="mt-2 text-destructive text-xs theme-transition">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );
