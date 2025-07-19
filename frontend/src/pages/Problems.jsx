@@ -312,10 +312,10 @@ export default function ProblemsPage() {
                     ) : (
                       <span className="h-5 w-5 border-2 border-muted rounded-full shrink-0 inline-block mr-3" />
                     )}
-                    <span className="text-base font-medium text-foreground mr-2 shrink-0">
+                    <span className="text-base font-medium text-foreground mr-2 shrink-0 theme-transition">
                       {idx + 1}.
                     </span>
-                    <span className="text-base font-medium text-foreground truncate min-w-0">
+                    <span className="text-base font-medium text-foreground truncate min-w-0 theme-transition">
                       {problem.name}
                     </span>
                   </div>

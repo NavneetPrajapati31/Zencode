@@ -54,7 +54,6 @@ export default function TopNavbar({
   canGoNext = false,
 }) {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const { toggleSidebar } = useProblemsSidebar();
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +63,7 @@ export default function TopNavbar({
   const [aiReviewError, setAiReviewError] = useState("");
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { theme, toggleTheme, isTransitioning } = useTheme();
 
   const handleRun = async () => {
     setIsRunning(true);
@@ -333,10 +333,38 @@ export default function TopNavbar({
       )}
 
       <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="theme-transition-fast cursor-pointer"
+        {/* Theme Toggler */}
+        <button
+          onClick={toggleTheme}
+          disabled={isTransitioning}
+          aria-label={
+            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+          }
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              toggleTheme();
+            }
+          }}
+          className={`ml-2 p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
+            theme === "dark"
+              ? "bg-accent border border-border"
+              : "bg-card border border-border"
+          } ${isTransitioning ? "opacity-75" : ""}`}
+        >
+          {theme === "dark" ? (
+            <Sun className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <Moon className="h-4 w-4 text-muted-foreground" />
+          )}
+        </button>
+        <button
+          className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
+            theme === "dark"
+              ? "bg-accent border border-border"
+              : "bg-card border border-border"
+          }`}
           aria-label="Settings"
           tabIndex={0}
           onClick={handleOpenSettingsModal}
@@ -347,8 +375,9 @@ export default function TopNavbar({
             }
           }}
         >
-          <Settings className="h-4 w-4" />
-        </Button>
+          <Settings className="mr-2 h-4 w-4" />
+          Settings
+        </button>
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <button
@@ -356,12 +385,12 @@ export default function TopNavbar({
               tabIndex={0}
               aria-label="User menu"
             >
-              <Avatar className="h-9 w-9">
+              <Avatar className="h-8 w-8 theme-transition">
                 <AvatarImage
                   src={user?.avatar}
                   alt={user?.name || user?.email || "User"}
                 />
-                <AvatarFallback className="text-sm border border-border">
+                <AvatarFallback className="text-sm border border-border theme-transition">
                   {user?.name
                     ? user.name
                         .split(" ")
@@ -385,7 +414,10 @@ export default function TopNavbar({
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.92 }}
-                  transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{
+                    duration: 0.32,
+                    ease: [0.4, 0, 0.2, 1],
+                  }}
                 >
                   <DropdownMenuLabel className="theme-transition">
                     <div className="flex items-center text-lg gap-2 theme-transition">
@@ -415,31 +447,31 @@ export default function TopNavbar({
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="theme-transition" />
-                  <DropdownMenuItem
-                    onClick={toggleTheme}
-                    className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground theme-transition"
-                    aria-label={
-                      theme === "dark"
-                        ? "Switch to light mode"
-                        : "Switch to dark mode"
-                    }
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        toggleTheme();
-                      }
-                    }}
-                  >
-                    {theme === "dark" ? (
-                      <Sun className="h-4 w-4 text-primary theme-transition" />
-                    ) : (
-                      <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
-                    )}
-                    <span className="text-sm theme-transition">
-                      {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                    </span>
-                  </DropdownMenuItem>
+                  {/* <DropdownMenuItem
+                        onClick={toggleTheme}
+                        className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground theme-transition"
+                        aria-label={
+                          theme === "dark"
+                            ? "Switch to light mode"
+                            : "Switch to dark mode"
+                        }
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggleTheme();
+                          }
+                        }}
+                      >
+                        {theme === "dark" ? (
+                          <Sun className="h-4 w-4 text-primary theme-transition" />
+                        ) : (
+                          <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
+                        )}
+                        <span className="text-sm theme-transition">
+                          {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                        </span>
+                      </DropdownMenuItem> */}
                   <DropdownMenuItem
                     onClick={logout}
                     className="text-destructive focus:text-destructive cursor-pointer theme-transition"

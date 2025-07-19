@@ -22,11 +22,11 @@ const Avatar = ({ src, alt }) =>
     <img
       src={src}
       alt={alt}
-      className="w-10 h-10 rounded-full object-cover"
+      className="w-10 h-10 rounded-full object-cover theme-transition"
       loading="lazy"
     />
   ) : (
-    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-xl text-muted-foreground">
+    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-xl text-muted-foreground theme-transition">
       <User2 className="w-6 h-6" aria-label="User avatar" />
     </div>
   );
@@ -40,31 +40,31 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
       rank % 2 === 1 ? "bg-accent/70" : "bg-background"
     )}
   >
-    <td className="px-4 py-3 flex items-center gap-3 min-w-[220px]">
+    <td className="px-4 py-3 flex items-center gap-3 min-w-[220px] theme-transition">
       <Avatar src={user.avatar} alt={user.name} />
-      <div className="flex flex-col">
-        <span className="font-semibold text-foreground leading-tight">
+      <div className="flex flex-col gap-0.5 theme-transition">
+        <span className="font-semibold text-sm text-foreground leading-tight theme-transition">
           {user.name}
         </span>
-        <span className="text-xs text-muted-foreground leading-tight">
+        <span className="text-xs text-muted-foreground leading-tight theme-transition">
           {user.handle}
         </span>
       </div>
     </td>
-    <td className="px-4 py-3 text-right font-semibold text-foreground">
+    <td className="px-4 py-3 text-right font-semibold text-foreground theme-transition">
       {user.totalQuestions}
     </td>
-    <td className="px-4 py-3 text-center font-bold min-w-[100px]">
+    <td className="px-4 py-3 text-center font-bold min-w-[100px] theme-transition">
       {isTop3 ? (
         <span
           role="img"
           aria-label={medalIcons[rank].label}
-          className="text-lg align-middle"
+          className="text-lg align-middle theme-transition"
         >
           {medalIcons[rank].icon}
         </span>
       ) : (
-        <span className="text-foreground">#{rank + 1}</span>
+        <span className="text-foreground theme-transition">#{rank + 1}</span>
       )}
     </td>
   </tr>
@@ -132,26 +132,26 @@ const Leaderboard = () => {
 
   return (
     <>
-      <h1 className="!text-2xl font-bold text-center mt-8 mb-2 text-foreground theme-transition font-sans px-2 sm:px-4">
+      <h1 className="!text-2xl font-semibold text-center mt-8 mb-2 text-foreground theme-transition font-sans px-2 sm:px-4">
         Leaderboard
       </h1>
-      <section className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-8">
-        <div className="bg-background rounded-2xl shadow-lg overflow-x-auto border border-border theme-transition">
-          <table className="min-w-full text-left text-sm">
-            <thead className="h-16">
+      <section className="w-full max-w-5xl mx-auto px-2 sm:px-4 py-8 theme-transition">
+        <div className="bg-background rounded-2xl shadow-none overflow-x-auto border border-border theme-transition">
+          <table className="min-w-full text-left text-sm theme-transition">
+            <thead className="h-16 theme-transition">
               <tr className="bg-accent/70 text-muted-foreground theme-transition">
-                <th className="!px-5 py-3 font-semibold text-base">
+                <th className="!px-5 py-3 font-semibold text-sm theme-transition">
                   User Name
                 </th>
-                <th className="!px-5 py-3 font-semibold text-base text-right">
+                <th className="!px-5 py-3 font-semibold text-sm text-right theme-transition">
                   Total Questions
                 </th>
-                <th className="!px-5 py-3 font-semibold text-base text-center">
+                <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
                   Rank
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="theme-transition">
               {data.map((user, idx) => (
                 <LeaderboardRow
                   key={user.handle}
@@ -163,9 +163,9 @@ const Leaderboard = () => {
             </tbody>
           </table>
         </div>
-        <Pagination className="mt-6">
-          <PaginationContent>
-            <PaginationItem>
+        <Pagination className="mt-6 text-muted-foreground theme-transition">
+          <PaginationContent className="theme-transition">
+            <PaginationItem className="theme-transition">
               <PaginationPrevious
                 href="#"
                 onClick={(e) => {
@@ -174,30 +174,32 @@ const Leaderboard = () => {
                 }}
                 aria-disabled={page === 1}
                 tabIndex={page === 1 ? -1 : 0}
+                className="theme-transition"
               />
             </PaginationItem>
             {page > 2 && (
-              <PaginationItem>
+              <PaginationItem className="theme-transition">
                 <PaginationLink
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     handlePageChange(1);
                   }}
+                  className="theme-transition"
                 >
                   1
                 </PaginationLink>
               </PaginationItem>
             )}
             {page > 3 && (
-              <PaginationItem>
-                <PaginationEllipsis />
+              <PaginationItem className="theme-transition">
+                <PaginationEllipsis className="theme-transition" />
               </PaginationItem>
             )}
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .filter((p) => Math.abs(p - page) <= 1)
               .map((p) => (
-                <PaginationItem key={p}>
+                <PaginationItem key={p} className="theme-transition">
                   <PaginationLink
                     href="#"
                     isActive={p === page}
@@ -205,30 +207,32 @@ const Leaderboard = () => {
                       e.preventDefault();
                       handlePageChange(p);
                     }}
+                    className="theme-transition"
                   >
                     {p}
                   </PaginationLink>
                 </PaginationItem>
               ))}
             {page < totalPages - 2 && (
-              <PaginationItem>
-                <PaginationEllipsis />
+              <PaginationItem className="theme-transition">
+                <PaginationEllipsis className="theme-transition" />
               </PaginationItem>
             )}
             {page < totalPages - 1 && (
-              <PaginationItem>
+              <PaginationItem className="theme-transition">
                 <PaginationLink
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     handlePageChange(totalPages);
                   }}
+                  className="theme-transition"
                 >
                   {totalPages}
                 </PaginationLink>
               </PaginationItem>
             )}
-            <PaginationItem>
+            <PaginationItem className="theme-transition">
               <PaginationNext
                 href="#"
                 onClick={(e) => {
@@ -237,6 +241,7 @@ const Leaderboard = () => {
                 }}
                 aria-disabled={page === totalPages}
                 tabIndex={page === totalPages ? -1 : 0}
+                className="theme-transition"
               />
             </PaginationItem>
           </PaginationContent>

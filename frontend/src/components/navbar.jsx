@@ -119,7 +119,7 @@ export default function Navbar({ sticky = false }) {
                   tabIndex={0}
                   aria-label="User menu"
                 >
-                  <Avatar className="h-9 w-9">
+                  <Avatar className="h-8 w-8">
                     <AvatarImage
                       src={user?.avatar}
                       alt={user?.name || user?.email || "User"}

@@ -11,18 +11,20 @@ import OAuthCallback from "./pages/OAuthCallback";
 import LeaderboardPage from "./pages/Leaderboard";
 import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
 import { useTheme } from "./components/theme-context-utils";
+import ProfileRedirect from "./components/profile-redirect";
 
 function AppContent() {
   const { isInitialized } = useTheme();
 
   return (
     <div
-      className={`font-inter min-h-screen bg-background text-foreground ${!isInitialized ? "theme-not-initialized" : ""}`}
+      className={`font-inter min-h-screen bg-background text-foreground theme-transition ${!isInitialized ? "theme-not-initialized" : ""}`}
     >
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/profile" element={<ProfileRedirect />} />
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/problems" element={<ProblemsPage />} />
         <Route path="/problems/:id" element={<ProblemDetail />} />
