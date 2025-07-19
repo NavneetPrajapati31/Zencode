@@ -2,7 +2,7 @@ import React, { createContext, useContext } from "react";
 
 /**
  * @typedef {"light" | "dark"} Theme
- * @typedef {{ theme: Theme; toggleTheme: () => void }} ThemeContextType
+ * @typedef {{ theme: Theme; toggleTheme: () => void; isTransitioning: boolean; isInitialized: boolean }} ThemeContextType
  */
 
 export const THEME_KEY = "zencode-theme";

@@ -3,13 +3,13 @@ import { RiFocus2Line } from "react-icons/ri";
 
 export default function Footer() {
   return (
-    <footer className="bg-background py-12 px-12 border-t border-border">
+    <footer className="bg-background py-12 px-12 border-t border-border theme-transition">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
         {/* Logo and Description */}
         <div className="flex flex-col items-center">
           <a
             href="#"
-            className="flex items-center gap-2 text-2xl font-bold text-primary mb-4"
+            className="flex items-center gap-2 text-2xl font-bold text-primary mb-4 theme-transition"
           >
             {/* <Code className="h-7 w-7" /> */}
             <RiFocus2Line className="h-10 w-10" />
@@ -48,7 +48,7 @@ export default function Footer() {
             </svg> */}
             Zencode
           </a>
-          <p className="text-muted-foreground max-w-xs">
+          <p className="text-muted-foreground max-w-xs theme-transition">
             Your calm, distraction-free platform for deep coding and skill
             improvement.
           </p>
@@ -56,14 +56,14 @@ export default function Footer() {
 
         {/* Navigation Links */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold text-foreground mb-4">
+          <h3 className="text-lg font-semibold text-foreground mb-4 theme-transition">
             Quick Links
           </h3>
           <ul className="space-y-2 text-muted-foreground">
             <li>
               <a
                 href="#features"
-                className="hover:text-primary transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200 theme-transition-fast"
               >
                 Features
               </a>
@@ -71,7 +71,7 @@ export default function Footer() {
             <li>
               <a
                 href="#dashboard"
-                className="hover:text-primary transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200 theme-transition-fast"
               >
                 Dashboard
               </a>
@@ -79,7 +79,7 @@ export default function Footer() {
             <li>
               <a
                 href="#testimonials"
-                className="hover:text-primary transition-colors duration-200"
+                className="hover:text-primary transition-colors duration-200 theme-transition-fast"
               >
                 Testimonials
               </a>
@@ -89,33 +89,33 @@ export default function Footer() {
 
         {/* Social Links */}
         <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold text-foreground mb-4">
+          <h3 className="text-lg font-semibold text-foreground mb-4 theme-transition">
             Connect With Us
           </h3>
           <div className="flex justify-center md:justify-start gap-6">
             <a
               href="#"
               aria-label="GitHub"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
             >
               <Github className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Discord"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
             >
               <Discord className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Twitter"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
             >
               <Twitter className="h-6 w-6" />
             </a>
           </div>
-          <p className="text-muted-foreground mt-8">
+          <p className="text-muted-foreground mt-8 theme-transition">
             &copy; {new Date().getFullYear()} Zencode. All rights reserved.
           </p>
         </div>

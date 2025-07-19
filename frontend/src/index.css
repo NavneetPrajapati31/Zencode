@@ -29,7 +29,7 @@ body {
   }
 }
 
-/* Utility layer for text-wrap: balance (Next.js specific, but good practice) */
+/* Theme Transition Utilities */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -40,6 +40,127 @@ body {
   }
   .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Theme transition utilities - only for theme-dependent properties */
+  .theme-transition {
+    transition:
+      background-color 0.3s ease-in-out,
+      color 0.3s ease-in-out,
+      border-color 0.3s ease-in-out,
+      box-shadow 0.3s ease-in-out;
+  }
+
+  .theme-transition-fast {
+    transition:
+      background-color 0.15s ease-in-out,
+      color 0.15s ease-in-out,
+      border-color 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+  }
+
+  .theme-transition-slow {
+    transition:
+      background-color 0.5s ease-in-out,
+      color 0.5s ease-in-out,
+      border-color 0.5s ease-in-out,
+      box-shadow 0.5s ease-in-out;
+  }
+
+  /* Theme transition utilities that preserve existing transitions */
+  .theme-transition-preserve {
+    transition:
+      background-color 0.3s ease-in-out,
+      color 0.3s ease-in-out,
+      border-color 0.3s ease-in-out,
+      box-shadow 0.3s ease-in-out,
+      transform 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
+  }
+
+  .theme-transition-preserve-fast {
+    transition:
+      background-color 0.15s ease-in-out,
+      color 0.15s ease-in-out,
+      border-color 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out,
+      transform 0.15s ease-in-out,
+      opacity 0.15s ease-in-out;
+  }
+
+  .theme-transition-preserve-slow {
+    transition:
+      background-color 0.5s ease-in-out,
+      color 0.5s ease-in-out,
+      border-color 0.5s ease-in-out,
+      box-shadow 0.5s ease-in-out,
+      transform 0.5s ease-in-out,
+      opacity 0.5s ease-in-out;
+  }
+
+  /* Override for elements with existing transition classes */
+  .theme-transition-override {
+    transition: all 0.3s ease-in-out !important;
+  }
+}
+
+/* Global theme transition styles */
+@layer base {
+  /* Apply smooth transitions to theme-dependent properties only for specific elements */
+
+  /* Prevent transitions during initial load */
+  .theme-not-initialized *,
+  .theme-not-initialized *::before,
+  .theme-not-initialized *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  /* Specific elements that need different transition timing */
+  button,
+  input,
+  select,
+  textarea,
+  [role="button"],
+  [tabindex] {
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
+      box-shadow 0.2s ease-in-out;
+  }
+
+  /* Cards and containers */
+  .card,
+  [class*="card"],
+  [class*="Card"] {
+    transition:
+      background-color 0.3s ease-in-out,
+      border-color 0.3s ease-in-out,
+      box-shadow 0.3s ease-in-out;
+  }
+
+  /* Icons and SVGs */
+  svg,
+  [class*="icon"],
+  [class*="Icon"] {
+    transition:
+      color 0.2s ease-in-out,
+      fill 0.2s ease-in-out,
+      stroke 0.2s ease-in-out;
+  }
+
+  /* Shadows and borders */
+  [class*="shadow"],
+  [class*="border"] {
+    transition:
+      box-shadow 0.3s ease-in-out,
+      border-color 0.3s ease-in-out;
+  }
+
+  /* Ensure hover animations work with theme transitions */
+  [class*="hover:scale"][class*="transition-all"] {
+    transition: all 0.3s ease-in-out !important;
   }
 }
 
@@ -200,28 +321,4 @@ body {
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
 }

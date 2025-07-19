@@ -8,6 +8,17 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Apply theme immediately before any content renders
+      (function () {
+        const theme = localStorage.getItem("zencode-theme") || "dark";
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

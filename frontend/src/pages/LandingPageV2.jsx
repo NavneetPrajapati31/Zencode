@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground font-sans hide-scrollbar">
+    <div className="min-h-screen flex flex-col bg-background text-foreground font-sans hide-scrollbar theme-transition">
       {/* Navbar */}
       <Navbar />
 
@@ -29,42 +29,42 @@ export default function LandingPage() {
         <section className="relative h-[calc(90vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
           <div className="relative z-10 max-w-full mx-auto w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
             {/* Hero Content */}
-            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl p-0 lg:px-0 lg:py-0 rounded-2xl border border-border bg-card hover:scale-105 transition-all duration-300">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl p-0 lg:px-0 lg:py-0 rounded-2xl border border-border bg-card hover:scale-105 transition-all duration-300 theme-transition-override">
               {/* Browser-style header bar INSIDE the card */}
               <div
-                className="w-full h-10 rounded-t-2xl bg-card flex items-center px-6 border-b border-border"
+                className="w-full h-10 rounded-t-2xl bg-card flex items-center px-6 border-b border-border theme-transition"
                 aria-label="Window controls"
                 tabIndex={0}
               >
                 <div className="flex space-x-2">
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-red-500  "
+                    className="w-2.5 h-2.5 rounded-full bg-red-500 theme-transition-fast"
                     aria-label="Close"
                   />
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-yellow-500  "
+                    className="w-2.5 h-2.5 rounded-full bg-yellow-500 theme-transition-fast"
                     aria-label="Minimize"
                   />
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-green-500"
+                    className="w-2.5 h-2.5 rounded-full bg-green-500 theme-transition-fast"
                     aria-label="Maximize"
                   />
                 </div>
               </div>
               <div className="flex flex-col items-center md:items-start text-center md:text-left w-full p-10 lg:px-16 lg:py-12">
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-4 theme-transition">
                   01 Purpose
                 </span>
-                <p className="font-poppins !text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground">
+                <p className="font-poppins !text-3xl md:text-6xl font-bold tracking-tight mb-6 leading-tight text-foreground theme-transition">
                   Zencode: Where Code Meets{" "}
                   <span className="text-primary">Focus</span>
                 </p>
-                <p className="!text-lg !md:text-xl text-muted-foreground mb-8">
+                <p className="!text-lg !md:text-xl text-muted-foreground mb-8 theme-transition">
                   The distraction-free platform that helps you achieve deep work
                   and master your skills.
                 </p>
                 <Link to={"/problems"}>
-                  <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg transition-colors duration-300 group">
+                  <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg theme-transition-fast group">
                     Get Started
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
                   </Button>
@@ -75,9 +75,12 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-16 md:py-24 px-4 bg-background">
+        <section
+          id="features"
+          className="py-16 md:py-24 px-4 bg-background theme-transition"
+        >
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary">
+            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary theme-transition">
               Features Designed for Focus
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -122,16 +125,19 @@ export default function LandingPage() {
         </section>
 
         {/* Progress Dashboard Showcase */}
-        <section id="dashboard" className="py-16 md:py-24 px-4 bg-background">
+        <section
+          id="dashboard"
+          className="py-16 md:py-24 px-4 bg-background theme-transition"
+        >
           <div className="max-w-6xl mx-auto text-center">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-4 text-primary">
+            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-4 text-primary theme-transition">
               See Your Progress Unfold
             </h2>
-            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto theme-transition">
               Our intuitive dashboard provides clear insights into your coding
               habits and skill development.
             </p>
-            <Card className="flex justify-center items-center !border-none shadow-none bg-transparent rounded-xl">
+            <Card className="flex justify-center items-center !border-none shadow-none bg-transparent rounded-xl theme-transition">
               <CardContent className="p-6 md:p-8 max-w-5xl">
                 {/* <ProgressChart /> */}
                 {/* <ChartBarInteractive /> */}
@@ -144,10 +150,10 @@ export default function LandingPage() {
         {/* Testimonials Section */}
         <section
           id="testimonials"
-          className="py-16 md:py-24 px-4 bg-background"
+          className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary">
+            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold text-center mb-12 text-primary theme-transition">
               What Developers Are Saying
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -176,17 +182,17 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 md:py-24 px-4 bg-background text-center">
+        <section className="py-16 md:py-24 px-4 bg-background text-center theme-transition">
           <div className="!max-w-3xl mx-auto">
-            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-6 text-primary">
+            <h2 className="font-poppins !text-3xl !md:text-4xl font-bold mb-6 text-primary theme-transition">
               Ready to Achieve Deep Work?
             </h2>
-            <p className="!text-lg text-muted-foreground mb-8">
+            <p className="!text-lg text-muted-foreground mb-8 theme-transition">
               Join Zencode today and experience a new level of coding focus and
               productivity.
             </p>
             <Link to={"/problems"}>
-              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-lg !text-md shadow-lg transition-colors duration-300">
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-lg !text-md shadow-lg theme-transition-fast">
                 Start Coding Now
               </Button>
             </Link>

@@ -8,10 +8,16 @@ import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
 import Dashboard from "./pages/Dashboard";
 import OAuthCallback from "./pages/OAuthCallback";
+import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
+import { useTheme } from "./components/theme-context-utils";
 
-function App() {
+function AppContent() {
+  const { isInitialized } = useTheme();
+
   return (
-    <div className="font-inter">
+    <div
+      className={`font-inter min-h-screen bg-background text-foreground ${!isInitialized ? "theme-not-initialized" : ""}`}
+    >
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -24,6 +30,18 @@ function App() {
           <Route path="/oauth/callback" element={<OAuthCallback />} />
         </Routes>
       </BrowserRouter>
+    </div>
+  );
+}
+
+function App() {
+  const { isInitialized } = useTheme();
+
+  return (
+    <div className={!isInitialized ? "theme-not-initialized" : ""}>
+      <ThemeTransitionWrapper className="font-inter min-h-screen bg-background text-foreground">
+        <AppContent />
+      </ThemeTransitionWrapper>
     </div>
   );
 }
