@@ -22,6 +22,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  solvedProblems: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Problem",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

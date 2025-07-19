@@ -22,6 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { submissionsAPI } from "@/utils/api";
 
 const SUPPORTED_LANGUAGES = [
   {
@@ -100,7 +101,10 @@ const extractErrorMessage = (err) => {
   return "Unknown error";
 };
 
-const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
+const CodeEditorPanel = forwardRef(function CodeEditorPanel(
+  { problem, onSubmissionCreated },
+  ref
+) {
   // --- State ---
   const [language, setLanguage] = useState(SUPPORTED_LANGUAGES[0].prism);
   const [code, setCode] = useState(SUPPORTED_LANGUAGES[0].defaultCode);
@@ -297,6 +301,22 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
     }
     setSubmitResults(results);
     setActiveTab("submit");
+
+    // --- Create submission in backend ---
+    try {
+      const verdict = results.every((r) => r.verdict === "Passed")
+        ? "Accepted"
+        : "Not Accepted";
+      await submissionsAPI.create({
+        problemId: getProblemId(),
+        verdict,
+        language,
+      });
+      if (onSubmissionCreated) onSubmissionCreated();
+    } catch (err) {
+      // Optionally handle error
+      console.error("Failed to save submission:", err);
+    }
   };
 
   // --- Language Change ---
@@ -402,7 +422,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
 
       {/* Editor */}
       <div className="flex-1 flex flex-col min-h-0 theme-transition">
-        <div className="flex-1 relative bg-background border-b border-border theme-transition">
+        <div className="flex-1 relative bg-background border-none theme-transition">
           <div className="absolute inset-0 flex h-full overflow-y-auto no-scrollbar">
             <div className="flex w-full h-full">
               {/* Line Numbers */}
@@ -519,7 +539,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                   <span className="text-muted-foreground text-sm theme-transition">
                     Input:
                   </span>
-                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap text-left min-h-8 theme-transition">
+                  <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap text-left min-h-8 theme-transition">
                     {publicTestcases[activeTestcaseIdx].input}
                   </div>
                 </div>
@@ -527,7 +547,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                   <span className="text-muted-foreground text-sm theme-transition">
                     Expected Output:
                   </span>
-                  <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap theme-transition">
+                  <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap theme-transition">
                     {publicTestcases[activeTestcaseIdx].output}
                   </div>
                 </div>
@@ -544,7 +564,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       <span className="text-muted-foreground text-sm theme-transition">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8 theme-transition">
+                      <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap min-h-8 theme-transition">
                         {runResults[activeTestcaseIdx].output}
                       </div>
                     </div>
@@ -559,7 +579,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       </span>
                     </div>
                     {runResults[activeTestcaseIdx].error && (
-                      <div className="text-xs text-destructive mt-1 theme-transition">
+                      <div className="text-sm text-destructive mt-1 theme-transition">
                         Error: {runResults[activeTestcaseIdx].error}
                       </div>
                     )}
@@ -576,12 +596,12 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                   </span>
                   {customEditIdx === activeTestcaseIdx ? (
                     <textarea
-                      className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-xs border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
+                      className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
                       value={customEditInput}
                       onChange={(e) => setCustomEditInput(e.target.value)}
                     />
                   ) : (
-                    <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8 theme-transition">
+                    <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap min-h-8 theme-transition">
                       {customTestcases[activeTestcaseIdx].input}
                     </div>
                   )}
@@ -590,7 +610,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                   {customEditIdx === activeTestcaseIdx ? (
                     <>
                       <button
-                        className="px-3 py-1 rounded bg-primary/20 text-primary text-xs theme-transition"
+                        className="px-3 py-1 rounded bg-primary/20 text-primary text-sm theme-transition"
                         onClick={() =>
                           handleSaveEditCustomTestcase(activeTestcaseIdx)
                         }
@@ -598,7 +618,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                         Save
                       </button>
                       <button
-                        className="px-3 py-1 rounded bg-muted text-muted-foreground text-xs theme-transition"
+                        className="px-3 py-1 rounded bg-muted text-muted-foreground text-sm theme-transition"
                         onClick={() => setCustomEditIdx(null)}
                       >
                         Cancel
@@ -606,7 +626,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                     </>
                   ) : (
                     <button
-                      className="px-3 py-1 rounded bg-muted text-muted-foreground text-xs hover:cursor-pointer theme-transition"
+                      className="px-3 py-1 rounded bg-muted text-muted-foreground text-sm hover:cursor-pointer theme-transition"
                       onClick={() =>
                         handleEditCustomTestcase(activeTestcaseIdx)
                       }
@@ -622,12 +642,12 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                       <span className="text-muted-foreground text-sm">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-xs whitespace-pre-wrap min-h-8">
+                      <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap min-h-8">
                         {customTestcases[activeTestcaseIdx].result.output}
                       </div>
                     </div>
                     {customTestcases[activeTestcaseIdx].result.error && (
-                      <div className="text-xs text-destructive mt-1">
+                      <div className="text-sm text-destructive mt-1">
                         Error: {customTestcases[activeTestcaseIdx].result.error}
                       </div>
                     )}
@@ -649,7 +669,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
                   />
                 </div>
                 <button
-                  className="px-4 py-1 rounded bg-primary/20 text-primary text-xs hover:cursor-pointer theme-transition"
+                  className="px-4 py-1 rounded bg-primary/20 text-primary text-sm hover:cursor-pointer theme-transition"
                   onClick={handleAddCustomTestcase}
                   disabled={!customInputDraft.trim()}
                 >
@@ -663,28 +683,28 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           <div className="theme-transition">
             <label
               htmlFor="custom-input"
-              className="block text-xs text-muted-foreground mb-1 theme-transition"
+              className="block text-sm text-muted-foreground mb-1 theme-transition"
             >
               Custom Input (stdin):
             </label>
             <textarea
               id="custom-input"
-              className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-xs border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
+              className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
               value={customInputDraft}
               onChange={(e) => setCustomInputDraft(e.target.value)}
               aria-label="Custom input"
             />
-            <div className="text-xs text-muted-foreground mt-1 theme-transition">
+            <div className="text-sm text-muted-foreground mt-1 theme-transition">
               This input will be included in the next Run.
             </div>
           </div>
         )}
         {activeTab === "output" && (
           <div className="theme-transition">
-            <div className="text-xs text-muted-foreground mb-2 theme-transition">
+            <div className="text-sm text-muted-foreground mb-2 theme-transition">
               Last Run Output:
             </div>
-            <pre className="bg-muted text-foreground font-mono text-xs rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-border theme-transition">
+            <pre className="bg-muted text-foreground font-mono text-sm rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-border theme-transition">
               {runResults.length > 0
                 ? runResults
                     .map(
@@ -699,7 +719,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
         {activeTab === "submit" && (
           <div className="theme-transition">
             <div className="overflow-x-auto">
-              <table className="min-w-full text-xs border border-border rounded text-foreground theme-transition">
+              <table className="min-w-full text-sm border border-border rounded text-foreground theme-transition">
                 <thead>
                   <tr className="bg-muted text-foreground theme-transition">
                     <th className="px-2 py-1 text-left theme-transition">#</th>
@@ -791,7 +811,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               </table>
             </div>
             {submitResults.length > 0 && (
-              <div className="mt-2 text-xs theme-transition">
+              <div className="mt-2 text-sm theme-transition">
                 <span className="font-semibold theme-transition">Summary:</span>{" "}
                 {submitResults.filter((r) => r.verdict === "Passed").length} /{" "}
                 {submitResults.length} testcases passed.
@@ -810,7 +830,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
               </div>
             )}
             {submitResults.some((r) => r.error) && (
-              <div className="mt-2 text-destructive text-xs theme-transition">
+              <div className="mt-2 text-destructive text-sm theme-transition">
                 {submitResults
                   .filter((r) => r.error)
                   .map((r, i) => (
@@ -823,7 +843,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel({ problem }, ref) {
           </div>
         )}
         {error && (
-          <div className="mt-2 text-destructive text-xs theme-transition">
+          <div className="mt-2 text-destructive text-sm theme-transition">
             {error}
           </div>
         )}

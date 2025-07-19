@@ -184,7 +184,7 @@ export default function TopNavbar({
           ) : (
             <Play className="h-3 w-3" />
           )}
-          <span className="text-sm font-semibold">Run</span>
+          <span className="text-sm font-medium">Run</span>
         </button>
         <button
           className="bg-green-600/20 text-green-500 px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60"
@@ -197,7 +197,7 @@ export default function TopNavbar({
           ) : (
             <CloudUpload className="h-3 w-3" />
           )}
-          <span className="text-sm font-semibold">Submit</span>
+          <span className="text-sm font-medium">Submit</span>
         </button>
         <button
           className="bg-primary/20 text-primary px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 border border-none"
@@ -210,7 +210,7 @@ export default function TopNavbar({
           ) : (
             <RiGeminiFill className="h-3 w-3" />
           )}
-          <span className="text-sm font-semibold">AI Review</span>
+          <span className="text-sm font-medium">AI Review</span>
         </button>
       </div>
 

@@ -7,7 +7,17 @@ const SubmissionSchema = new mongoose.Schema(
       ref: "Problem",
       required: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     verdict: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    language: {
       type: String,
       required: true,
       trim: true,

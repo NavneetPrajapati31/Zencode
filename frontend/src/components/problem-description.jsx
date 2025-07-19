@@ -12,8 +12,14 @@ import {
   Share2,
   HelpCircle,
 } from "lucide-react";
+import { useAuth } from "@/components/use-auth";
 
 export default function ProblemDescription({ problem }) {
+  const { user } = useAuth();
+  const isSolved = user?.solvedProblems?.some(
+    (pid) => (pid._id || pid) === (problem._id || problem.id)
+  );
+
   if (!problem) {
     return (
       <div className="p-4 text-muted-foreground theme-transition">
@@ -46,9 +52,9 @@ export default function ProblemDescription({ problem }) {
             <h1 className="text-xl text-left font-bold theme-transition">
               {problem.title}
             </h1>
-            {problem.solved && (
-              <span className="text-success flex items-center space-x-1 theme-transition">
-                Solved <CheckCircle className="h-5 w-5 theme-transition" />
+            {isSolved && (
+              <span className="text-green-500 flex items-center space-x-1 theme-transition">
+                <CheckCircle className="h-4 w-4 theme-transition" />
               </span>
             )}
           </div>

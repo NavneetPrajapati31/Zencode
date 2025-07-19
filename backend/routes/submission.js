@@ -12,7 +12,7 @@ const {
 
 // Public routes
 router.get("/", getSubmissions);
-router.get("/problem/:problemId", getSubmissionsByProblem);
+router.get("/problem/:problemId", auth, getSubmissionsByProblem);
 router.get("/:id", getSubmissionById);
 
 // Protected routes

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useProblemsSidebar } from "./problems-sidebar-context";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/components/use-auth";
 
 export function ProblemsSidebar() {
   const { id: currentProblemId } = useParams();
@@ -14,6 +15,7 @@ export function ProblemsSidebar() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchProblems();
@@ -32,8 +34,11 @@ export function ProblemsSidebar() {
     }
   };
 
-  // For demo: treat problems with percentage >= 50 as solved
-  const isSolved = (problem) => problem.solved || problem.percentage >= 50;
+  // Real: check if problem._id is in user's solvedProblems
+  const isSolved = (problem) =>
+    user?.solvedProblems?.some(
+      (pid) => (pid._id || pid) === (problem._id || problem.id)
+    );
 
   // Get difficulty color
   const getDifficultyColor = (difficulty) => {

@@ -1,15 +1,16 @@
 const Submission = require("../models/Submission");
 const Problem = require("../models/Problem");
+const User = require("../models/User");
 
 // Create a new submission
 const createSubmission = async (req, res) => {
   try {
-    const { problemId, verdict } = req.body;
+    const { problemId, verdict, language } = req.body;
 
-    if (!problemId || !verdict) {
+    if (!problemId || !verdict || !language) {
       return res
         .status(400)
-        .json({ message: "Problem ID and verdict are required." });
+        .json({ message: "Problem ID, verdict, and language are required." });
     }
 
     // Check if problem exists
@@ -21,13 +22,25 @@ const createSubmission = async (req, res) => {
     const submission = new Submission({
       problem: problemId,
       verdict,
+      user: req.user._id || req.user.id,
+      language,
     });
     await submission.save();
+
+    // Mark problem as solved for user if first accepted
+    if (verdict === "Accepted") {
+      await User.findByIdAndUpdate(req.user._id || req.user.id, {
+        $addToSet: { solvedProblems: problemId },
+      });
+    }
 
     // Populate problem details
     await submission.populate("problem");
     res.status(201).json(submission);
   } catch (error) {
+    console.error("[createSubmission] Error:", error);
+    console.error("[createSubmission] req.body:", req.body);
+    console.error("[createSubmission] req.user:", req.user);
     res.status(500).json({ message: "Server error", error });
   }
 };
@@ -42,15 +55,18 @@ const getSubmissions = async (req, res) => {
   }
 };
 
-// Get submissions by problem ID
+// Get submissions by problem ID for the current user
 const getSubmissionsByProblem = async (req, res) => {
   try {
     const { problemId } = req.params;
-    const submissions = await Submission.find({ problem: problemId }).populate(
-      "problem"
-    );
+    const userId = req.user._id || req.user.id;
+    const submissions = await Submission.find({
+      problem: problemId,
+      user: userId,
+    }).populate("problem");
     res.json(submissions);
   } catch (error) {
+    console.error("[getSubmissionsByProblem] Error:", error);
     res.status(500).json({ message: "Server error", error });
   }
 };

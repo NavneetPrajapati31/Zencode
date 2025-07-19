@@ -7,6 +7,9 @@ import ProblemDescription from "@/components/problem-description";
 import CodeEditorPanel from "@/components/code-editor-panel";
 import { ProblemsSidebar } from "@/components/problems-sidebar";
 import { ProblemsSidebarProvider } from "@/components/problems-sidebar-context";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { FileText, History, RefreshCw } from "lucide-react";
+import SubmissionList from "@/components/submission-list";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -18,6 +21,8 @@ export default function ProblemDetailPage() {
   const [error, setError] = useState("");
   const [allProblems, setAllProblems] = useState([]);
   const [currentProblemIndex, setCurrentProblemIndex] = useState(-1);
+  const [activeTab, setActiveTab] = useState("description");
+  const [submissionsRefreshKey, setSubmissionsRefreshKey] = useState(0);
   const codeEditorRef = useRef();
 
   useEffect(() => {
@@ -145,7 +150,7 @@ export default function ProblemDetailPage() {
   return (
     <ProblemsSidebarProvider>
       <ProblemsSidebar />
-      <div className="min-h-screen bg-background text-foreground flex flex-col theme-transition">
+      <div className="h-screen bg-background text-foreground flex flex-col theme-transition no-scrollbar">
         <TopNavbar
           onRun={() => codeEditorRef.current?.run()}
           onSubmit={() => codeEditorRef.current?.submit()}
@@ -156,13 +161,61 @@ export default function ProblemDetailPage() {
           canGoNext={canGoNext}
         />
         <div className="flex flex-1 overflow-hidden flex-col lg:flex-row theme-transition">
-          {/* Left Panel: Problem Description */}
-          <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar border-b lg:border-b-0 lg:border-r border-border bg-background theme-transition">
-            <ProblemDescription problem={combinedProblem} />
+          {/* Left Panel: Problem Description with Tabs */}
+          <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar lg:border-r border-border bg-background theme-transition flex flex-col">
+            <Tabs
+              defaultValue="description"
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full flex flex-col flex-1 gap-0 theme-transition"
+            >
+              <div className="sticky top-0 z-10 bg-background theme-transition">
+                <TabsList className="flex flex-row gap-1 bg-background py-6 px-4 rounded-none theme-transition">
+                  <TabsTrigger
+                    value="description"
+                    className="flex items-center text-card-foreground rounded-md gap-1 !px-3 !py-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-0 aria-selected:text-accent-foreground aria-selected:border-border cursor-pointer theme-transition transition-colors duration-200 ease-in-out"
+                    aria-label="Description Tab"
+                    tabIndex={0}
+                  >
+                    <FileText className="w-4 h-4" />
+                    Description
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="submissions"
+                    className="flex items-center text-card-foreground rounded-md gap-1 !px-3 !py-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-0 aria-selected:text-accent-foreground aria-selected:border-border cursor-pointer theme-transition transition-colors duration-200 ease-in-out"
+                    aria-label="Submissions Tab"
+                    tabIndex={0}
+                  >
+                    <History className="w-4 h-4" />
+                    Submissions
+                  </TabsTrigger>
+                </TabsList>
+                <div className="w-full border-b border-border theme-transition" />
+              </div>
+              <TabsContent
+                value="description"
+                className="flex-1 theme-transition"
+              >
+                <ProblemDescription problem={combinedProblem} />
+              </TabsContent>
+              <TabsContent
+                value="submissions"
+                className="flex-1 theme-transition"
+              >
+                <SubmissionList
+                  problemId={id}
+                  refreshKey={submissionsRefreshKey}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
           {/* Right Panel: Code Editor and Test Cases */}
           <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar bg-card theme-transition">
-            <CodeEditorPanel ref={codeEditorRef} problem={combinedProblem} />
+            <CodeEditorPanel
+              ref={codeEditorRef}
+              problem={combinedProblem}
+              onSubmissionCreated={() => setSubmissionsRefreshKey((k) => k + 1)}
+            />
           </div>
         </div>
       </div>
