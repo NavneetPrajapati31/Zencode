@@ -21,6 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import Navbar from "@/components/navbar";
 
 export default function Dashboard() {
   const challenges = [
@@ -298,6 +299,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
+      <Navbar />
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="space-y-1">

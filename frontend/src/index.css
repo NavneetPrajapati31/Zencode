@@ -11,7 +11,7 @@ html {
 body {
   font-family: Arial, Helvetica, sans-serif;
   /* These Tailwind classes are applied globally */
-  @apply bg-zinc-900 text-zinc-100;
+  @apply bg-background text-foreground;
 }
 
 @layer base {
@@ -25,7 +25,7 @@ body {
   * {
     scroll-behavior: smooth;
     scrollbar-width: 50px;
-    scrollbar-color: var(--primary) var(--color-background);
+    scrollbar-color: var(--border) var(--color-background);
   }
 }
 

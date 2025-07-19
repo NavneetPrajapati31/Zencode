@@ -27,4 +27,15 @@ const authorizeRole = (role) => (req, res, next) => {
   next();
 };
 
-module.exports = { authenticateJWT, authorizeRole };
+const requireProfileComplete = (req, res, next) => {
+  // Allow access to profile completion endpoint
+  if (req.path === "/api/auth/complete-profile") return next();
+  if (req.user && req.user.profileComplete === false) {
+    return res
+      .status(403)
+      .json({ message: "Profile incomplete. Please complete your profile." });
+  }
+  next();
+};
+
+module.exports = { authenticateJWT, authorizeRole, requireProfileComplete };

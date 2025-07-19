@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { authenticateJWT } = require("../middleware/auth");
+const {
+  authenticateJWT,
+  requireProfileComplete,
+} = require("../middleware/auth");
 const {
   createTestCase,
   getTestCases,
@@ -16,8 +19,8 @@ router.get("/problem/:problemId", getTestCasesByProblem);
 router.get("/:id", getTestCaseById);
 
 // Protected routes
-router.post("/", authenticateJWT, createTestCase);
-router.put("/:id", authenticateJWT, updateTestCase);
-router.delete("/:id", authenticateJWT, deleteTestCase);
+router.post("/", authenticateJWT, requireProfileComplete, createTestCase);
+router.put("/:id", authenticateJWT, requireProfileComplete, updateTestCase);
+router.delete("/:id", authenticateJWT, requireProfileComplete, deleteTestCase);
 
 module.exports = router;

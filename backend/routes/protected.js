@@ -1,5 +1,8 @@
 const express = require("express");
-const { authenticateJWT } = require("../middleware/auth");
+const {
+  authenticateJWT,
+  requireProfileComplete,
+} = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -7,7 +10,7 @@ const router = express.Router();
 // @desc    Example protected route
 // @access  Private (JWT required)
 const User = require("../models/User");
-router.get("/", authenticateJWT, async (req, res) => {
+router.get("/", authenticateJWT, requireProfileComplete, async (req, res) => {
   try {
     const user = await User.findById(req.user._id || req.user.id).populate(
       "solvedProblems"

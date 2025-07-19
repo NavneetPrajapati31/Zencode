@@ -66,14 +66,14 @@ export default function SignIn() {
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="w-full max-w-lg space-y-8">
         {/* Logo and Header */}
-        <div className="text-center">
+        {/* <div className="text-center">
           <p className="text-xl font-bold text-foreground">
             Welcome back, Coder!
           </p>
           <p className="!text-md text-muted-foreground mt-2">
             Sign in to access coding challenges
           </p>
-        </div>
+        </div> */}
 
         <Card className="bg-card border-border">
           <CardHeader className="space-y-1 border-border">

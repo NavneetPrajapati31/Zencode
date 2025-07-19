@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ import { Eye, EyeOff, Code2, Github, Mail, Check, X } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
+import ProfileCompletionModal from "@/components/profile-completion-modal";
 
 const GITHUB_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/github`;
 const GOOGLE_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/google`;
@@ -33,7 +34,6 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -49,6 +49,15 @@ export default function SignUp() {
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileToken, setProfileToken] = useState("");
+  const [profileFormData, setProfileFormData] = useState({
+    fullName: "",
+    username: "",
+  });
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -81,15 +90,64 @@ export default function SignUp() {
       return;
     }
     const userData = {
-      fullName: formData.fullName,
       email: formData.email,
       password: formData.password,
     };
     try {
-      await authAPI.signup(userData);
-      navigate("/signin");
+      const result = await authAPI.signup(userData);
+      if (result.token) {
+        await login(result.token);
+        if (result.user && result.user.profileComplete === false) {
+          setProfileToken(result.token);
+          setProfileFormData({
+            fullName: "",
+            username: result.user.username || "",
+          });
+          setShowProfileModal(true);
+        } else {
+          navigate("/problems");
+        }
+      } else {
+        setError("Signup succeeded but no token received.");
+      }
     } catch (err) {
       setError(err.message || "Registration failed.");
+    }
+  };
+
+  const handleProfileInputChange = (e) => {
+    const { name, value } = e.target;
+    setProfileFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+    setProfileError("");
+    setProfileLoading(true);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/complete-profile`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${profileToken}`,
+          },
+          body: JSON.stringify({
+            fullName: profileFormData.fullName,
+            username: profileFormData.username,
+          }),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Profile completion failed");
+      await login(data.token);
+      setShowProfileModal(false);
+      navigate("/problems");
+    } catch (err) {
+      setProfileError(err.message);
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -102,14 +160,14 @@ export default function SignUp() {
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="w-full max-w-lg space-y-8">
         {/* Logo and Header */}
-        <div className="text-center">
+        {/* <div className="text-center">
           <p className="text-xl font-bold text-foreground">
             Join our community
           </p>
           <p className="!text-md text-muted-foreground mt-2">
             Create your coding account today
           </p>
-        </div>
+        </div> */}
 
         <Card className="bg-card border-border">
           <CardHeader className="space-y-1 border-border">
@@ -161,22 +219,6 @@ export default function SignUp() {
                   {error}
                 </div>
               )}
-              <div className="space-y-2">
-                <Label htmlFor="fullName" className="text-foreground">
-                  Name
-                </Label>
-                <Input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  placeholder="Enter your name"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
-                  required
-                />
-              </div>
-
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-foreground">
                   Email
@@ -424,6 +466,14 @@ export default function SignUp() {
           </p>
         </div>
       </div>
+      <ProfileCompletionModal
+        open={showProfileModal}
+        onSubmit={handleProfileSubmit}
+        formData={profileFormData}
+        onChange={handleProfileInputChange}
+        loading={profileLoading}
+        error={profileError}
+      />
     </div>
   );
 }

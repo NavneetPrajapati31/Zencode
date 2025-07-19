@@ -1,7 +1,8 @@
 const express = require("express");
-const { signUp, signIn } = require("../controllers/auth");
+const { signUp, signIn, completeProfile } = require("../controllers/auth");
 const passport = require("passport");
 const { oauthCallback } = require("../controllers/oauth");
+const { authenticateJWT } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -12,6 +13,9 @@ router.post("/signup", signUp);
 
 // @route   POST /api/auth/signin
 router.post("/signin", signIn);
+
+// @route   POST /api/auth/complete-profile
+router.post("/complete-profile", authenticateJWT, completeProfile);
 
 // --- OAuth ---
 // GitHub
