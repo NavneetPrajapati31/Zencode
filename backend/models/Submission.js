@@ -22,6 +22,10 @@ const SubmissionSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    code: {
+      type: String,
+      required: true,
+    },
     submittedAt: {
       type: Date,
       default: Date.now,

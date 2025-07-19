@@ -5,12 +5,12 @@ const User = require("../models/User");
 // Create a new submission
 const createSubmission = async (req, res) => {
   try {
-    const { problemId, verdict, language } = req.body;
+    const { problemId, verdict, language, code } = req.body;
 
-    if (!problemId || !verdict || !language) {
-      return res
-        .status(400)
-        .json({ message: "Problem ID, verdict, and language are required." });
+    if (!problemId || !verdict || !language || !code) {
+      return res.status(400).json({
+        message: "Problem ID, verdict, language, and code are required.",
+      });
     }
 
     // Check if problem exists
@@ -24,6 +24,7 @@ const createSubmission = async (req, res) => {
       verdict,
       user: req.user._id || req.user.id,
       language,
+      code,
     });
     await submission.save();
 
