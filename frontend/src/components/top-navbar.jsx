@@ -174,7 +174,7 @@ export default function TopNavbar({
 
       <div className="flex items-center gap-2">
         <button
-          className="bg-accent text-accent-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+          className="bg-accent text-muted-foreground border-none px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
           onClick={handleRun}
           aria-label="Run code"
           disabled={isRunning}
@@ -187,7 +187,7 @@ export default function TopNavbar({
           <span className="text-sm font-semibold">Run</span>
         </button>
         <button
-          className="bg-primary text-primary-foreground px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60"
+          className="bg-green-600/20 text-green-500 px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60"
           onClick={handleSubmit}
           aria-label="Submit code"
           disabled={isSubmitting}
@@ -215,46 +215,76 @@ export default function TopNavbar({
       </div>
 
       {/* Modal for AI Review */}
-      {aiReviewModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md transition-all duration-300"
-          onClick={handleCloseModal}
-        >
+      <AnimatePresence>
+        {aiReviewModalOpen && (
           <div
-            className="!bg-card border border-border text-foreground rounded-lg shadow-lg max-w-3xl w-full py-4 px-6 pb-6 relative"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            tabIndex={-1}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md transition-all duration-300"
+            onClick={handleCloseModal}
           >
-            <button
-              className="absolute top-5 right-5 text-foreground hover:cursor-pointer"
-              onClick={handleCloseModal}
-              aria-label="Close AI review modal"
-              tabIndex={0}
+            <motion.div
+              className="!bg-card border border-border text-foreground rounded-2xl shadow-lg max-w-2xl w-full pb-6 relative"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              tabIndex={-1}
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             >
-              <LuX className="h-5 w-5" />
-            </button>
-            <h2 className="text-lg font-semibold mb-3">AI Code Review</h2>
-            {isAiReviewing ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin" />
-                <span className="ml-2">Reviewing...</span>
-              </div>
-            ) : aiReviewError ? (
-              <div className="text-destructive text-sm">{aiReviewError}</div>
-            ) : (
+              {/* Browser-style header bar INSIDE the card */}
               <div
-                className="prose prose-sm prose-invert overflow-y-auto no-scrollbar bg-card !p-6 rounded-xl border border-border text-left"
-                style={{ maxHeight: "60vh" }}
+                className="w-full h-10 rounded-t-2xl bg-card flex items-center px-6 border-b border-border theme-transition"
+                aria-label="Window controls"
+                tabIndex={0}
               >
-                {console.log("AI REVIEW RAW:", aiReviewResult)}
-                <ReactMarkdown>{cleanMarkdown(aiReviewResult)}</ReactMarkdown>
+                <div className="flex space-x-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full bg-red-500 theme-transition-fast"
+                    aria-label="Close"
+                    onClick={handleCloseModal}
+                  />
+                  <span
+                    className="w-2.5 h-2.5 rounded-full bg-yellow-500 theme-transition-fast"
+                    aria-label="Minimize"
+                  />
+                  <span
+                    className="w-2.5 h-2.5 rounded-full bg-green-500 theme-transition-fast"
+                    aria-label="Maximize"
+                  />
+                </div>
               </div>
-            )}
+              {/* <button
+                className="absolute top-5 right-5 text-muted-foreground hover:cursor-pointer"
+                onClick={handleCloseModal}
+                aria-label="Close AI review modal"
+                tabIndex={0}
+              >
+                <LuX className="h-5 w-5" />
+              </button>
+              <h2 className="text-md text-muted-foreground text-left !font-medium mb-4">
+                AI Code Review
+              </h2> */}
+              {isAiReviewing ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <span className="ml-2">Reviewing...</span>
+                </div>
+              ) : aiReviewError ? (
+                <div className="text-destructive text-sm">{aiReviewError}</div>
+              ) : (
+                <div
+                  className="prose prose-sm prose-invert overflow-y-auto no-scrollbar bg-card !p-6 !px-8 rounded-2xl text-left text-muted-foreground prose-mono"
+                  style={{ maxHeight: "50vh" }}
+                >
+                  {console.log("AI REVIEW RAW:", aiReviewResult)}
+                  <ReactMarkdown>{cleanMarkdown(aiReviewResult)}</ReactMarkdown>
+                </div>
+              )}
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
       {/* Settings Modal */}
       {isSettingsModalOpen && (

@@ -101,7 +101,7 @@ export function ProblemsSidebar() {
         <>
           <motion.div
             key="sidebar-overlay"
-            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300"
             initial="closed"
             animate="open"
             exit="closed"
