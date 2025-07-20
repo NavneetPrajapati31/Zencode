@@ -1,5 +1,14 @@
 const express = require("express");
-const { signUp, signIn, completeProfile } = require("../controllers/auth");
+const {
+  signUp,
+  signIn,
+  completeProfile,
+  verifyEmail,
+  forgotPassword,
+  resetPassword,
+  validateResetToken,
+  resendVerification,
+} = require("../controllers/auth");
 const passport = require("passport");
 const { oauthCallback } = require("../controllers/oauth");
 const { authenticateJWT } = require("../middleware/auth");
@@ -16,6 +25,21 @@ router.post("/signin", signIn);
 
 // @route   POST /api/auth/complete-profile
 router.post("/complete-profile", authenticateJWT, completeProfile);
+
+// @route   POST /api/auth/verify-email
+router.post("/verify-email", verifyEmail);
+
+// @route   POST /api/auth/forgot-password
+router.post("/forgot-password", forgotPassword);
+
+// @route   POST /api/auth/reset-password
+router.post("/reset-password", resetPassword);
+
+// @route   GET /api/auth/validate-reset-token/:token
+router.get("/validate-reset-token/:token", validateResetToken);
+
+// @route   POST /api/auth/resend-verification
+router.post("/resend-verification", authenticateJWT, resendVerification);
 
 // --- OAuth ---
 // GitHub

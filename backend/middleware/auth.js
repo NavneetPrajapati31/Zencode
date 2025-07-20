@@ -28,13 +28,32 @@ const authorizeRole = (role) => (req, res, next) => {
 };
 
 const requireProfileComplete = (req, res, next) => {
+  console.log("[Middleware] requireProfileComplete called");
+  console.log("[Middleware] Request method:", req.method);
+  console.log("[Middleware] Request path:", req.path);
+  console.log("[Middleware] User:", req.user);
+
   // Allow access to profile completion endpoint
-  if (req.path === "/api/auth/complete-profile") return next();
+  if (req.path === "/api/auth/complete-profile") {
+    console.log("[Middleware] Allowing profile completion endpoint");
+    return next();
+  }
+
+  // Allow access to profile GET endpoint (for fetching user data)
+  // Since this middleware is applied to /api/profile routes, the path will be just the username
+  if (req.method === "GET" && req.path.match(/^\/[^\/]+$/)) {
+    console.log("[Middleware] Allowing profile GET endpoint");
+    return next();
+  }
+
   if (req.user && req.user.profileComplete === false) {
+    console.log("[Middleware] Blocking - profile incomplete");
     return res
       .status(403)
       .json({ message: "Profile incomplete. Please complete your profile." });
   }
+
+  console.log("[Middleware] Allowing request");
   next();
 };
 
