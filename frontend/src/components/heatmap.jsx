@@ -213,23 +213,13 @@ export default function Heatmap() {
   );
 
   return (
-    <Card className="w-full max-w-4xl bg-transparent text-gh-text-light rounded-none border-none shadow-none p-0 gap-0">
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <div className="flex items-center gap-2 text-lg text-muted-foreground">
-          <span className="font-medium text-lg ">{totalSubmissions}</span>{" "}
+    <Card className="w-full max-w-4xl bg-transparent text-gh-text-light rounded-none border-none shadow-none !gap-0">
+      <CardHeader className="flex flex-row items-center justify-between p-0">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span className="font-medium text-sm">{totalSubmissions}</span>{" "}
           submissions in the past one year
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Info className="h-4 w-4 text-gh-text-muted cursor-pointer" />
-              </TooltipTrigger>
-              <TooltipContent className="bg-gray-700 text-white text-sm p-2 rounded-md">
-                <p>Total contributions in the last 365 days.</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
         </div>
-        <div className="flex items-center gap-4 text-sm text-gh-text-muted">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <span>
             Total active days:{" "}
             <span className="font-semibold text-gh-text-light">
@@ -242,38 +232,16 @@ export default function Heatmap() {
               {maxStreak}
             </span>
           </span>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="px-3 py-1 h-auto rounded-md">
-                Current <ChevronDown className="ml-1 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-gh-card-bg text-gh-text-light border-gh-heatmap-inactive"
-            >
-              <DropdownMenuItem className="hover:bg-gh-heatmap-inactive cursor-pointer">
-                Current
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gh-heatmap-inactive cursor-pointer">
-                Last Year
-              </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-gh-heatmap-inactive cursor-pointer">
-                All Time
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </CardHeader>
-      <div className="pt-4">
+      <div className="pt-6">
         <div className="relative overflow-x-auto no-scrollbar pb-6 h-full">
           {/* Day labels (Sun, Mon, Tue, etc.) */}
-          <div
+          {/* <div
             className="flex flex-col mr-2 text-xs text-gh-text-muted"
             style={{ float: "left" }}
           >
             <div style={{ height: "18px" }}></div>{" "}
-            {/* Space for month labels */}
             <div className="flex flex-col gap-0.5">
               <div className="h-3 flex items-center">Sun</div>
               <div className="h-3 flex items-center">Mon</div>
@@ -283,26 +251,10 @@ export default function Heatmap() {
               <div className="h-3 flex items-center">Fri</div>
               <div className="h-3 flex items-center">Sat</div>
             </div>
-          </div>
-
-          {/* Month labels */}
-          <div className="flex ml-6 mb-1 relative" style={{ height: "18px" }}>
-            {monthLabels.map((month) => {
-              const left = month.weekIndex * 16;
-              return (
-                <span
-                  key={`${month.name}-${month.weekIndex}-${month.month}`}
-                  className="absolute text-xs text-gh-text-muted"
-                  style={{ left: `${left}px` }}
-                >
-                  {month.name}
-                </span>
-              );
-            })}
-          </div>
+          </div> */}
 
           {/* Heatmap grid */}
-          <div className="flex ml-6">
+          <div className="flex">
             {weekColumns.map((column, weekIdx) => (
               <div
                 key={weekIdx}
@@ -341,6 +293,22 @@ export default function Heatmap() {
                 })}
               </div>
             ))}
+          </div>
+
+          {/* Month labels */}
+          <div className="flex ml-6 mt-4 relative" style={{ height: "18px" }}>
+            {monthLabels.map((month) => {
+              const left = month.weekIndex * 16;
+              return (
+                <span
+                  key={`${month.name}-${month.weekIndex}-${month.month}`}
+                  className="absolute text-xs text-muted-foreground"
+                  style={{ left: `${left}px` }}
+                >
+                  {month.name}
+                </span>
+              );
+            })}
           </div>
         </div>
       </div>

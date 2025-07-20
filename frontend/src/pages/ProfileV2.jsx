@@ -180,7 +180,6 @@ export default function Profile() {
               <span className="text-sm text-muted-foreground">
                 Recent Submissions
               </span>
-              <span className="text-sm text-muted-foreground">168</span>
             </div>
             {/* <ProblemsBarChart /> */}
             <div className="flex flex-col w-full justify-center py-4 px-6 gap-2">
@@ -228,10 +227,17 @@ export default function Profile() {
           /> */}
           {/* Second row: 1 card spanning all columns */}
           <Card
-            className="flex items-center justify-center md:col-span-3 border-border"
+            className="flex items-center md:col-span-3 border-border p-0 gap-0"
             aria-label="Bento card 4"
             tabIndex={0}
           >
+            <div
+              className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border theme-transition justify-between"
+              aria-label="Window controls"
+              tabIndex={0}
+            >
+              <span className="text-sm text-muted-foreground">Activity</span>
+            </div>
             <Heatmap />
           </Card>
         </div>
