@@ -17,6 +17,7 @@ import { Eye, EyeOff, Code2, Github, Mail } from "lucide-react";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
 import { FaGoogle } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 
 const GITHUB_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/github`;
 const GOOGLE_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/google`;
@@ -93,7 +94,7 @@ export default function SignIn() {
                 onClick={handleGithubOAuth}
                 type="button"
               >
-                <Github className="mr-2 h-4 w-4" />
+                <FaGithub className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
               <Button

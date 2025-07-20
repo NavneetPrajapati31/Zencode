@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Code2, Github, Mail, Check, X } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
 import ProfileCompletionModal from "@/components/profile-completion-modal";
@@ -187,7 +188,7 @@ export default function SignUp() {
                 onClick={handleGithubOAuth}
                 type="button"
               >
-                <Github className="mr-2 h-4 w-4" />
+                <FaGithub className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
               <Button
