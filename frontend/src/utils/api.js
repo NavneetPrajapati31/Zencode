@@ -56,14 +56,15 @@ export const authAPI = {
     apiCall(`/auth/validate-reset-token/${token}`, {
       method: "GET",
     }),
-  verifyEmail: (token) =>
-    apiCall("/auth/verify-email", {
+  verifyOTP: (email, otp) =>
+    apiCall("/auth/verify-otp", {
       method: "POST",
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ email, otp }),
     }),
-  resendVerification: () =>
-    apiCall("/auth/resend-verification", {
+  resendOTP: (email) =>
+    apiCall("/auth/resend-otp", {
       method: "POST",
+      body: JSON.stringify({ email }),
     }),
   completeProfile: (profileData) =>
     apiCall("/auth/complete-profile", {

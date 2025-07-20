@@ -69,34 +69,6 @@ export default function Navbar({ sticky = false }) {
 
           {/* Right: Theme Toggler and Auth */}
           <div className="flex-1 flex items-center justify-end gap-2 theme-transition">
-            {/* Theme Toggler */}
-            <button
-              onClick={toggleTheme}
-              disabled={isTransitioning}
-              aria-label={
-                theme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  toggleTheme();
-                }
-              }}
-              className={`ml-2 p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
-                theme === "dark"
-                  ? "bg-accent border border-border"
-                  : "bg-card border border-border"
-              } ${isTransitioning ? "opacity-75" : ""}`}
-            >
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <Moon className="h-4 w-4 text-muted-foreground" />
-              )}
-            </button>
             {/* <Link to={"/problems"}>
             <button className="flex flex-row justify-center items-center bg-primary hover:bg-primary/85 text-primary-foreground font-semibold !py-2 pl-4 pr-3 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer">
               Solve now
@@ -140,6 +112,34 @@ export default function Navbar({ sticky = false }) {
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </button>
+                {/* Theme Toggler */}
+                <button
+                  onClick={toggleTheme}
+                  disabled={isTransitioning}
+                  aria-label={
+                    theme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleTheme();
+                    }
+                  }}
+                  className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
+                    theme === "dark"
+                      ? "bg-accent border border-border"
+                      : "bg-card border border-border"
+                  } ${isTransitioning ? "opacity-75" : ""}`}
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Moon className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </button>
                 <DropdownMenu
                   open={dropdownOpen}
                   onOpenChange={setDropdownOpen}
@@ -150,12 +150,12 @@ export default function Navbar({ sticky = false }) {
                       tabIndex={0}
                       aria-label="User menu"
                     >
-                      <Avatar className="h-8 w-8 theme-transition">
+                      <Avatar className="h-8.5 w-8.5 theme-transition">
                         <AvatarImage
                           src={user?.avatar}
                           alt={user?.name || user?.email || "User"}
                         />
-                        <AvatarFallback className="text-sm border border-border theme-transition">
+                        <AvatarFallback className="text-sm border border-border text-muted-foreground theme-transition">
                           {user?.name
                             ? user.name
                                 .split(" ")

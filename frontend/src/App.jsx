@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
+import VerifyOTP from "./pages/VerifyOTP";
 import ProblemsPage from "./pages/Problems";
 import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
@@ -30,6 +31,7 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/profile" element={<ProfileRedirect />} />
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/problems" element={<ProblemsPage />} />

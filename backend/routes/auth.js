@@ -3,7 +3,8 @@ const {
   signUp,
   signIn,
   completeProfile,
-  verifyEmail,
+  verifyOTP,
+  resendOTP,
   forgotPassword,
   resetPassword,
   validateResetToken,
@@ -26,8 +27,11 @@ router.post("/signin", signIn);
 // @route   POST /api/auth/complete-profile
 router.post("/complete-profile", authenticateJWT, completeProfile);
 
-// @route   POST /api/auth/verify-email
-router.post("/verify-email", verifyEmail);
+// @route   POST /api/auth/verify-otp
+router.post("/verify-otp", verifyOTP);
+
+// @route   POST /api/auth/resend-otp
+router.post("/resend-otp", resendOTP);
 
 // @route   POST /api/auth/forgot-password
 router.post("/forgot-password", forgotPassword);

@@ -63,6 +63,18 @@ export default function Navbar({ sticky = false }) {
 
         {/* Right: Theme Toggler and Auth */}
         <div className="flex-1 flex items-center justify-end gap-2">
+          <Link to={"/problems"}>
+            <button
+              className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
+                theme === "dark"
+                  ? "bg-accent border border-border"
+                  : "bg-card border border-border"
+              }`}
+            >
+              Solve now
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </button>
+          </Link>
           {/* Theme Toggler */}
           <button
             onClick={toggleTheme}
@@ -77,24 +89,18 @@ export default function Navbar({ sticky = false }) {
                 toggleTheme();
               }
             }}
-            className={`ml-2 p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition-fast flex items-center justify-center hover:cursor-pointer ${
+            className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
               theme === "dark"
-                ? "bg-primary hover:bg-primary/85"
+                ? "bg-accent border border-border"
                 : "bg-card border border-border"
             } ${isTransitioning ? "opacity-75" : ""}`}
           >
             {theme === "dark" ? (
-              <Sun className="h-4 w-4 text-primary-foreground" />
+              <Sun className="h-4 w-4 text-muted-foreground" />
             ) : (
-              <Moon className="h-4 w-4 text-foreground" />
+              <Moon className="h-4 w-4 text-muted-foreground" />
             )}
           </button>
-          <Link to={"/problems"}>
-            <button className="flex flex-row justify-center items-center bg-primary hover:bg-primary/85 text-primary-foreground font-semibold !py-2 pl-4 pr-3 rounded-full text-xs shadow-none theme-transition-fast group hover:cursor-pointer">
-              Solve now
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </button>
-          </Link>
           {!isAuthenticated ? (
             <>
               {/* <Link to={"signin"}>
@@ -106,7 +112,13 @@ export default function Navbar({ sticky = false }) {
                 </Button>
               </Link> */}
               <Link to={"signup"}>
-                <button className="bg-card text-card-foreground border border-border font-semibold !py-2 !px-5 rounded-full text-xs shadow-none theme-transition-fast group hover:cursor-pointer">
+                <button
+                  className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
+                    theme === "dark"
+                      ? "bg-accent border border-border"
+                      : "bg-card border border-border"
+                  }`}
+                >
                   Sign Up
                 </button>
               </Link>
@@ -115,16 +127,16 @@ export default function Navbar({ sticky = false }) {
             <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="focus:outline-none focus-visible:ring-0 rounded-full hover:cursor-pointer"
+                  className="focus:outline-none focus-visible:ring-0 rounded-full hover:cursor-pointer theme-transition"
                   tabIndex={0}
                   aria-label="User menu"
                 >
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-8.5 w-8.5">
                     <AvatarImage
                       src={user?.avatar}
                       alt={user?.name || user?.email || "User"}
                     />
-                    <AvatarFallback className="text-sm border border-border">
+                    <AvatarFallback className="text-sm border border-border theme-transition">
                       {user?.name
                         ? user.name
                             .split(" ")
@@ -140,7 +152,7 @@ export default function Navbar({ sticky = false }) {
                 {dropdownOpen && (
                   <DropdownMenuContent
                     align="end"
-                    className="min-w-56 mt-2 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                    className="min-w-56 mt-2 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 theme-transition"
                     asChild
                     forceMount
                   >

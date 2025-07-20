@@ -18,7 +18,7 @@ html {
   * {
     scroll-behavior: smooth;
     scrollbar-width: 50px;
-    scrollbar-color: var(--border) var(--color-background);
+    scrollbar-color: var(--border) var(--background);
   }
 }
 

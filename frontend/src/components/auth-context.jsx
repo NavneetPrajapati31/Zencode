@@ -42,6 +42,11 @@ export function AuthProvider({ children }) {
         user = { ...user, role: decoded.role };
       }
 
+      // Ensure avatar is included in user data
+      if (user && !user.avatar) {
+        user = { ...user, avatar: "" };
+      }
+
       console.log("[Auth] Setting user state:", user);
       setUser(user);
       console.log("[Auth] User loaded from backend:", userData.user);

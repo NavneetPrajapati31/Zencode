@@ -67,6 +67,15 @@ export default function SignIn() {
       navigate("/problems");
     } catch (err) {
       console.error("Signin error:", err);
+
+      // If email is not verified, redirect to OTP verification
+      if (err.message && err.message.includes("verify your email")) {
+        // Extract email from the form data
+        const email = formData.email;
+        navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
+        return;
+      }
+
       setError(err.message || "Login failed.");
     }
   };

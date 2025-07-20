@@ -177,9 +177,9 @@ const signUp = async (req, res) => {
     console.log("Creating new user...");
     let user;
     try {
-      // Generate verification token
-      const verificationToken = crypto.randomBytes(32).toString("hex");
-      const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+      // Generate OTP (6 digits)
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
       user = new User({
         email,
@@ -188,37 +188,38 @@ const signUp = async (req, res) => {
         role: "user",
         profileComplete,
         emailVerified: false,
-        verificationToken,
-        verificationExpires,
+        otp,
+        otpExpires,
       });
       await user.save();
       console.log("User saved successfully");
 
-      // Send verification email
-      console.log("Preparing to send verification email...");
-      const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+      // Send OTP email
+      console.log("Preparing to send OTP email...");
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: "Verify your email address",
+        subject: "Verify your email address - Zencode",
         html: `
           <h2>Welcome to Zencode!</h2>
-          <p>Please click the link below to verify your email address:</p>
-          <a href="${verificationUrl}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Verify Email</a>
-          <p>This link will expire in 24 hours.</p>
+          <p>Your verification code is:</p>
+          <h1 style="font-size: 32px; color: #007bff; text-align: center; letter-spacing: 8px; font-weight: bold; margin: 20px 0;">${otp}</h1>
+          <p>Enter this code on the verification page to complete your registration.</p>
+          <p>This code will expire in 10 minutes.</p>
           <p>If you didn't create an account, please ignore this email.</p>
         `,
       };
 
       console.log("Creating email transporter...");
       const transporter = await createTransporter();
-      console.log("Sending email...");
+      console.log("Sending OTP email...");
       await transporter.sendMail(mailOptions);
-      console.log("Email sent successfully");
+      console.log("OTP email sent successfully");
 
       res.status(201).json({
         message:
-          "Account created successfully. Please check your email to verify your account.",
+          "Account created successfully. Please check your email for the verification code.",
+        email: email, // Return email for frontend to use in OTP verification
       });
     } catch (err) {
       console.error("Error in user creation/email sending:", err);
@@ -271,7 +272,7 @@ const signIn = async (req, res) => {
       console.log("Email not verified, rejecting signin");
       return res.status(401).json({
         message:
-          "Please verify your email address before signing in. Check your email for a verification link.",
+          "Please verify your email address before signing in. Check your email for a verification code.",
       });
     }
 
@@ -342,30 +343,27 @@ const completeProfile = async (req, res) => {
   }
 };
 
-// POST /api/auth/verify-email
-const verifyEmail = async (req, res) => {
+// POST /api/auth/verify-otp
+const verifyOTP = async (req, res) => {
   try {
-    const { token } = req.body;
-    if (!token) {
-      return res
-        .status(400)
-        .json({ message: "Verification token is required." });
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required." });
     }
 
     const user = await User.findOne({
-      verificationToken: token,
-      verificationExpires: { $gt: Date.now() },
+      email,
+      otp,
+      otpExpires: { $gt: Date.now() },
     });
 
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or expired verification token." });
+      return res.status(400).json({ message: "Invalid or expired OTP." });
     }
 
     user.emailVerified = true;
-    user.verificationToken = undefined;
-    user.verificationExpires = undefined;
+    user.otp = undefined;
+    user.otpExpires = undefined;
     await user.save();
 
     const jwtToken = generateToken(user);
@@ -378,8 +376,56 @@ const verifyEmail = async (req, res) => {
         username: user.username,
         role: user.role,
         emailVerified: user.emailVerified,
+        profileComplete: user.profileComplete,
       },
     });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// POST /api/auth/resend-otp
+const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ message: "Email is already verified." });
+    }
+
+    // Generate new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+
+    // Send new OTP email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "New verification code - Zencode",
+      html: `
+        <h2>New Verification Code</h2>
+        <p>Your new verification code is:</p>
+        <h1 style="font-size: 32px; color: #007bff; text-align: center; letter-spacing: 8px; font-weight: bold; margin: 20px 0;">${otp}</h1>
+        <p>Enter this code on the verification page to complete your registration.</p>
+        <p>This code will expire in 10 minutes.</p>
+      `,
+    };
+
+    const transporter = await createTransporter();
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "New OTP sent successfully." });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -550,7 +596,8 @@ module.exports = {
   signUp,
   signIn,
   completeProfile,
-  verifyEmail,
+  verifyOTP,
+  resendOTP,
   forgotPassword,
   resetPassword,
   validateResetToken,

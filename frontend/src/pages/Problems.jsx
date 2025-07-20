@@ -170,8 +170,14 @@ export default function ProblemsPage() {
     }
   };
 
-  // For demo: treat problems with percentage >= 50 as solved
-  const isSolved = (problem) => problem.solved || problem.percentage >= 50;
+  // Check if the current user has solved this problem
+  const isSolved = (problem) => {
+    if (!user || !user.solvedProblems) return false;
+    return user.solvedProblems.some(
+      (solvedProblem) =>
+        solvedProblem._id === problem._id || solvedProblem === problem._id
+    );
+  };
 
   // Restore getDifficultyColor for badge coloring
   const getDifficultyColor = (difficulty) => {
@@ -308,7 +314,7 @@ export default function ProblemsPage() {
                 >
                   <div className="flex items-center min-w-0 max-w-[70%] flex-shrink-0">
                     {isSolved(problem) ? (
-                      <CheckCircle className="h-5 w-5 text-success shrink-0" />
+                      <CheckCircle className="h-5 w-5 mr-3 text-green-500 shrink-0" />
                     ) : (
                       <span className="h-5 w-5 border-2 border-muted rounded-full shrink-0 inline-block mr-3" />
                     )}

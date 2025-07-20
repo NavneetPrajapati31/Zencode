@@ -48,6 +48,7 @@ export default function SignUp() {
   });
 
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
@@ -85,14 +86,12 @@ export default function SignUp() {
       email: formData.email,
       password: formData.password,
     };
+    setIsLoading(true);
     try {
       const result = await authAPI.signup(userData);
       if (result.message) {
-        // Email verification required
-        setError(
-          "Please check your email to verify your account before signing in."
-        );
-        // You could redirect to a verification pending page here
+        // OTP verification required - redirect to OTP verification page
+        navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`);
       } else if (result.token) {
         // If no email verification required, handle direct signup
         await login(result.token);
@@ -102,6 +101,8 @@ export default function SignUp() {
       }
     } catch (err) {
       setError(err.message || "Registration failed.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -387,10 +388,17 @@ export default function SignUp() {
 
               <Button
                 type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-foreground"
-                disabled={!isPasswordValid || !doPasswordsMatch}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                disabled={!isPasswordValid || !doPasswordsMatch || isLoading}
               >
-                Create account
+                {isLoading ? (
+                  <>
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+                    Creating account...
+                  </>
+                ) : (
+                  "Create account"
+                )}
               </Button>
             </form>
 
