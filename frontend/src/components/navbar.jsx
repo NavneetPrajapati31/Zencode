@@ -43,7 +43,7 @@ export default function Navbar({ sticky = false }) {
             to={"/"}
             className="flex items-center gap-2 text-xl font-bold text-primary theme-transition"
           >
-            <RiFocus2Line className="h-10 w-10" />
+            <RiFocus2Line className="h-8 w-8" />
             Zencode
           </Link>
         </div>

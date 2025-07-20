@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Code, Sun, Moon, ChevronRight, Settings } from "lucide-react";
 import { RiFocus2Line } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "./use-auth";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "./theme-context-utils";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { LuX } from "react-icons/lu";
 
 export default function Navbar({ sticky = false }) {
@@ -31,11 +31,24 @@ export default function Navbar({ sticky = false }) {
   const { theme, toggleTheme, isTransitioning } = useTheme();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const location = useLocation();
 
   console.log("Navbar user:", user); // Log user object
 
   const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
   const handleCloseSettingsModal = () => setIsSettingsModalOpen(false);
+
+  // Check if a link is active based on current pathname
+  const isActiveLink = (href) => {
+    if (href === "/profile") {
+      // For profile, check if current path starts with /profile
+      return location.pathname.startsWith("/profile");
+    }
+    // For other links, check exact match or if pathname starts with href
+    return (
+      location.pathname === href || location.pathname.startsWith(href + "/")
+    );
+  };
 
   return (
     <>
@@ -49,7 +62,7 @@ export default function Navbar({ sticky = false }) {
               to={"/"}
               className="flex items-center gap-2 text-xl font-bold text-primary theme-transition"
             >
-              <RiFocus2Line className="h-10 w-10 theme-transition" />
+              <RiFocus2Line className="h-8 w-8 theme-transition" />
               Zencode
             </Link>
           </div>
@@ -60,7 +73,11 @@ export default function Navbar({ sticky = false }) {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm text-muted-foreground hover:text-primary theme-transition"
+                className={`text-sm theme-transition ${
+                  isActiveLink(link.href)
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
               >
                 {link.name}
               </a>
@@ -304,7 +321,11 @@ export default function Navbar({ sticky = false }) {
                   <a
                     key={link.name}
                     href={link.href}
-                    className="text-lg font-medium text-foreground hover:text-primary theme-transition"
+                    className={`text-lg font-medium theme-transition ${
+                      isActiveLink(link.href)
+                        ? "text-primary"
+                        : "text-foreground hover:text-primary"
+                    }`}
                   >
                     {link.name}
                   </a>

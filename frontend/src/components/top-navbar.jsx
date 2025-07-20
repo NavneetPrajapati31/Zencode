@@ -13,9 +13,10 @@ import {
   Loader2,
   Sun,
   Moon,
+  Home,
 } from "lucide-react";
 import { LuX } from "react-icons/lu";
-import { RiGeminiFill } from "react-icons/ri";
+import { RiFocus2Line, RiGeminiFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAuth } from "./use-auth";
 import { useTheme } from "./theme-context-utils";
@@ -143,9 +144,18 @@ export default function TopNavbar({
     <nav className="flex items-center justify-between p-4 border-b border-border bg-background theme-transition">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
+          <Link to={"/"}>
+            <button
+              size="icon"
+              className="bg-accent text-muted-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+              aria-label="Home"
+            >
+              <Home className="h-4 w-4" />
+            </button>
+          </Link>
           <button
             size="icon"
-            className="bg-accent text-accent-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+            className="bg-accent text-muted-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
             onClick={toggleSidebar}
             aria-label="Toggle problems sidebar"
           >
@@ -153,7 +163,7 @@ export default function TopNavbar({
           </button>
           <button
             size="icon"
-            className="bg-accent text-accent-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+            className="bg-accent text-muted-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
             aria-label="Previous problem"
             onClick={handlePrevious}
             disabled={!canGoPrevious}
@@ -162,7 +172,7 @@ export default function TopNavbar({
           </button>
           <button
             size="icon"
-            className="bg-accent text-accent-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
+            className="bg-accent text-muted-foreground border border-border px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 theme-transition"
             aria-label="Next problem"
             onClick={handleNext}
             disabled={!canGoNext}

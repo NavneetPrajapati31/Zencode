@@ -12,7 +12,7 @@ export default function Footer() {
             className="flex items-center gap-2 text-lg font-bold text-primary mb-4 theme-transition"
           >
             {/* <Code className="h-7 w-7" /> */}
-            <RiFocus2Line className="h-8 w-8" />
+            <RiFocus2Line className="h-7 w-7" />
             {/* <svg
               width="36"
               height="36"

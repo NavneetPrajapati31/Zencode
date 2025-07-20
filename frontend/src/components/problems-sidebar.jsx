@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Search, CheckCircle, Circle, X } from "lucide-react";
+import {
+  Search,
+  CheckCircle,
+  Circle,
+  X,
+  ArrowRight,
+  ChevronRight,
+} from "lucide-react";
 import { problemsAPI } from "@/utils/api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -128,16 +135,19 @@ export function ProblemsSidebar() {
           >
             <div className="px-6 py-4 border-b border-border bg-background theme-transition">
               <div className="flex items-center justify-between">
-                <div className="text-left text-muted-foreground theme-transition text-sm font-semibold">
-                  Problems
-                </div>
+                <Link to={"/problems"}>
+                  <div className="flex flex-row items-center justify-center text-left text-muted-foreground theme-transition text-sm font-semibold">
+                    Problems
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </div>
+                </Link>
                 <button
                   className="p-1 rounded hover:bg-accent transition-colors"
                   onClick={closeSidebar}
                   aria-label="Close sidebar"
                   tabIndex={0}
                 >
-                  <X className="h-5 w-5 text-muted-foreground cursor-pointer" />
+                  <X className="h-4 w-4 text-muted-foreground cursor-pointer" />
                 </button>
               </div>
             </div>
