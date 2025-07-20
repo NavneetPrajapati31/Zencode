@@ -17,6 +17,7 @@ import { Mail, ArrowLeft, RefreshCw, CheckCircle } from "lucide-react";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
 import ProfileCompletionCard from "@/components/profile-completion-card";
+import { jwtDecode } from "jwt-decode";
 
 export default function VerifyOTP() {
   const [searchParams] = useSearchParams();
@@ -74,7 +75,15 @@ export default function VerifyOTP() {
       // If profile is complete, log in and redirect immediately
       if (result.user.profileComplete) {
         await login(result.token);
-        navigate("/problems");
+        const decoded = jwtDecode(result.token);
+        const userId = decoded.userId || decoded.id;
+
+        if (userId) {
+          navigate(`/profile/${userId}`);
+        } else {
+          // Fallback to problems page if user ID is not available
+          navigate("/problems");
+        }
       }
       // If profile is not complete, the profile completion card will be shown
     } catch (err) {
@@ -124,7 +133,15 @@ export default function VerifyOTP() {
 
       // Automatically log the user in after profile completion
       await login(data.token);
-      navigate("/problems");
+      const decoded = jwtDecode(data.token);
+      const userId = decoded.userId || decoded.id;
+
+      if (userId) {
+        navigate(`/profile/${userId}`);
+      } else {
+        // Fallback to problems page if user ID is not available
+        navigate("/problems");
+      }
     } catch (err) {
       setProfileError(err.message);
       localStorage.removeItem("tempToken");

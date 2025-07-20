@@ -86,10 +86,44 @@ export default function Navbar({ sticky = false }) {
                 </Button>
               </Link> */}
                 <Link to={"signup"}>
-                  <button className="bg-card text-card-foreground border border-border font-semibold !py-2 !px-5 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer">
+                  <button
+                    className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
+                      theme === "dark"
+                        ? "bg-accent border border-border"
+                        : "bg-card border border-border"
+                    }`}
+                  >
                     Sign Up
                   </button>
                 </Link>
+                {/* Theme Toggler */}
+                <button
+                  onClick={toggleTheme}
+                  disabled={isTransitioning}
+                  aria-label={
+                    theme === "dark"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleTheme();
+                    }
+                  }}
+                  className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
+                    theme === "dark"
+                      ? "bg-accent border border-border"
+                      : "bg-card border border-border"
+                  } ${isTransitioning ? "opacity-75" : ""}`}
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Moon className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </button>
               </>
             ) : (
               <div className="flex items-center gap-2">

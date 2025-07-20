@@ -18,6 +18,7 @@ import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode";
 
 const GITHUB_OAUTH_URL = `http://localhost:5000/api/auth/github`;
 const GOOGLE_OAUTH_URL = `http://localhost:5000/api/auth/google`;
@@ -63,8 +64,18 @@ export default function SignIn() {
 
       console.log("Calling login function...");
       await login(result.token);
-      console.log("Login successful, navigating to /problems");
-      navigate("/problems");
+      console.log("Login successful, navigating to profile");
+
+      // Decode the token to get user ID for navigation
+      const decoded = jwtDecode(result.token);
+      const userId = decoded.userId || decoded.id;
+
+      if (userId) {
+        navigate(`/profile/${userId}`);
+      } else {
+        // Fallback to problems page if user ID is not available
+        navigate("/problems");
+      }
     } catch (err) {
       console.error("Signin error:", err);
 

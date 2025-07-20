@@ -14,6 +14,7 @@ import { CheckCircle, XCircle, Mail, ArrowRight } from "lucide-react";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
 import ProfileCompletionModal from "@/components/profile-completion-modal";
+import { jwtDecode } from "jwt-decode";
 
 export default function VerifyEmail() {
   const [searchParams] = useSearchParams();
@@ -93,7 +94,15 @@ export default function VerifyEmail() {
       // Automatically log the user in after profile completion
       await login(data.token);
       setShowProfileModal(false);
-      navigate("/problems");
+      const decoded = jwtDecode(data.token);
+      const userId = decoded.userId || decoded.id;
+
+      if (userId) {
+        navigate(`/profile/${userId}`);
+      } else {
+        // Fallback to problems page if user ID is not available
+        navigate("/problems");
+      }
     } catch (err) {
       setProfileError(err.message);
       localStorage.removeItem("tempToken");

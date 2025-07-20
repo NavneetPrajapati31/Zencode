@@ -18,6 +18,7 @@ import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
+import { jwtDecode } from "jwt-decode";
 
 const GITHUB_OAUTH_URL = `http://localhost:5000/api/auth/github`;
 const GOOGLE_OAUTH_URL = `http://localhost:5000/api/auth/google`;
@@ -95,7 +96,17 @@ export default function SignUp() {
       } else if (result.token) {
         // If no email verification required, handle direct signup
         await login(result.token);
-        navigate("/problems");
+
+        // Decode the token to get user ID for navigation
+        const decoded = jwtDecode(result.token);
+        const userId = decoded.userId || decoded.id;
+
+        if (userId) {
+          navigate(`/profile/${userId}`);
+        } else {
+          // Fallback to problems page if user ID is not available
+          navigate("/problems");
+        }
       } else {
         setError("Signup succeeded but no token received.");
       }
