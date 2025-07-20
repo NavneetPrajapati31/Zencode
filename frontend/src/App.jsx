@@ -10,7 +10,7 @@ import VerifyOTP from "./pages/VerifyOTP";
 import ProblemsPage from "./pages/Problems";
 import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
-import Profile from "./pages/Profile";
+import Profile from "./pages/ProfileV2";
 import OAuthCallback from "./pages/OAuthCallback";
 import LeaderboardPage from "./pages/Leaderboard";
 import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
