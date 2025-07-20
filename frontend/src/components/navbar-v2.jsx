@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "./theme-context-utils";
 import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { LuX } from "react-icons/lu";
 
 export default function Navbar({ sticky = false }) {
