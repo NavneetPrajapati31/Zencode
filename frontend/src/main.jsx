@@ -1,51 +1,19 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.jsx";
 import { AuthProvider } from "@/components/auth-context";
 import ThemeProvider from "@/components/theme-context";
-import Navbar from "@/components/navbar-v2";
-import Footer from "@/components/footer";
-import { BrowserRouter, useLocation } from "react-router-dom";
-import { useMemo } from "react";
-
-const exceptionRoutes = [
-  "/",
-  "/signin",
-  "/signup",
-  "/oauth/callback",
-  "/forgot-password",
-  "/reset-password",
-  "/verify-email",
-  "/verify-otp",
-];
-
-const RootLayout = () => {
-  const location = useLocation();
-  const hideNavFooter = useMemo(
-    () =>
-      exceptionRoutes.includes(location.pathname) ||
-      /^\/problems\/[^/]+$/.test(location.pathname),
-    [location.pathname]
-  );
-
-  return (
-    <div className="font-inter min-h-screen bg-background text-foreground theme-transition">
-      <ThemeProvider>
-        <AuthProvider>
-          {!hideNavFooter && <Navbar />}
-          <App />
-          {!hideNavFooter && <Footer />}
-        </AuthProvider>
-      </ThemeProvider>
-    </div>
-  );
-};
+import { RootLayout } from "@/components/root-layout";
+import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <RootLayout />
+      <ThemeProvider>
+        <AuthProvider>
+          <RootLayout />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
 );

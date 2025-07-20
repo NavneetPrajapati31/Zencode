@@ -70,9 +70,9 @@ export default function Navbar({ sticky = false }) {
           {/* Center: Nav Links */}
           <nav className="hidden md:flex items-center gap-6 justify-center flex-none theme-transition">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className={`text-sm theme-transition ${
                   isActiveLink(link.href)
                     ? "text-primary"
@@ -80,7 +80,7 @@ export default function Navbar({ sticky = false }) {
                 }`}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
