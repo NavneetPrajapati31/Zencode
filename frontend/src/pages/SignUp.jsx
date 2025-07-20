@@ -157,8 +157,8 @@ export default function SignUp() {
     formData.confirmPassword !== "";
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-lg space-y-8">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6 custom-autofill">
+      <div className="w-full max-w-xl space-y-8">
         {/* Logo and Header */}
         {/* <div className="text-center">
           <p className="text-xl font-bold text-foreground">
@@ -171,7 +171,7 @@ export default function SignUp() {
 
         <Card className="bg-card border-border">
           <CardHeader className="space-y-1 border-border">
-            <CardTitle className="text-xl text-center text-foreground">
+            <CardTitle className="text-lg text-center text-foreground font-semibold">
               Create account
             </CardTitle>
             <CardDescription className="text-center text-muted-foreground">
@@ -230,7 +230,7 @@ export default function SignUp() {
                   placeholder="john@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
+                  className="!bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
                   required
                 />
               </div>
@@ -247,14 +247,14 @@ export default function SignUp() {
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
+                    className="!bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 bg-transparent text-muted-foreground hover:text-foreground"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -364,14 +364,14 @@ export default function SignUp() {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
+                    className="!bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 bg-transparent text-muted-foreground hover:text-foreground"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-muted-foreground hover:text-foreground"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -395,7 +395,9 @@ export default function SignUp() {
                           : "text-destructive"
                       }
                     >
-                      Passwords match
+                      {doPasswordsMatch
+                        ? "Passwords match"
+                        : "Passwords don't match"}
                     </span>
                   </div>
                 )}

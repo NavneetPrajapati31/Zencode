@@ -10,6 +10,7 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from "./ui/pagination";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const medalIcons = [
   { icon: "🥇", label: "Gold Medal" },
@@ -17,19 +18,19 @@ const medalIcons = [
   { icon: "🥉", label: "Bronze Medal" },
 ];
 
-const Avatar = ({ src, alt }) =>
-  src ? (
-    <img
-      src={src}
-      alt={alt}
-      className="w-10 h-10 rounded-full object-cover theme-transition"
-      loading="lazy"
-    />
-  ) : (
-    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-xl text-muted-foreground theme-transition">
-      <User2 className="w-6 h-6" aria-label="User avatar" />
-    </div>
-  );
+// const Avatar = ({ src, alt }) =>
+//   src ? (
+//     <img
+//       src={src}
+//       alt={alt}
+//       className="w-10 h-10 rounded-full object-cover theme-transition"
+//       loading="lazy"
+//     />
+//   ) : (
+//     <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-xl text-muted-foreground theme-transition">
+//       <User2 className="w-6 h-6" aria-label="User avatar" />
+//     </div>
+//   );
 
 const LeaderboardRow = ({ user, rank, isTop3 }) => (
   <tr
@@ -41,7 +42,21 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
     )}
   >
     <td className="px-4 py-3 flex items-center gap-3 min-w-[220px] theme-transition">
-      <Avatar src={user.avatar} alt={user.name} />
+      <Avatar className="h-10 w-10 theme-transition">
+        <AvatarImage
+          src={user?.avatar}
+          alt={user?.name || user?.email || "User"}
+        />
+        <AvatarFallback className="text-sm border border-border theme-transition">
+          {user?.name
+            ? user.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
+            : "U"}
+        </AvatarFallback>
+      </Avatar>
       <div className="flex flex-col gap-0.5 theme-transition">
         <span className="font-semibold text-sm text-foreground leading-tight theme-transition">
           {user.name}
@@ -185,7 +200,7 @@ const Leaderboard = () => {
                     e.preventDefault();
                     handlePageChange(1);
                   }}
-                  className="theme-transition"
+                  className="theme-transition !bg-accent"
                 >
                   1
                 </PaginationLink>
@@ -207,7 +222,7 @@ const Leaderboard = () => {
                       e.preventDefault();
                       handlePageChange(p);
                     }}
-                    className="theme-transition"
+                    className="theme-transition !bg-accent"
                   >
                     {p}
                   </PaginationLink>
@@ -226,7 +241,7 @@ const Leaderboard = () => {
                     e.preventDefault();
                     handlePageChange(totalPages);
                   }}
-                  className="theme-transition"
+                  className="theme-transition !bg-accent"
                 >
                   {totalPages}
                 </PaginationLink>

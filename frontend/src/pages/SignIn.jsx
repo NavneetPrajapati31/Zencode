@@ -63,8 +63,8 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-lg space-y-8">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6 custom-autofill">
+      <div className="w-full max-w-xl space-y-8">
         {/* Logo and Header */}
         {/* <div className="text-center">
           <p className="text-xl font-bold text-foreground">
@@ -77,7 +77,7 @@ export default function SignIn() {
 
         <Card className="bg-card border-border">
           <CardHeader className="space-y-1 border-border">
-            <CardTitle className="text-xl text-center text-foreground">
+            <CardTitle className="text-lg font-semibold text-center text-foreground">
               Sign in
             </CardTitle>
             <CardDescription className="text-center text-muted-foreground">
@@ -131,7 +131,7 @@ export default function SignIn() {
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary"
+                  className="!bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary"
                   required
                 />
               </div>
@@ -148,7 +148,7 @@ export default function SignIn() {
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
+                    className="!bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
                     required
                   />
                   <Button

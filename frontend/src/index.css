@@ -63,6 +63,78 @@ html {
     display: none;
   }
 
+  /* Autofill styling overrides - comprehensive approach */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus,
+  select:-webkit-autofill:active,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  textarea:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset !important;
+    -webkit-text-fill-color: var(--foreground) !important;
+    color: var(--foreground) !important;
+    background-color: var(--background) !important;
+    background-clip: content-box !important;
+    border-color: var(--border) !important;
+  }
+
+  /* Force autofill background to be transparent */
+  input:-webkit-autofill {
+    transition: background-color 5000s ease-in-out 0s !important;
+    -webkit-animation-name: autofill !important;
+    -webkit-animation-fill-mode: both !important;
+  }
+
+  /* Firefox autofill override */
+  input:-moz-autofill,
+  input:-moz-autofill:focus {
+    background-color: var(--background) !important;
+    color: var(--foreground) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* Edge autofill override */
+  input:-ms-input-placeholder {
+    color: var(--foreground) !important;
+  }
+
+  /* Additional specificity for form inputs */
+  form input:-webkit-autofill,
+  form input:-webkit-autofill:hover,
+  form input:-webkit-autofill:focus,
+  form input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset !important;
+    -webkit-text-fill-color: var(--foreground) !important;
+    color: var(--foreground) !important;
+    background-color: var(--background) !important;
+  }
+
+  /* Most aggressive autofill override - targets all possible states */
+  input[type="email"]:-webkit-autofill,
+  input[type="password"]:-webkit-autofill,
+  input[type="text"]:-webkit-autofill,
+  input[type="email"]:-webkit-autofill:hover,
+  input[type="password"]:-webkit-autofill:hover,
+  input[type="text"]:-webkit-autofill:hover,
+  input[type="email"]:-webkit-autofill:focus,
+  input[type="password"]:-webkit-autofill:focus,
+  input[type="text"]:-webkit-autofill:focus,
+  input[type="email"]:-webkit-autofill:active,
+  input[type="password"]:-webkit-autofill:active,
+  input[type="text"]:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 9999px var(--background) inset !important;
+    -webkit-text-fill-color: var(--foreground) !important;
+    color: var(--foreground) !important;
+    background-color: var(--background) !important;
+    background-image: none !important;
+  }
+
   /* Theme transition utilities - only for theme-dependent properties */
   .theme-transition {
     transition:
