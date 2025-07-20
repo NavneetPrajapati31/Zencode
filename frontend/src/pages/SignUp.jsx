@@ -18,10 +18,9 @@ import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { authAPI } from "@/utils/api";
 import { AuthContext } from "@/components/auth-context";
-import ProfileCompletionModal from "@/components/profile-completion-modal";
 
-const GITHUB_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/github`;
-const GOOGLE_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/google`;
+const GITHUB_OAUTH_URL = `http://localhost:5000/api/auth/github`;
+const GOOGLE_OAUTH_URL = `http://localhost:5000/api/auth/google`;
 
 const handleGithubOAuth = () => {
   window.location.href = GITHUB_OAUTH_URL;
@@ -51,14 +50,6 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [profileToken, setProfileToken] = useState("");
-  const [profileFormData, setProfileFormData] = useState({
-    fullName: "",
-    username: "",
-  });
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [profileError, setProfileError] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -96,59 +87,21 @@ export default function SignUp() {
     };
     try {
       const result = await authAPI.signup(userData);
-      if (result.token) {
+      if (result.message) {
+        // Email verification required
+        setError(
+          "Please check your email to verify your account before signing in."
+        );
+        // You could redirect to a verification pending page here
+      } else if (result.token) {
+        // If no email verification required, handle direct signup
         await login(result.token);
-        if (result.user && result.user.profileComplete === false) {
-          setProfileToken(result.token);
-          setProfileFormData({
-            fullName: "",
-            username: result.user.username || "",
-          });
-          setShowProfileModal(true);
-        } else {
-          navigate("/problems");
-        }
+        navigate("/problems");
       } else {
         setError("Signup succeeded but no token received.");
       }
     } catch (err) {
       setError(err.message || "Registration failed.");
-    }
-  };
-
-  const handleProfileInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfileFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleProfileSubmit = async (e) => {
-    e.preventDefault();
-    setProfileError("");
-    setProfileLoading(true);
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/complete-profile`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${profileToken}`,
-          },
-          body: JSON.stringify({
-            fullName: profileFormData.fullName,
-            username: profileFormData.username,
-          }),
-        }
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Profile completion failed");
-      await login(data.token);
-      setShowProfileModal(false);
-      navigate("/problems");
-    } catch (err) {
-      setProfileError(err.message);
-    } finally {
-      setProfileLoading(false);
     }
   };
 
@@ -469,14 +422,6 @@ export default function SignUp() {
           </p>
         </div>
       </div>
-      <ProfileCompletionModal
-        open={showProfileModal}
-        onSubmit={handleProfileSubmit}
-        formData={profileFormData}
-        onChange={handleProfileInputChange}
-        loading={profileLoading}
-        error={profileError}
-      />
     </div>
   );
 }

@@ -3,6 +3,9 @@ import "./App.css";
 import LandingPage from "./pages/LandingPageV2";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 import ProblemsPage from "./pages/Problems";
 import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
@@ -24,6 +27,9 @@ function AppContent() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/profile" element={<ProfileRedirect />} />
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/problems" element={<ProblemsPage />} />

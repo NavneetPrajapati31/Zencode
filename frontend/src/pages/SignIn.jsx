@@ -19,8 +19,8 @@ import { AuthContext } from "@/components/auth-context";
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 
-const GITHUB_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/github`;
-const GOOGLE_OAUTH_URL = `${import.meta.env.VITE_API_URL}/api/auth/google`;
+const GITHUB_OAUTH_URL = `http://localhost:5000/api/auth/github`;
+const GOOGLE_OAUTH_URL = `http://localhost:5000/api/auth/google`;
 
 const handleGithubOAuth = () => {
   window.location.href = GITHUB_OAUTH_URL;
@@ -51,14 +51,22 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    console.log("Signin form submitted:", { email: formData.email });
+
     try {
+      console.log("Calling authAPI.signin...");
       const result = await authAPI.signin({
         email: formData.email,
         password: formData.password,
       });
+      console.log("Signin API response:", result);
+
+      console.log("Calling login function...");
       await login(result.token);
+      console.log("Login successful, navigating to /problems");
       navigate("/problems");
     } catch (err) {
+      console.error("Signin error:", err);
       setError(err.message || "Login failed.");
     }
   };
@@ -132,7 +140,7 @@ export default function SignIn() {
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="!bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary"
+                  className="!bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
                   required
                 />
               </div>
@@ -149,10 +157,11 @@ export default function SignIn() {
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="!bg-card border-border text-primary-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
+                    className="!bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary pr-10"
                     required
                   />
                   <Button
+                    type="button"
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-muted-foreground !hover:bg-transparent hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}

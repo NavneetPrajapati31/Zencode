@@ -19,22 +19,38 @@ export function AuthProvider({ children }) {
 
   const fetchUserProfile = async () => {
     try {
+      console.log("[Auth] fetchUserProfile called");
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token");
+
+      console.log("[Auth] Token found, decoding...");
       const decoded = jwtDecode(token);
+      console.log("[Auth] Decoded token:", decoded);
+
       const username = decoded.username;
       if (!username) throw new Error("No username in token");
+
+      console.log(
+        "[Auth] Calling profileAPI.getProfile for username:",
+        username
+      );
       const userData = await profileAPI.getProfile(username);
+      console.log("[Auth] Profile API response:", userData);
+
       let user = userData.user || null;
       if (user && !user.role && decoded.role) {
         user = { ...user, role: decoded.role };
       }
+
+      console.log("[Auth] Setting user state:", user);
       setUser(user);
       console.log("[Auth] User loaded from backend:", userData.user);
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Error in fetchUserProfile:", error);
       localStorage.removeItem("token");
       setUser(null);
     } finally {
+      console.log("[Auth] Setting loading to false");
       setLoading(false);
     }
   };

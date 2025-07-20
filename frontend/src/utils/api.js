@@ -5,7 +5,8 @@ const API_BASE_URL = "http://localhost:5000/api";
 // Generic API call function
 const apiCall = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token") || localStorage.getItem("tempToken");
 
   const config = {
     headers: {
@@ -40,6 +41,34 @@ export const authAPI = {
     apiCall("/auth/signin", {
       method: "POST",
       body: JSON.stringify(credentials),
+    }),
+  forgotPassword: (email) =>
+    apiCall("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+  resetPassword: (token, password) =>
+    apiCall("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({ token, password }),
+    }),
+  validateResetToken: (token) =>
+    apiCall(`/auth/validate-reset-token/${token}`, {
+      method: "GET",
+    }),
+  verifyEmail: (token) =>
+    apiCall("/auth/verify-email", {
+      method: "POST",
+      body: JSON.stringify({ token }),
+    }),
+  resendVerification: () =>
+    apiCall("/auth/resend-verification", {
+      method: "POST",
+    }),
+  completeProfile: (profileData) =>
+    apiCall("/auth/complete-profile", {
+      method: "POST",
+      body: JSON.stringify(profileData),
     }),
 };
 
