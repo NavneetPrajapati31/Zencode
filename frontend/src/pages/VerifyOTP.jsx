@@ -76,10 +76,10 @@ export default function VerifyOTP() {
       if (result.user.profileComplete) {
         await login(result.token);
         const decoded = jwtDecode(result.token);
-        const userId = decoded.userId || decoded.id;
+        const username = decoded.username;
 
-        if (userId) {
-          navigate(`/profile/${userId}`);
+        if (username) {
+          navigate(`/profile/${username}`);
         } else {
           // Fallback to problems page if user ID is not available
           navigate("/problems");
@@ -134,10 +134,10 @@ export default function VerifyOTP() {
       // Automatically log the user in after profile completion
       await login(data.token);
       const decoded = jwtDecode(data.token);
-      const userId = decoded.userId || decoded.id;
+      const username = decoded.username;
 
-      if (userId) {
-        navigate(`/profile/${userId}`);
+      if (username) {
+        navigate(`/profile/${username}`);
       } else {
         // Fallback to problems page if user ID is not available
         navigate("/problems");
@@ -152,8 +152,8 @@ export default function VerifyOTP() {
 
   if (!email) {
     return (
-      <div className="h-[85vh] bg-background flex items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-6">
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <div className="w-full max-w-lg space-y-6">
           <Card className="bg-card border-border">
             <CardHeader className="space-y-1 border-border text-center">
               <CardTitle className="text-md font-semibold text-foreground">
@@ -179,8 +179,8 @@ export default function VerifyOTP() {
   }
 
   return (
-    <div className="h-[85vh] bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <div className="w-full max-w-lg space-y-6">
         {!isVerified ? (
           <Card className="bg-card border-border">
             <CardHeader className="space-y-1 border-border text-center">

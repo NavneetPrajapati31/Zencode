@@ -9,7 +9,16 @@ import Footer from "@/components/footer";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import { useMemo } from "react";
 
-const exceptionRoutes = ["/", "/signin", "/signup", "/oauth/callback"];
+const exceptionRoutes = [
+  "/",
+  "/signin",
+  "/signup",
+  "/oauth/callback",
+  "/forgot-password",
+  "/reset-password",
+  "/verify-email",
+  "/verify-otp",
+];
 
 const RootLayout = () => {
   const location = useLocation();

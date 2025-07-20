@@ -85,7 +85,7 @@ export default function Navbar({ sticky = false }) {
                   Login
                 </Button>
               </Link> */}
-                <Link to={"signup"}>
+                <Link to={"signin"}>
                   <button
                     className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
                       theme === "dark"
@@ -93,7 +93,7 @@ export default function Navbar({ sticky = false }) {
                         : "bg-card border border-border"
                     }`}
                   >
-                    Sign Up
+                    Sign In
                   </button>
                 </Link>
                 {/* Theme Toggler */}

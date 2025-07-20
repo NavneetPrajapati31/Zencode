@@ -107,16 +107,16 @@ export default function ResetPassword() {
   if (isSuccess) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-6">
+        <div className="w-full max-w-lg space-y-6">
           <Card className="bg-card border-border">
             <CardHeader className="space-y-1 border-border text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-                <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
-              <CardTitle className="text-xl text-foreground">
+              <CardTitle className="text-md font-semibold text-foreground">
                 Password reset successful
               </CardTitle>
-              <CardDescription className="text-muted-foreground">
+              <CardDescription className="text-sm font-light text-muted-foreground">
                 Your password has been successfully reset. You can now sign in
                 with your new password.
               </CardDescription>
@@ -138,16 +138,16 @@ export default function ResetPassword() {
   if (!isValidToken) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-6">
+        <div className="w-full max-w-lg space-y-6">
           <Card className="bg-card border-border">
             <CardHeader className="space-y-1 border-border text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900">
-                <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900">
+                <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
-              <CardTitle className="text-xl text-foreground">
+              <CardTitle className="text-md font-semibold text-foreground">
                 Invalid reset link
               </CardTitle>
-              <CardDescription className="text-muted-foreground">
+              <CardDescription className="text-sm font-light text-muted-foreground">
                 {error}
               </CardDescription>
             </CardHeader>
@@ -167,13 +167,13 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-6">
+      <div className="w-full max-w-lg space-y-6">
         <Card className="bg-card border-border">
           <CardHeader className="space-y-1 border-border">
-            <CardTitle className="text-xl text-center text-foreground">
+            <CardTitle className="text-md font-semibold text-center text-foreground">
               Reset your password
             </CardTitle>
-            <CardDescription className="text-center text-muted-foreground">
+            <CardDescription className="text-sm font-light text-center text-muted-foreground">
               Enter your new password below.
             </CardDescription>
           </CardHeader>
@@ -205,7 +205,7 @@ export default function ResetPassword() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 bg-transparent text-muted-foreground hover:text-foreground"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-muted-foreground hover:text-foreground"
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
@@ -238,7 +238,7 @@ export default function ResetPassword() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 bg-transparent text-muted-foreground hover:text-foreground"
+                    className="absolute right-0 top-0 h-full px-3 py-2 !bg-transparent text-muted-foreground hover:text-foreground"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     disabled={isLoading}
                   >

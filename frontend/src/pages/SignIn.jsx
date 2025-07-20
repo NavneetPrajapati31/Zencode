@@ -68,10 +68,10 @@ export default function SignIn() {
 
       // Decode the token to get user ID for navigation
       const decoded = jwtDecode(result.token);
-      const userId = decoded.userId || decoded.id;
+      const username = decoded.username;
 
-      if (userId) {
-        navigate(`/profile/${userId}`);
+      if (username) {
+        navigate(`/profile/${username}`);
       } else {
         // Fallback to problems page if user ID is not available
         navigate("/problems");

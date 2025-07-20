@@ -44,16 +44,16 @@ export default function ForgotPassword() {
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-6">
+        <div className="w-full max-w-lg space-y-6">
           <Card className="bg-card border-border">
             <CardHeader className="space-y-1 border-border text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-                <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
-              <CardTitle className="text-xl text-foreground">
+              <CardTitle className="text-md font-semibold text-foreground">
                 Check your email
               </CardTitle>
-              <CardDescription className="text-muted-foreground">
+              <CardDescription className="text-sm font-light text-muted-foreground">
                 We've sent a password reset link to{" "}
                 <span className="font-medium text-foreground">{email}</span>
               </CardDescription>
@@ -85,13 +85,13 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-6">
+      <div className="w-full max-w-lg space-y-6">
         <Card className="bg-card border-border">
           <CardHeader className="space-y-1 border-border">
-            <CardTitle className="text-xl text-center text-foreground">
+            <CardTitle className="text-md font-semibold text-center text-foreground">
               Forgot your password?
             </CardTitle>
-            <CardDescription className="text-center text-muted-foreground">
+            <CardDescription className="text-center text-sm font-light text-muted-foreground">
               Enter your email address and we'll send you a link to reset your
               password.
             </CardDescription>
@@ -143,8 +143,7 @@ export default function ForgotPassword() {
             <div className="text-center">
               <Button
                 asChild
-                variant="ghost"
-                className="text-muted-foreground hover:text-foreground"
+                className="w-full !bg-accent text-muted-foreground"
               >
                 <Link to="/signin">
                   <ArrowLeft className="mr-2 h-4 w-4" />
