@@ -183,7 +183,7 @@ const generateHeatmapData = () => {
   };
 };
 
-export default function Heatmap() {
+const Heatmap = () => {
   const { weekColumns, totalSubmissions, totalActiveDays, maxStreak } =
     React.useMemo(generateHeatmapData, []);
 
@@ -233,7 +233,7 @@ export default function Heatmap() {
   }, [weekColumns, weekColumnLeftOffsets]);
 
   return (
-    <Card className="w-full max-w-4xl bg-transparent text-gh-text-light rounded-none border-none shadow-none !gap-0">
+    <Card className="w-full max-w-full px-6 bg-card rounded-none gap-0 border-none shadow-none theme-transition">
       <CardHeader className="flex flex-row items-center justify-between p-0">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span className="font-semibold text-sm">{totalSubmissions}</span>{" "}
@@ -334,4 +334,6 @@ export default function Heatmap() {
       </div>
     </Card>
   );
-}
+};
+
+export default React.memo(Heatmap);

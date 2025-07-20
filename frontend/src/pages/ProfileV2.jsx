@@ -15,7 +15,7 @@ import Heatmap from "@/components/heatmap";
 export default function Profile() {
   const { user } = useAuth();
   return (
-    <div className="h-full flex justify-center items-center px-6 lg:px-10 mb-8">
+    <div className="h-full flex justify-center items-center px-6 lg:px-10 mb-8 theme-transition">
       {/* Hero Content */}
 
       <div
@@ -24,24 +24,24 @@ export default function Profile() {
       >
         {/* First row: 3 cards */}
         <Card
-          className="h-full flex flex-col items-center justify-center border-border md:col-span-1 md:row-span-2 p-0 gap-0"
+          className="h-full flex flex-col items-center justify-center bg-card border border-border md:col-span-1 md:row-span-2 p-0 gap-0 shadow-none theme-transition"
           aria-label="Profile summary"
           tabIndex={0}
         >
           <div
-            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border theme-transition justify-between"
+            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border justify-between"
             aria-label="Window controls"
             tabIndex={0}
           >
             <span className="text-sm text-muted-foreground">Profile</span>
           </div>
           <div className="flex flex-col w-full justify-center items-center py-4 px-6">
-            <Avatar className="h-20 w-20 theme-transition mb-3">
+            <Avatar className="h-20 w-20 mb-3">
               <AvatarImage
                 src={user?.avatar}
                 alt={user?.name || user?.email || "User"}
               />
-              <AvatarFallback className="text-3xl border border-border theme-transition">
+              <AvatarFallback className="text-3xl border border-border">
                 {user?.name
                   ? user.name
                       .split(" ")
@@ -51,26 +51,22 @@ export default function Profile() {
                   : "U"}
               </AvatarFallback>
             </Avatar>
-            <h2 className="text-lg font-medium text-foreground">
-              Navneet Prajapati
-            </h2>
-            <span className="text-muted-foreground text-sm font-normal">
-              {`@${user.username}`}
-            </span>
+            <span className="text-lg font-medium">Navneet Prajapati</span>
+            <span className="text-muted-foreground text-sm font-normal">{`@${user.username}`}</span>
           </div>
           <Separator className="!w-10/12" />
           <div className="flex flex-col w-full justify-center py-4 px-6">
-            <span className="text-sm font-normal text-muted-foreground !text-left mb-2">
+            <span className="text-sm font-normal text-muted-foreground text-left mb-2">
               Leaderboard Rank
             </span>
-            <span className="flex flex-row gap-2 text-md font-semibold text-foreground mb-2">
-              <BiSolidBarChartAlt2 className="w-5 h-5" />
+            <span className="flex flex-row gap-2 text-md font-semibold mb-2 text-muted-foreground">
+              <BiSolidBarChartAlt2 className="w-5 h-5 " />
               690
             </span>
             <Link to={"/leaderboard"}>
               <Button
                 variant={"outline"}
-                className="!w-full text-sm !bg-primary/10 text-primary hover:text-primary !border-none"
+                className="w-full text-sm !bg-primary/10 text-primary hover:text-primary border-none"
               >
                 View Leaderboard
               </Button>
@@ -80,7 +76,7 @@ export default function Profile() {
           <div className="flex flex-col w-full justify-center py-4 px-6 gap-2">
             <Button
               variant={"outline"}
-              className="text-muted-foreground text-sm"
+              className="!bg-accent text-muted-foreground text-sm"
             >
               <FaGithub className="h-6 w-6" />
               Add Github
@@ -88,14 +84,14 @@ export default function Profile() {
 
             <Button
               variant={"outline"}
-              className="text-muted-foreground text-sm"
+              className="!bg-accent text-muted-foreground text-sm"
             >
               <FaLinkedin className="h-6 w-6" />
               Add LinkedIn
             </Button>
             <Button
               variant={"outline"}
-              className="text-muted-foreground text-sm"
+              className="!bg-accent text-muted-foreground text-sm"
             >
               <FaXTwitter className="h-6 w-6" />
               Add Twitter
@@ -103,12 +99,12 @@ export default function Profile() {
           </div>
         </Card>
         <Card
-          className="h-full flex items-center justify-center border-border md:col-span-1 p-0 gap-0"
+          className="h-full flex items-center justify-center bg-card border-border md:col-span-1 p-0 gap-0 shadow-none theme-transition"
           aria-label="Bento card 2"
           tabIndex={0}
         >
           <div
-            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border theme-transition justify-between"
+            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border justify-between"
             aria-label="Window controls"
             tabIndex={0}
           >
@@ -139,22 +135,15 @@ export default function Profile() {
               <span className="text-sm font-normal">Hard</span>
               <span className="text-sm font-normal">38</span>
             </Button>
-            {/* <Button
-                variant={"outline"}
-                className="!text-muted-foreground text-sm justify-between border-none"
-              >
-                <span>Total</span>
-                <span>125</span>
-              </Button> */}
           </div>
         </Card>
         <Card
-          className="h-full flex items-center justify-center border-border md:col-span-2 p-0 gap-0"
+          className="h-full flex items-center justify-center bg-card border-border md:col-span-2 p-0 gap-0 shadow-none theme-transition"
           aria-label="Bento card 2"
           tabIndex={0}
         >
           <div
-            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border theme-transition justify-between"
+            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border justify-between"
             aria-label="Window controls"
             tabIndex={0}
           >
@@ -166,7 +155,7 @@ export default function Profile() {
           <div className="flex flex-col w-full justify-center py-4 px-6 gap-2">
             <Button
               variant={"outline"}
-              className="text-muted-foreground text-sm justify-between"
+              className="!bg-accent text-muted-foreground text-sm justify-between"
             >
               <span className="text-sm font-normal truncate">
                 Longest Substring Without Repeating Characters
@@ -176,7 +165,7 @@ export default function Profile() {
 
             <Button
               variant={"outline"}
-              className="text-muted-foreground text-sm justify-between"
+              className="!bg-accent text-muted-foreground text-sm justify-between"
             >
               <span className="text-sm font-normal truncate">
                 Container With Most Water
@@ -185,35 +174,23 @@ export default function Profile() {
             </Button>
             <Button
               variant={"outline"}
-              className="text-muted-foreground text-sm justify-between"
+              className="!bg-accent text-muted-foreground text-sm justify-between"
             >
               <span className="text-sm font-normal truncate">
                 Integer to Roman
               </span>
               <span className="text-sm font-normal">Jul 17, 2025</span>
             </Button>
-            {/* <Button
-            variant={"outline"}
-            className="!text-muted-foreground text-sm justify-between border-none"
-          >
-            <span>Total</span>
-            <span>125</span>
-          </Button> */}
           </div>
         </Card>
-        {/* <Card
-            className="h-full flex items-center justify-center border-border md:col-span-1 p-0 gap-0"
-            aria-label="Bento card 3"
-            tabIndex={0}
-          /> */}
         {/* Second row: 1 card spanning all columns */}
         <Card
-          className="flex items-center md:col-span-3 border-border p-0 gap-0"
+          className="flex items-center bg-card md:col-span-3 border-border p-0 gap-0 shadow-none theme-transition"
           aria-label="Bento card 4"
           tabIndex={0}
         >
           <div
-            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border theme-transition justify-between"
+            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border justify-between"
             aria-label="Window controls"
             tabIndex={0}
           >

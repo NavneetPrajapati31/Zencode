@@ -585,26 +585,25 @@ input[type="password"]::-webkit-inner-spin-button {
 @layer utilities {
   .bg-gh-heatmap-inactive {
     background-color: var(--border); /* Tailwind gray-200 */
+    transition: background-color 0.3s;
   }
   .bg-gh-heatmap-green-1 {
     background-color: var(--color-green-800); /* Light green */
+    transition: background-color 0.3s;
   }
   .bg-gh-heatmap-green-2 {
     background-color: var(--color-green-700); /* Medium green */
+    transition: background-color 0.3s;
   }
   .bg-gh-heatmap-green-3 {
     background-color: var(--color-green-600); /* Darker green */
+    transition: background-color 0.3s;
   }
   .bg-gh-heatmap-green-4 {
     background-color: var(--color-green-500); /* Darkest green */
+    transition: background-color 0.3s;
   }
   .bg-gh-card-bg {
     background-color: #18181b; /* Tailwind zinc-900 or custom dark */
-  }
-  .text-gh-text-light {
-    color: #fffff; /* Tailwind gray-100 */
-  }
-  .text-gh-text-muted {
-    color: #a1a1aa; /* Tailwind zinc-400 */
   }
 }
