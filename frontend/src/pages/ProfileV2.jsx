@@ -57,7 +57,7 @@ export default function Profile() {
               <span className="text-sm text-muted-foreground">Profile</span>
             </div>
             <div className="flex flex-col w-full justify-center items-center py-4 px-6">
-              <Avatar className="h-25 w-25 theme-transition mb-3">
+              <Avatar className="h-20 w-20 theme-transition mb-3">
                 <AvatarImage
                   src={user?.avatar}
                   alt={user?.name || user?.email || "User"}
@@ -84,8 +84,8 @@ export default function Profile() {
               <span className="text-sm font-normal text-muted-foreground !text-left mb-2">
                 Leaderboard Rank
               </span>
-              <span className="flex flex-row gap-2 text-lg font-semibold text-foreground mb-2">
-                <BiSolidBarChartAlt2 className="w-6 h-6" />
+              <span className="flex flex-row gap-2 text-md font-semibold text-foreground mb-2">
+                <BiSolidBarChartAlt2 className="w-5 h-5" />
                 690
               </span>
               <Button

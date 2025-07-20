@@ -183,40 +183,60 @@ const generateHeatmapData = () => {
   };
 };
 
-// Generate month labels based on week columns
-const getMonthLabels = (weekColumns) => {
-  const labels = [];
-  const seenMonths = new Set();
-
-  weekColumns.forEach((column, index) => {
-    // Find first non-null day to determine the month
-    const firstDay = column.days.find((day) => day !== null);
-    if (firstDay && !seenMonths.has(firstDay.month)) {
-      labels.push({
-        name: getMonthName(firstDay.month),
-        weekIndex: index,
-        month: firstDay.month,
-      });
-      seenMonths.add(firstDay.month);
-    }
-  });
-
-  return labels;
-};
-
 export default function Heatmap() {
   const { weekColumns, totalSubmissions, totalActiveDays, maxStreak } =
     React.useMemo(generateHeatmapData, []);
-  const monthLabels = React.useMemo(
-    () => getMonthLabels(weekColumns),
-    [weekColumns]
-  );
+
+  // Calculate left offsets for each week column, accounting for ml-6 (24px), ml-4 (16px), and ml-0.5 (2px)
+  const weekColumnLeftOffsets = React.useMemo(() => {
+    const offsets = [];
+    let currentLeft = 4; // ml-6 = 24px
+    for (let i = 0; i < weekColumns.length; i++) {
+      if (i > 0 && weekColumns[i].isFirstWeekOfMonth) {
+        currentLeft += 15; // ml-4 = 16px
+      } else if (i > 0) {
+        currentLeft += 2; // ml-0.5 = 2px
+      }
+      offsets.push(currentLeft);
+      currentLeft += 12; // w-3 = 12px
+    }
+    return offsets;
+  }, [weekColumns]);
+
+  // Generate month labels with true center pixel position
+  const monthLabels = React.useMemo(() => {
+    // Map from month to array of week indices
+    const monthToWeeks = new Map();
+    weekColumns.forEach((column, weekIdx) => {
+      const firstDay = column.days.find((day) => day !== null);
+      if (firstDay) {
+        if (!monthToWeeks.has(firstDay.month)) {
+          monthToWeeks.set(firstDay.month, []);
+        }
+        monthToWeeks.get(firstDay.month).push(weekIdx);
+      }
+    });
+    // For each month, calculate center pixel position
+    return Array.from(monthToWeeks.entries()).map(([month, weekIndices]) => {
+      const startIdx = weekIndices[0];
+      const endIdx = weekIndices[weekIndices.length - 1];
+      const leftStart = weekColumnLeftOffsets[startIdx];
+      const leftEnd = weekColumnLeftOffsets[endIdx];
+      // Center between the two columns (add 12 for width of last column)
+      const centerPx = (leftStart + leftEnd + 12) / 2;
+      return {
+        name: getMonthName(month),
+        month,
+        centerPx,
+      };
+    });
+  }, [weekColumns, weekColumnLeftOffsets]);
 
   return (
     <Card className="w-full max-w-4xl bg-transparent text-gh-text-light rounded-none border-none shadow-none !gap-0">
       <CardHeader className="flex flex-row items-center justify-between p-0">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="font-medium text-sm">{totalSubmissions}</span>{" "}
+          <span className="font-semibold text-sm">{totalSubmissions}</span>{" "}
           submissions in the past one year
         </div>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -282,7 +302,7 @@ export default function Heatmap() {
                             className={`w-3 h-3 rounded-xs ${getDayColor(day.count)} cursor-pointer`}
                           />
                         </TooltipTrigger>
-                        <TooltipContent className="bg-gray-700 text-white text-xs p-1 rounded-md">
+                        <TooltipContent className="bg-accent text-muted-foreground text-sm p-2 rounded-md">
                           <span>
                             {day.count} submissions on {day.date.toDateString()}
                           </span>
@@ -296,19 +316,19 @@ export default function Heatmap() {
           </div>
 
           {/* Month labels */}
-          <div className="flex ml-6 mt-4 relative" style={{ height: "18px" }}>
-            {monthLabels.map((month) => {
-              const left = month.weekIndex * 16;
-              return (
-                <span
-                  key={`${month.name}-${month.weekIndex}-${month.month}`}
-                  className="absolute text-xs text-muted-foreground"
-                  style={{ left: `${left}px` }}
-                >
-                  {month.name}
-                </span>
-              );
-            })}
+          <div className="flex mt-4 relative" style={{ height: "18px" }}>
+            {monthLabels.map((month) => (
+              <span
+                key={`${month.name}-${month.month}`}
+                className="absolute text-xs text-muted-foreground"
+                style={{
+                  left: `${month.centerPx}px`,
+                  transform: "translateX(-50%)",
+                }}
+              >
+                {month.name}
+              </span>
+            ))}
           </div>
         </div>
       </div>
