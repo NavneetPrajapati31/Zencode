@@ -226,13 +226,13 @@ export default function ProblemDescription({ problem }) {
   };
 
   return (
-    <div className="p-4 overflow-y-auto no-scrollbar bg-transparent text-foreground theme-transition">
+    <div className="py-4 px-5 overflow-y-auto no-scrollbar bg-transparent text-foreground theme-transition">
       {/* Tabs */}
       <div className="w-full theme-transition">
         <div className="theme-transition">
           {/* Problem Title and Solved Status */}
           <div className="flex items-center justify-between mb-4 theme-transition">
-            <h1 className="text-xl text-left font-bold theme-transition">
+            <h1 className="!text-lg text-left font-medium theme-transition">
               {problem.title}
             </h1>
             {isSolved && user?.role === "user" && (
@@ -263,26 +263,26 @@ export default function ProblemDescription({ problem }) {
             )}
           </div>
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-6 theme-transition">
+          <div className="flex flex-wrap gap-2 mb-4 theme-transition">
             <span
-              className={`text-xs font-medium px-3 py-0.5 rounded-full theme-transition ${getDifficultyColor(problem.difficulty)}`}
+              className={`text-sm font-light px-3 py-0.5 rounded-full theme-transition ${getDifficultyColor(problem.difficulty)}`}
             >
               {problem.difficulty || "Unknown"}
             </span>
             {/* Add more tags if available in problem object */}
           </div>
           {/* Problem Statement */}
-          <div className="text-foreground leading-relaxed space-y-4 text-md text-left theme-transition">
+          <div className="text-foreground leading-relaxed space-y-4 !text-md font-normal text-left theme-transition">
             <p className="theme-transition">{problem.description}</p>
             {/* Render examples if available */}
             {problem.examples && problem.examples.length > 0 && (
               <div className="space-y-4 theme-transition">
                 {problem.examples.map((ex, i) => (
                   <div key={i} className="theme-transition">
-                    <h3 className="font-semibold text-foreground text-md mb-2 theme-transition">
+                    <h3 className="font-medium text-muted-foreground text-md mb-2 theme-transition">
                       Example {i + 1}:
                     </h3>
-                    <div className="bg-muted p-3 rounded-md text-sm theme-transition">
+                    <div className="bg-muted p-3 rounded-md text-md theme-transition">
                       <pre className="whitespace-pre-wrap break-words theme-transition">
                         <code className="block theme-transition">
                           Input: {ex.input}
@@ -303,8 +303,8 @@ export default function ProblemDescription({ problem }) {
             )}
             {/* Constraints */}
             {problem.constraints && problem.constraints.length > 0 && (
-              <div className="space-y-2 theme-transition">
-                <h3 className="font-semibold text-foreground text-md theme-transition">
+              <div className="space-y-1 theme-transition">
+                <h3 className="font-medium text-md text-muted-foreground text-md theme-transition">
                   Constraints:
                 </h3>
                 <ul className="list-disc list-inside text-md space-y-1 theme-transition">

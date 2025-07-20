@@ -60,7 +60,7 @@ export default function Navbar({ sticky = false }) {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm text-muted-foreground hover:text-primary theme-transition-fast"
+                className="text-sm text-muted-foreground hover:text-primary theme-transition"
               >
                 {link.name}
               </a>

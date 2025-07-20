@@ -38,15 +38,15 @@ export default function LandingPage() {
               >
                 <div className="flex space-x-2">
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-red-500 theme-transition-fast"
+                    className="w-2.5 h-2.5 rounded-full bg-red-500 theme-transition"
                     aria-label="Close"
                   />
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-yellow-500 theme-transition-fast"
+                    className="w-2.5 h-2.5 rounded-full bg-yellow-500 theme-transition"
                     aria-label="Minimize"
                   />
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-green-500 theme-transition-fast"
+                    className="w-2.5 h-2.5 rounded-full bg-green-500 theme-transition"
                     aria-label="Maximize"
                   />
                 </div>
@@ -64,7 +64,7 @@ export default function LandingPage() {
                   and master your skills.
                 </p>
                 <Link to={"/problems"}>
-                  <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg theme-transition-fast group">
+                  <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-full text-md shadow-lg theme-transition group">
                     Get Started
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
                   </Button>

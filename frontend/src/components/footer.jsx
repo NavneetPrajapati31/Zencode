@@ -63,7 +63,7 @@ export default function Footer() {
             <li>
               <a
                 href="#features"
-                className="hover:text-primary transition-colors duration-200 theme-transition-fast"
+                className="hover:text-primary transition-colors duration-200 theme-transition"
               >
                 Features
               </a>
@@ -71,7 +71,7 @@ export default function Footer() {
             <li>
               <a
                 href="#dashboard"
-                className="hover:text-primary transition-colors duration-200 theme-transition-fast"
+                className="hover:text-primary transition-colors duration-200 theme-transition"
               >
                 Dashboard
               </a>
@@ -79,7 +79,7 @@ export default function Footer() {
             <li>
               <a
                 href="#testimonials"
-                className="hover:text-primary transition-colors duration-200 theme-transition-fast"
+                className="hover:text-primary transition-colors duration-200 theme-transition"
               >
                 Testimonials
               </a>
@@ -96,21 +96,21 @@ export default function Footer() {
             <a
               href="#"
               aria-label="GitHub"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition"
             >
               <Github className="h-5 w-5" />
             </a>
             <a
               href="#"
               aria-label="Discord"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition"
             >
               <Discord className="h-5 w-5" />
             </a>
             <a
               href="#"
               aria-label="Twitter"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition-fast"
+              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition"
             >
               <Twitter className="h-5 w-5" />
             </a>

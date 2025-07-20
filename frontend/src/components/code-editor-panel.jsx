@@ -388,7 +388,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   return (
     <div className="flex flex-col h-full bg-background text-foreground rounded-none theme-transition">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border theme-transition">
+      <div className="flex items-center justify-between pl-4 pr-2 py-2 border-b border-border theme-transition">
         <div className="flex items-center space-x-2 theme-transition">
           {getFileIcon(language)}
           <span className="font-medium text-muted-foreground text-sm theme-transition">
@@ -488,7 +488,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
               {publicTestcases.map((tc, idx) => (
                 <button
                   key={idx}
-                  className={`text-sm px-5 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-muted text-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                  className={`text-sm px-5 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-accent text-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}
                   onClick={() => {
                     setActiveTestcaseType("public");
                     setActiveTestcaseIdx(idx);
@@ -516,7 +516,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                     Custom {idx + 1}
                   </button>
                   <button
-                    className="absolute -right-1.5 -top-2 text-muted-foreground bg-muted rounded-full px-1.5 hover:cursor-pointer text-sm theme-transition"
+                    className="absolute -right-2 -top-2.5 text-muted-foreground bg-accent rounded-full px-1.5 hover:cursor-pointer text-sm theme-transition border border-border"
                     onClick={() => handleRemoveCustomTestcase(idx)}
                     aria-label="Remove custom testcase"
                   >
@@ -526,7 +526,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
               ))}
               {/* Add (+) tab */}
               <button
-                className={`text-sm px-3 py-1 rounded font-bold bg-card text-muted-foreground hover:bg-muted focus:outline-none theme-transition`}
+                className={`text-sm px-4 py-1.5 rounded font-bold bg-card text-muted-foreground hover:bg-muted focus:outline-none theme-transition`}
                 onClick={() => {
                   setActiveTestcaseType("add");
                   setActiveTestcaseIdx(-1);
@@ -534,7 +534,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                 tabIndex={0}
                 aria-label="Add custom testcase"
               >
-                +
+                <Plus className="h-4 w-4" />
               </button>
             </div>
             {/* Testcase Details */}
@@ -542,18 +542,18 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
             publicTestcases[activeTestcaseIdx] ? (
               <div className="space-y-3 text-left theme-transition">
                 <div className="theme-transition">
-                  <span className="text-muted-foreground text-sm theme-transition">
+                  <span className="text-muted-foreground text-md theme-transition">
                     Input:
                   </span>
-                  <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap text-left min-h-8 theme-transition">
+                  <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap text-left min-h-8 theme-transition">
                     {publicTestcases[activeTestcaseIdx].input}
                   </div>
                 </div>
                 <div className="theme-transition">
-                  <span className="text-muted-foreground text-sm theme-transition">
+                  <span className="text-muted-foreground text-md theme-transition">
                     Expected Output:
                   </span>
-                  <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap theme-transition">
+                  <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap theme-transition">
                     {publicTestcases[activeTestcaseIdx].output}
                   </div>
                 </div>
@@ -567,25 +567,25 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                 {runResults[activeTestcaseIdx] && (
                   <div className="space-y-1 theme-transition">
                     <div className="theme-transition">
-                      <span className="text-muted-foreground text-sm theme-transition">
+                      <span className="text-muted-foreground text-md theme-transition">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap min-h-8 theme-transition">
+                      <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap min-h-8 theme-transition">
                         {runResults[activeTestcaseIdx].output}
                       </div>
                     </div>
                     <div className="theme-transition">
-                      <span className="text-muted-foreground text-sm theme-transition">
+                      <span className="text-muted-foreground text-md theme-transition">
                         Verdict:
                       </span>
                       <span
-                        className={`ml-2 font-semibold text-sm theme-transition ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-500" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-warning"}`}
+                        className={`ml-2 font-semibold text-md theme-transition ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-500" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-warning"}`}
                       >
                         {runResults[activeTestcaseIdx].verdict}
                       </span>
                     </div>
                     {runResults[activeTestcaseIdx].error && (
-                      <div className="text-sm text-destructive mt-1 theme-transition">
+                      <div className="text-md text-destructive mt-1 theme-transition">
                         Error: {runResults[activeTestcaseIdx].error}
                       </div>
                     )}
@@ -595,19 +595,19 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
             ) : null}
             {activeTestcaseType === "custom" &&
             customTestcases[activeTestcaseIdx] ? (
-              <div className="space-y-3 text-left theme-transition">
+              <div className="space-y-2 text-left theme-transition">
                 <div className="theme-transition">
                   <span className="text-muted-foreground theme-transition">
                     Input:
                   </span>
                   {customEditIdx === activeTestcaseIdx ? (
                     <textarea
-                      className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
+                      className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-md border border-border focus:outline-none focus:ring-0 theme-transition mt-2"
                       value={customEditInput}
                       onChange={(e) => setCustomEditInput(e.target.value)}
                     />
                   ) : (
-                    <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap min-h-8 theme-transition">
+                    <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap min-h-8 theme-transition">
                       {customTestcases[activeTestcaseIdx].input}
                     </div>
                   )}
@@ -643,17 +643,17 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                 </div>
                 {/* Show run result for this custom testcase if available */}
                 {customTestcases[activeTestcaseIdx].result && (
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <div>
-                      <span className="text-muted-foreground text-sm">
+                      <span className="text-muted-foreground text-md">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-sm whitespace-pre-wrap min-h-8">
+                      <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap min-h-8">
                         {customTestcases[activeTestcaseIdx].result.output}
                       </div>
                     </div>
                     {customTestcases[activeTestcaseIdx].result.error && (
-                      <div className="text-sm text-destructive mt-1">
+                      <div className="text-md text-destructive mt-1">
                         Error: {customTestcases[activeTestcaseIdx].result.error}
                       </div>
                     )}
@@ -662,13 +662,13 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
               </div>
             ) : null}
             {activeTestcaseType === "add" && (
-              <div className="space-y-3 text-left theme-transition">
+              <div className="space-y-2 text-left theme-transition">
                 <div className="theme-transition">
-                  <span className="text-muted-foreground text-sm theme-transition">
+                  <span className="text-muted-foreground text-md theme-transition">
                     Input:
                   </span>
                   <textarea
-                    className="w-full min-h-[60px] bg-muted text-muted-foreground rounded p-2 font-mono text-sm border border-border focus:outline-none mt-2 theme-transition"
+                    className="w-full min-h-[60px] bg-muted text-muted-foreground rounded p-2 font-mono text-md border border-border focus:outline-none mt-2 theme-transition"
                     value={customInputDraft}
                     onChange={(e) => setCustomInputDraft(e.target.value)}
                     placeholder="Enter custom input..."
@@ -689,28 +689,28 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
           <div className="theme-transition">
             <label
               htmlFor="custom-input"
-              className="block text-sm text-muted-foreground mb-1 theme-transition"
+              className="block text-md text-muted-foreground mb-1 theme-transition"
             >
               Custom Input (stdin):
             </label>
             <textarea
               id="custom-input"
-              className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
+              className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-md border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
               value={customInputDraft}
               onChange={(e) => setCustomInputDraft(e.target.value)}
               aria-label="Custom input"
             />
-            <div className="text-sm text-muted-foreground mt-1 theme-transition">
+            <div className="text-md text-muted-foreground mt-1 theme-transition">
               This input will be included in the next Run.
             </div>
           </div>
         )}
         {activeTab === "output" && (
           <div className="theme-transition">
-            <div className="text-sm text-muted-foreground mb-2 theme-transition">
+            <div className="text-md text-muted-foreground mb-2 theme-transition">
               Last Run Output:
             </div>
-            <pre className="bg-muted text-foreground font-mono text-sm rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-border theme-transition">
+            <pre className="bg-muted text-foreground font-mono text-md rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-border theme-transition">
               {runResults.length > 0
                 ? runResults
                     .map(
@@ -726,7 +726,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
           <div className="theme-transition">
             <div className="overflow-x-auto">
               {submitResults.length > 0 && (
-                <div className="mb-4 text-sm theme-transition text-left">
+                <div className="mb-4 text-md theme-transition text-left">
                   <span className="font-semibold theme-transition">
                     Summary:
                   </span>{" "}

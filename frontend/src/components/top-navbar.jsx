@@ -185,7 +185,7 @@ export default function TopNavbar({
           ) : (
             <Play className="h-3 w-3" />
           )}
-          <span className="text-sm font-medium">Run</span>
+          <span className="text-sm font-normal">Run</span>
         </button>
         <button
           className="bg-green-600/20 text-green-500 px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer hover:bg-green-500/30 disabled:opacity-60"
@@ -198,7 +198,7 @@ export default function TopNavbar({
           ) : (
             <CloudUpload className="h-3 w-3" />
           )}
-          <span className="text-sm font-medium">Submit</span>
+          <span className="text-sm font-normal">Submit</span>
         </button>
         <button
           className="bg-primary/20 text-primary px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 border border-none"
@@ -211,7 +211,7 @@ export default function TopNavbar({
           ) : (
             <RiGeminiFill className="h-3 w-3" />
           )}
-          <span className="text-sm font-medium">AI Review</span>
+          <span className="text-sm font-normal">AI Review</span>
         </button>
       </div>
 
@@ -244,15 +244,15 @@ export default function TopNavbar({
                   onClick={handleCloseModal}
                 >
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-red-500 theme-transition-fast"
+                    className="w-2.5 h-2.5 rounded-full bg-red-500 theme-transition"
                     aria-label="Close"
                   />
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-yellow-500 theme-transition-fast"
+                    className="w-2.5 h-2.5 rounded-full bg-yellow-500 theme-transition"
                     aria-label="Minimize"
                   />
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-green-500 theme-transition-fast"
+                    className="w-2.5 h-2.5 rounded-full bg-green-500 theme-transition"
                     aria-label="Maximize"
                   />
                 </div>

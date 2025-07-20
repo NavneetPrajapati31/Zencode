@@ -54,7 +54,7 @@ export default function Navbar({ sticky = false }) {
             <a
               key={link.name}
               href={link.href}
-              className="text-sm text-muted-foreground hover:text-primary theme-transition-fast"
+              className="text-sm text-muted-foreground hover:text-primary theme-transition"
             >
               {link.name}
             </a>
@@ -233,11 +233,7 @@ export default function Navbar({ sticky = false }) {
         {/* Mobile Navigation */}
         <Sheet>
           <SheetTrigger asChild className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="theme-transition-fast"
-            >
+            <Button variant="ghost" size="icon" className="theme-transition">
               <Menu className="h-6 w-6 text-foreground" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
@@ -251,7 +247,7 @@ export default function Navbar({ sticky = false }) {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-lg font-medium text-foreground hover:text-primary theme-transition-fast"
+                  className="text-lg font-medium text-foreground hover:text-primary theme-transition"
                 >
                   {link.name}
                 </a>
@@ -272,7 +268,7 @@ export default function Navbar({ sticky = false }) {
                     toggleTheme();
                   }
                 }}
-                className={`p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition-fast flex items-center justify-center w-fit ${
+                className={`p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center w-fit ${
                   isTransitioning ? "opacity-75" : ""
                 }`}
               >
@@ -287,11 +283,11 @@ export default function Navbar({ sticky = false }) {
               </button>
               <Button
                 variant="ghost"
-                className="text-lg font-medium text-foreground hover:text-primary justify-start theme-transition-fast"
+                className="text-lg font-medium text-foreground hover:text-primary justify-start theme-transition"
               >
                 Login
               </Button>
-              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold text-lg justify-start theme-transition-fast">
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold text-lg justify-start theme-transition">
                 Sign Up
               </Button>
             </div>

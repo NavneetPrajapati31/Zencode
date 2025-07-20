@@ -14,7 +14,7 @@ import { ChevronLeft } from "lucide-react";
 const languageBadge = (lang) => {
   if (!lang) return null;
   return (
-    <span className="ml-4 px-3 py-1 rounded-full bg-popover text-xs text-muted-foreground font-medium theme-transition">
+    <span className="ml-4 px-3 py-1 rounded-full bg-popover text-sm text-muted-foreground font-medium theme-transition">
       {lang}
     </span>
   );
@@ -78,15 +78,15 @@ export default function SubmissionList({ problemId, refreshKey }) {
               }}
             >
               <span
-                className="w-2 h-2 rounded-full bg-red-500 theme-transition-fast"
+                className="w-2 h-2 rounded-full bg-red-500 theme-transition"
                 aria-label="Close"
               />
               <span
-                className="w-2 h-2 rounded-full bg-yellow-500 theme-transition-fast"
+                className="w-2 h-2 rounded-full bg-yellow-500 theme-transition"
                 aria-label="Minimize"
               />
               <span
-                className="w-2 h-2 rounded-full bg-green-500 theme-transition-fast"
+                className="w-2 h-2 rounded-full bg-green-500 theme-transition"
                 aria-label="Maximize"
               />
             </div>
@@ -133,7 +133,7 @@ export default function SubmissionList({ problemId, refreshKey }) {
             .map((sub, idx) => (
               <li
                 key={sub._id || idx}
-                className={`px-4 py-3 flex items-center justify-between bg-accent rounded-lg shadow-none border border-border theme-transition cursor-pointer ${selectedId === (sub._id || idx) ? "ring-2 ring-primary/60" : ""}`}
+                className={`px-4 py-3 flex items-center justify-between bg-accent rounded-lg shadow-none border border-border theme-transition cursor-pointer ${selectedId === (sub._id || idx) ? "ring-0" : ""}`}
                 onClick={() => handleSelect(sub._id || idx)}
                 tabIndex={0}
                 aria-label="View submission code"
@@ -141,11 +141,11 @@ export default function SubmissionList({ problemId, refreshKey }) {
                 <div className="flex items-center gap-4 theme-transition">
                   <div className="flex flex-col theme-transition">
                     <span
-                      className={`font-semibold text-sm text-left ${sub.verdict === "Accepted" ? "text-green-500" : "text-destructive"} theme-transition`}
+                      className={`font-medium text-md text-left ${sub.verdict === "Accepted" ? "text-green-500" : "text-red-500"} theme-transition`}
                     >
                       {sub.verdict}
                     </span>
-                    <span className="text-xs text-muted-foreground text-left mt-1 theme-transition">
+                    <span className="text-sm text-muted-foreground text-left mt-1 theme-transition">
                       {formatDate(sub.submittedAt)}
                     </span>
                   </div>
