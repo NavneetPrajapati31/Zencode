@@ -37,8 +37,8 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
     tabIndex={0}
     aria-label={`Rank ${rank + 1}, ${user.name}`}
     className={cn(
-      "theme-transition focus:outline-none focus:ring-0 hover:bg-accent",
-      rank % 2 === 1 ? "bg-accent/70" : "bg-background"
+      "theme-transition focus:outline-none focus:ring-0 hover:bg-accent bg-background"
+      // rank % 2 === 1 ? "bg-accent/70" : "bg-background"
     )}
   >
     <td className="px-4 py-3 flex items-center gap-3 min-w-[220px] theme-transition">
@@ -58,18 +58,18 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
         </AvatarFallback>
       </Avatar>
       <div className="flex flex-col gap-0.5 theme-transition">
-        <span className="font-semibold text-sm text-foreground leading-tight theme-transition">
+        <span className="font-medium text-sm text-foreground leading-tight theme-transition">
           {user.name}
         </span>
-        <span className="text-xs text-muted-foreground leading-tight theme-transition">
+        <span className="text-xs text-muted-foreground leading-tight theme-transition font-normal">
           {user.handle}
         </span>
       </div>
     </td>
-    <td className="px-4 py-3 text-right font-semibold text-foreground theme-transition">
+    <td className="px-4 py-3 text-center font-normal text-foreground theme-transition">
       {user.totalQuestions}
     </td>
-    <td className="px-4 py-3 text-center font-bold min-w-[100px] theme-transition">
+    <td className="px-4 py-3 text-center font-normal min-w-[100px] theme-transition">
       {isTop3 ? (
         <span
           role="img"
@@ -81,6 +81,9 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
       ) : (
         <span className="text-foreground theme-transition">#{rank + 1}</span>
       )}
+    </td>
+    <td className="px-4 py-3 text-center font-normal text-foreground theme-transition">
+      {user.score}
     </td>
   </tr>
 );
@@ -147,7 +150,7 @@ const Leaderboard = () => {
 
   return (
     <>
-      <h1 className="!text-2xl font-semibold text-center mt-8 mb-2 text-foreground theme-transition font-sans px-2 sm:px-4">
+      <h1 className="!text-2xl font-medium text-center mt-8 mb-2 text-foreground theme-transition font-sans px-2 sm:px-4">
         Leaderboard
       </h1>
       <section className="w-full max-w-5xl mx-auto px-2 sm:px-4 py-8 theme-transition">
@@ -158,11 +161,14 @@ const Leaderboard = () => {
                 <th className="!px-5 py-3 font-semibold text-sm theme-transition">
                   User Name
                 </th>
-                <th className="!px-5 py-3 font-semibold text-sm text-right theme-transition">
+                <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
                   Total Questions
                 </th>
                 <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
                   Rank
+                </th>
+                <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
+                  Score
                 </th>
               </tr>
             </thead>
