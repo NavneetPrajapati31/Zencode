@@ -2,7 +2,6 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import FeatureCard from "../components/feature-card";
 import TestimonialCard from "../components/testimonial-card";
-import ProgressChart from "../components/progress-chart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -13,9 +12,7 @@ import {
   BarChart,
   ArrowRight,
 } from "lucide-react";
-import { ChartBarInteractive } from "@/components/ui/chart-bar-interactive";
 import Page from "@/components/Dashboard01";
-import { ChartBarMultiple } from "@/components/chart-bar-multiple";
 import { Link } from "react-router-dom";
 
 export default function LandingPage() {
@@ -138,11 +135,7 @@ export default function LandingPage() {
               habits and skill development.
             </p>
             <Card className="flex justify-center items-center !border-none shadow-none bg-transparent rounded-xl theme-transition">
-              <CardContent className="p-6 md:p-8 max-w-5xl">
-                {/* <ProgressChart /> */}
-                {/* <ChartBarInteractive /> */}
-                <ChartBarMultiple />
-              </CardContent>
+              <CardContent className="p-6 md:p-8 max-w-5xl"></CardContent>
             </Card>
           </div>
         </section>
