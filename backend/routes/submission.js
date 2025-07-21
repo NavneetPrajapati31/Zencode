@@ -15,7 +15,19 @@ const {
 const { getUserSubmissions } = require("../controllers/submission-user");
 
 // Public routes
-router.get("/", getSubmissions);
+router.get("/", async (req, res) => {
+  try {
+    const submissions = await require("../models/Submission").find();
+    submissions.forEach((sub, idx) => {
+      console.log(
+        `[AllSubs] Submission ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}, user=${sub.user}`
+      );
+    });
+    res.json(submissions);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch submissions" });
+  }
+});
 router.get("/problem/:problemId", authenticateJWT, getSubmissionsByProblem);
 router.get("/user/:username", getUserSubmissions);
 router.get("/:id", getSubmissionById);

@@ -43,13 +43,11 @@ const getDayColor = (count) => {
   return "bg-gh-heatmap-green-4";
 };
 
-const generateHeatmapData = () => {
+const generateHeatmapData = (externalData) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
-  // Calculate the start date (365 days ago)
   const startDate = new Date(today);
-  startDate.setDate(startDate.getDate() - 364); // 365 days total (including today)
+  startDate.setDate(startDate.getDate() - 364);
 
   // Generate all days in our range
   const allDays = [];
@@ -60,15 +58,32 @@ const generateHeatmapData = () => {
   let lastActive = false;
 
   let date = new Date(startDate);
+  let dataMap = {};
+  if (Array.isArray(externalData) && externalData.length > 0) {
+    externalData.forEach(({ date, count }) => {
+      dataMap[date] = count;
+    });
+  }
   while (date <= today) {
-    const count = Math.floor(Math.random() * 25);
+    let count = 0;
+    if (Array.isArray(externalData) && externalData.length > 0) {
+      const dateStr =
+        date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0");
+      count = dataMap[dateStr] || 0;
+    } else {
+      count = 0;
+    }
     allDays.push({
       date: new Date(date),
       count,
-      dayOfWeek: date.getDay(), // 0 = Sunday, 1 = Monday, etc.
+      dayOfWeek: date.getDay(),
       month: date.getMonth(),
+      year: date.getFullYear(),
     });
-
     totalSubmissions += count;
     if (count > 0) {
       totalActiveDays++;
@@ -79,15 +94,13 @@ const generateHeatmapData = () => {
       lastActive = false;
     }
     if (currentStreak > maxStreak) maxStreak = currentStreak;
-
     date.setDate(date.getDate() + 1);
   }
 
   // Group days by month and create week columns for each month
   const monthGroups = new Map();
-
   allDays.forEach((day) => {
-    const monthKey = day.month;
+    const monthKey = day.month + "-" + day.year;
     if (!monthGroups.has(monthKey)) {
       monthGroups.set(monthKey, []);
     }
@@ -97,28 +110,29 @@ const generateHeatmapData = () => {
   // Convert to ordered array of months
   const months = Array.from(monthGroups.entries())
     .sort(([a], [b]) => {
-      // Handle year wrap-around (e.g., if we start in Feb and go to next Jan)
-      const aDate = allDays.find((d) => d.month === a).date;
-      const bDate = allDays.find((d) => d.month === b).date;
+      // Handle year wrap-around
+      const aDate = allDays.find((d) => d.month + "-" + d.year === a).date;
+      const bDate = allDays.find((d) => d.month + "-" + d.year === b).date;
       return aDate.getTime() - bDate.getTime();
     })
-    .map(([monthIndex, days]) => ({
-      month: monthIndex,
-      name: getMonthName(monthIndex),
-      days: days.sort((a, b) => a.date.getTime() - b.date.getTime()),
-    }));
+    .map(([monthKey, days]) => {
+      const [monthIndex, year] = monthKey.split("-").map(Number);
+      return {
+        month: monthIndex,
+        year,
+        name: getMonthName(monthIndex),
+        days: days.sort((a, b) => a.date.getTime() - b.date.getTime()),
+      };
+    });
 
   // Create week columns for each month
   const weekColumns = [];
   let globalWeekIndex = 0;
-
   months.forEach((monthData, monthIndex) => {
     const monthDays = monthData.days;
     if (monthDays.length === 0) return;
-
     // Determine starting day of week position
-    let startDayOfWeek = 0; // Default to Sunday (top row)
-
+    let startDayOfWeek = 0;
     if (monthIndex > 0) {
       // For subsequent months, continue from where the previous month left off
       const prevMonth = months[monthIndex - 1];
@@ -128,11 +142,9 @@ const generateHeatmapData = () => {
       // For the first month, start from the actual day of week of the first day
       startDayOfWeek = monthDays[0].dayOfWeek;
     }
-
     let currentColumn = [];
     let currentDayPosition = startDayOfWeek;
     let dayIndex = 0;
-
     // Fill the month's days into week columns
     while (dayIndex < monthDays.length) {
       // Fill current column up to position where we need to place the next day
@@ -142,21 +154,18 @@ const generateHeatmapData = () => {
       ) {
         currentColumn.push(null); // Empty slot
       }
-
       // Add the actual day if we have space in this column
       if (currentColumn.length < 7) {
         currentColumn.push(monthDays[dayIndex]);
         dayIndex++;
         currentDayPosition++;
       }
-
       // If column is full or we've placed all days, finalize this column
       if (currentColumn.length === 7 || dayIndex === monthDays.length) {
         // Fill remaining slots in column with null if not full
         while (currentColumn.length < 7) {
           currentColumn.push(null);
         }
-
         weekColumns.push({
           days: [...currentColumn],
           month: monthData.month,
@@ -166,7 +175,6 @@ const generateHeatmapData = () => {
             weekColumns.length === 0 ||
             weekColumns[weekColumns.length - 1]?.month !== monthData.month,
         });
-
         currentColumn = [];
         currentDayPosition = 0; // Reset to top for next column
         globalWeekIndex++;
@@ -183,54 +191,47 @@ const generateHeatmapData = () => {
   };
 };
 
-const Heatmap = () => {
+const Heatmap = ({ data }) => {
+  const scrollContainerRef = React.useRef(null);
   const { weekColumns, totalSubmissions, totalActiveDays, maxStreak } =
-    React.useMemo(generateHeatmapData, []);
+    React.useMemo(() => generateHeatmapData(data), [data]);
 
-  // Calculate left offsets for each week column, accounting for ml-6 (24px), ml-4 (16px), and ml-0.5 (2px)
-  const weekColumnLeftOffsets = React.useMemo(() => {
-    const offsets = [];
-    let currentLeft = 4; // ml-6 = 24px
-    for (let i = 0; i < weekColumns.length; i++) {
-      if (i > 0 && weekColumns[i].isFirstWeekOfMonth) {
-        currentLeft += 15; // ml-4 = 16px
-      } else if (i > 0) {
-        currentLeft += 2; // ml-0.5 = 2px
+  // Group week columns by month-year
+  const monthBlocks = React.useMemo(() => {
+    const blocks = [];
+    let currentMonth = null;
+    let currentYear = null;
+    let currentBlock = null;
+    weekColumns.forEach((col) => {
+      // Find the first non-null day to determine the month and year
+      const firstDay = col.days.find((d) => d);
+      if (!firstDay) return;
+      const month = firstDay.month;
+      const year = firstDay.year;
+      if (!currentBlock || currentMonth !== month || currentYear !== year) {
+        if (currentBlock) blocks.push(currentBlock);
+        currentBlock = {
+          month,
+          year,
+          name: getMonthName(month),
+          weekColumns: [],
+        };
+        currentMonth = month;
+        currentYear = year;
       }
-      offsets.push(currentLeft);
-      currentLeft += 12; // w-3 = 12px
-    }
-    return offsets;
+      currentBlock.weekColumns.push(col);
+    });
+    if (currentBlock) blocks.push(currentBlock);
+    return blocks;
   }, [weekColumns]);
 
-  // Generate month labels with true center pixel position
-  const monthLabels = React.useMemo(() => {
-    // Map from month to array of week indices
-    const monthToWeeks = new Map();
-    weekColumns.forEach((column, weekIdx) => {
-      const firstDay = column.days.find((day) => day !== null);
-      if (firstDay) {
-        if (!monthToWeeks.has(firstDay.month)) {
-          monthToWeeks.set(firstDay.month, []);
-        }
-        monthToWeeks.get(firstDay.month).push(weekIdx);
-      }
-    });
-    // For each month, calculate center pixel position
-    return Array.from(monthToWeeks.entries()).map(([month, weekIndices]) => {
-      const startIdx = weekIndices[0];
-      const endIdx = weekIndices[weekIndices.length - 1];
-      const leftStart = weekColumnLeftOffsets[startIdx];
-      const leftEnd = weekColumnLeftOffsets[endIdx];
-      // Center between the two columns (add 12 for width of last column)
-      const centerPx = (leftStart + leftEnd + 12) / 2;
-      return {
-        name: getMonthName(month),
-        month,
-        centerPx,
-      };
-    });
-  }, [weekColumns, weekColumnLeftOffsets]);
+  React.useEffect(() => {
+    if (scrollContainerRef.current) {
+      // Scroll to the far right (most recent month)
+      scrollContainerRef.current.scrollLeft =
+        scrollContainerRef.current.scrollWidth;
+    }
+  }, [monthBlocks.length]);
 
   return (
     <Card className="w-full max-w-full px-6 bg-card rounded-xl gap-0 border-none shadow-none theme-transition">
@@ -255,79 +256,62 @@ const Heatmap = () => {
         </div>
       </CardHeader>
       <div className="pt-6">
-        <div className="relative overflow-x-auto no-scrollbar pb-6 h-full">
-          {/* Day labels (Sun, Mon, Tue, etc.) */}
-          {/* <div
-            className="flex flex-col mr-2 text-xs text-gh-text-muted"
-            style={{ float: "left" }}
-          >
-            <div style={{ height: "18px" }}></div>{" "}
-            <div className="flex flex-col gap-0.5">
-              <div className="h-3 flex items-center">Sun</div>
-              <div className="h-3 flex items-center">Mon</div>
-              <div className="h-3 flex items-center">Tue</div>
-              <div className="h-3 flex items-center">Wed</div>
-              <div className="h-3 flex items-center">Thu</div>
-              <div className="h-3 flex items-center">Fri</div>
-              <div className="h-3 flex items-center">Sat</div>
-            </div>
-          </div> */}
-
-          {/* Heatmap grid */}
+        <div
+          ref={scrollContainerRef}
+          className="relative overflow-x-auto no-scrollbar h-full"
+        >
+          {/* Month blocks with centered labels */}
           <div className="flex">
-            {weekColumns.map((column, weekIdx) => (
+            {monthBlocks.map((block, blockIdx) => (
               <div
-                key={weekIdx}
-                className={`flex flex-col gap-0.5 ${
-                  column.isFirstWeekOfMonth && weekIdx > 0
-                    ? "ml-4"
-                    : weekIdx > 0
-                      ? "ml-0.5"
-                      : ""
-                }`}
+                key={`${block.name}-${block.year}`}
+                className={`flex flex-col items-center ${blockIdx > 0 ? "ml-0" : ""}`}
+                style={{ minWidth: `${block.weekColumns.length * 16}px` }}
               >
-                {column.days.map((day, dayIdx) => {
-                  if (!day) {
-                    // Empty slot - render as invisible placeholder to maintain structure
-                    return <div key={`empty-${dayIdx}`} className="w-3 h-3" />;
-                  }
-
-                  return (
-                    <TooltipProvider key={`${day.date.getTime()}-${dayIdx}`}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            tabIndex={0}
-                            aria-label={`${day.count} submissions on ${day.date.toDateString()}`}
-                            className={`w-3 h-3 rounded-xs ${getDayColor(day.count)} cursor-pointer`}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-accent text-muted-foreground text-sm p-2 rounded-md">
-                          <span>
-                            {day.count} submissions on {day.date.toDateString()}
-                          </span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  );
-                })}
+                <div className="flex">
+                  {block.weekColumns.map((column, weekIdx) => (
+                    <div
+                      key={weekIdx}
+                      className={`flex flex-col gap-0.5 ${
+                        weekIdx > 0 ? "ml-0.5" : ""
+                      }`}
+                    >
+                      {column.days.map((day, dayIdx) => {
+                        if (!day) {
+                          return (
+                            <div key={`empty-${dayIdx}`} className="w-3 h-3" />
+                          );
+                        }
+                        return (
+                          <TooltipProvider
+                            key={`${day.date.getTime()}-${dayIdx}`}
+                          >
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div
+                                  tabIndex={0}
+                                  aria-label={`${day.count} submissions on ${getMonthName(day.date.getMonth())} ${day.date.getDate()}, ${day.date.getFullYear()}`}
+                                  className={`w-3 h-3 rounded-xs ${getDayColor(day.count)} cursor-pointer`}
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent className="bg-accent text-muted-foreground text-sm p-2 rounded-md">
+                                <span>
+                                  {day.count} submissions on{" "}
+                                  {getMonthName(day.date.getMonth())}{" "}
+                                  {day.date.getDate()}, {day.date.getFullYear()}
+                                </span>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+                <span className="text-xs text-muted-foreground mt-4">
+                  {block.name}
+                </span>
               </div>
-            ))}
-          </div>
-
-          {/* Month labels */}
-          <div className="flex mt-4 relative" style={{ height: "18px" }}>
-            {monthLabels.map((month) => (
-              <span
-                key={`${month.name}-${month.month}`}
-                className="absolute text-xs text-muted-foreground"
-                style={{
-                  left: `${month.centerPx}px`,
-                  transform: "translateX(-50%)",
-                }}
-              >
-                {month.name}
-              </span>
             ))}
           </div>
         </div>

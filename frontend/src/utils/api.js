@@ -162,6 +162,7 @@ export const submissionsAPI = {
 // Profile API calls
 export const profileAPI = {
   getProfile: (username) => apiCall(`/profile/${username}`),
+  getHeatmap: (username) => apiCall(`/profile/${username}/heatmap`),
   updateSocialProfiles: (username, socialProfiles) =>
     apiCall(`/profile/${username}/social`, {
       method: "PUT",

@@ -5,6 +5,8 @@ const {
 } = require("../middleware/auth");
 const User = require("../models/User");
 const { getUserProgress } = require("../controllers/profile-progress");
+const Submission = require("../models/Submission");
+const dayjs = require("dayjs");
 
 const router = express.Router();
 
@@ -36,6 +38,69 @@ router.get(
   authenticateJWT,
   requireProfileComplete,
   getUserProgress
+);
+
+// GET /api/profile/:username/heatmap
+router.get(
+  "/:username/heatmap",
+  authenticateJWT,
+  requireProfileComplete,
+  async (req, res) => {
+    try {
+      const username = req.params.username;
+      const user = await User.findOne({ username });
+      if (!user) return res.status(404).json({ error: "User not found" });
+      const today = dayjs().endOf("day");
+      const startDate = today.subtract(364, "day").startOf("day");
+      console.log(
+        `[Heatmap] Date range: ${startDate.toDate()} to ${today.toDate()}`
+      );
+      // Get all submissions for this user in the last 365 days
+      const submissions = await Submission.find({
+        user: user._id,
+        createdAt: { $gte: startDate.toDate(), $lte: today.toDate() },
+      });
+      console.log(
+        `[Heatmap] User: ${username}, Submissions found: ${submissions.length}`
+      );
+      submissions.forEach((sub, idx) => {
+        console.log(
+          `[Heatmap] Submission ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}`
+        );
+      });
+      // Print all submissions for the user regardless of date
+      const allUserSubs = await Submission.find({ user: user._id });
+      allUserSubs.forEach((sub, idx) => {
+        console.log(
+          `[Heatmap][AllUserSubs] ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}`
+        );
+      });
+      // Print which ones are included in the heatmap
+      submissions.forEach((sub, idx) => {
+        console.log(
+          `[Heatmap][InRange] ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}`
+        );
+      });
+      // Aggregate by date
+      const dateMap = {};
+      for (let i = 0; i < 365; i++) {
+        const date = startDate.add(i, "day").format("YYYY-MM-DD");
+        dateMap[date] = 0;
+      }
+      submissions.forEach((sub) => {
+        const date = dayjs(sub.createdAt).format("YYYY-MM-DD");
+        if (dateMap[date] !== undefined) dateMap[date]++;
+      });
+      const heatmap = Object.entries(dateMap).map(([date, count]) => ({
+        date,
+        count,
+      }));
+      res.json({ heatmap });
+    } catch (err) {
+      console.error("Heatmap error:", err);
+      res.status(500).json({ error: "Failed to fetch heatmap data" });
+    }
+  }
 );
 
 // PUT /api/profile/:username/social

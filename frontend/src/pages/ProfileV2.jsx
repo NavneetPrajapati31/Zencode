@@ -39,6 +39,7 @@ export default function Profile() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [heatmapData, setHeatmapData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,6 +93,14 @@ export default function Profile() {
         } catch {
           //
         }
+
+        // Fetch heatmap data
+        try {
+          const heatmapRes = await profileAPI.getHeatmap(user.username);
+          setHeatmapData(heatmapRes.heatmap || []);
+        } catch {
+          //
+        }
       } catch {
         // handle error (optional: set error state)
       }
@@ -125,6 +134,30 @@ export default function Profile() {
     }
   };
 
+  const medalIcons = [
+    {
+      icon: "🥇",
+      label: "Gold Medal",
+      badge: "Zen Master",
+      classname: "bg-blue-600/20 text-blue-600",
+      ring: "border-blue-600",
+    },
+    {
+      icon: "🥈",
+      label: "Silver Medal",
+      badge: "Zen Sage",
+      classname: "bg-rose-600/20 text-rose-600",
+      ring: "border-rose-600",
+    },
+    {
+      icon: "🥉",
+      label: "Bronze Medal",
+      badge: "Zen Sensei",
+      classname: "bg-violet-600/20 text-violet-600",
+      ring: "border-violet-600",
+    },
+  ];
+
   if (!user) return null;
 
   console.log("socialProfiles state:", socialProfiles);
@@ -144,19 +177,46 @@ export default function Profile() {
           tabIndex={0}
         >
           <div
-            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center px-6 border-b border-border justify-between"
+            className="w-full h-10 rounded-t-2xl bg-transparent flex items-center pl-6 pr-4 border-b border-border justify-between"
             aria-label="Window controls"
             tabIndex={0}
           >
             <span className="text-sm text-muted-foreground">Profile</span>
+            <div
+              className={
+                leaderboardRank !== null &&
+                leaderboardRank >= 1 &&
+                leaderboardRank <= 3
+                  ? `${medalIcons[leaderboardRank - 1].classname} text-sm px-3 py-0.5 rounded-3xl`
+                  : "text-sm px-2 py-0.5 rounded-3xl"
+              }
+            >
+              <span className="mr-2">
+                {" "}
+                {leaderboardRank !== null ? "#" : ""}
+                {leaderboardRank !== null ? leaderboardRank : "-"}
+              </span>
+              {leaderboardRank !== null &&
+                leaderboardRank >= 1 &&
+                leaderboardRank <= 3 &&
+                medalIcons[leaderboardRank - 1].badge}
+            </div>
           </div>
           <div className="flex flex-col w-full justify-center items-center py-4 px-6">
-            <Avatar className="h-20 w-20 mb-3">
+            <Avatar
+              className={`h-20 w-20 mb-3 border border-border ${
+                // leaderboardRank !== null &&
+                // leaderboardRank >= 1 &&
+                // leaderboardRank <= 3 &&
+                // medalIcons[leaderboardRank - 1].ring
+                ""
+              }`}
+            >
               <AvatarImage
                 src={user?.avatar}
                 alt={user?.name || user?.email || "User"}
               />
-              <AvatarFallback className="text-3xl border border-border theme-transition">
+              <AvatarFallback className="text-3xl theme-transition text-muted-foreground">
                 {user?.name
                   ? user.name
                       .split(" ")
@@ -178,6 +238,7 @@ export default function Profile() {
             </span>
             <span className="flex flex-row gap-2 text-md font-semibold mb-2 text-muted-foreground">
               <BiSolidBarChartAlt2 className="w-5 h-5 " />
+              {leaderboardRank !== null ? "#" : ""}
               {leaderboardRank !== null ? leaderboardRank : "-"}
             </span>
             <Link to={"/leaderboard"}>
@@ -329,7 +390,7 @@ export default function Profile() {
           >
             <span className="text-sm text-muted-foreground">Activity</span>
           </div>
-          <Heatmap />
+          <Heatmap data={heatmapData} />
         </Card>
       </div>
       <SocialProfileModal
