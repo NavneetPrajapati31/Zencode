@@ -611,6 +611,12 @@ input[type="password"]::-webkit-inner-spin-button {
   }
 }
 
+.deep-glow {
+  box-shadow:
+    0 0 48px 0 rgba(80, 120, 255, 0.35),
+    0 0 0 4px rgba(80, 120, 255, 0.08);
+}
+
 body,
 html,
 * {

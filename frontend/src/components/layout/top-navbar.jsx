@@ -251,7 +251,7 @@ export default function TopNavbar({
           ) : (
             <RiGeminiFill className="h-3 w-3" />
           )}
-          <span className="text-sm font-normal">AI Review</span>
+          <span className="text-sm font-normal">Debug</span>
         </button>
       </div>
 
@@ -275,7 +275,7 @@ export default function TopNavbar({
             >
               {/* Browser-style header bar INSIDE the card */}
               <div
-                className="w-full h-10 rounded-t-2xl bg-card flex items-center px-6 border-b border-border theme-transition"
+                className="w-full h-10 rounded-t-2xl bg-card flex items-center justify-between px-6 border-b border-border theme-transition"
                 aria-label="Window controls"
                 tabIndex={0}
               >
@@ -296,6 +296,9 @@ export default function TopNavbar({
                     aria-label="Maximize"
                   />
                 </div>
+                <span className="italic text-sm font-light text-muted-foreground">
+                  Powered by Gemini
+                </span>
               </div>
               {/* <button
                 className="absolute top-5 right-5 text-muted-foreground hover:cursor-pointer"
