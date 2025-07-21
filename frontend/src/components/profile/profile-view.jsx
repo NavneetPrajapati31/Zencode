@@ -86,7 +86,7 @@ const ProfileView = ({
             tabIndex={0}
           >
             <span className="text-sm text-muted-foreground">Profile</span>
-            <div
+            {/* <div
               className={
                 leaderboardRank != null &&
                 leaderboardRank >= 1 &&
@@ -99,36 +99,68 @@ const ProfileView = ({
                 leaderboardRank >= 1 &&
                 leaderboardRank <= 3 &&
                 medalIcons[leaderboardRank - 1].badge}
-            </div>
+            </div> */}
           </div>
-          <div className="flex flex-col w-full justify-center items-center py-4 px-6">
-            <Avatar className="h-20 w-20 mb-3 border border-border">
-              <AvatarImage
-                src={user?.avatar}
-                alt={user?.name || user?.email || "User"}
-              />
-              <AvatarFallback className="text-3xl theme-transition text-muted-foreground">
-                {user?.name
-                  ? user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                  : "U"}
-              </AvatarFallback>
-            </Avatar>
-            <span
-              className={`${
+          <div className="flex flex-col w-full">
+            <div
+              className={
+                leaderboardRank != null &&
+                leaderboardRank >= 1 &&
+                leaderboardRank <= 3
+                  ? `${medalIcons[leaderboardRank - 1].classname} text-sm px-3 py-0.5 mx-6 w-fit mt-4 rounded-3xl flex flex-row`
+                  : "text-xs px-3 py-0.5 rounded-3xl w-fit mt-4 flex flex-row"
+              }
+            >
+              {leaderboardRank != null &&
                 leaderboardRank >= 1 &&
                 leaderboardRank <= 3 &&
-                medalIcons[leaderboardRank - 1].classname
-              } !bg-transparent`}
-            >
-              {user?.name || "User"}
-            </span>
-            <span className="text-muted-foreground text-sm font-normal">
-              {user?.username ? `@${user.username}` : ""}
-            </span>
+                medalIcons[leaderboardRank - 1].badge}
+            </div>
+            <div className="flex flex-row gap-3 w-full justify-start items-center py-4 pt-3 px-6">
+              <Avatar className="h-13 w-13">
+                <AvatarImage
+                  src={user?.avatar}
+                  alt={user?.name || user?.email || "User"}
+                />
+                <AvatarFallback className="text-xl theme-transition text-muted-foreground">
+                  {user?.name
+                    ? user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                    : "U"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col justify-center text-left">
+                {/* <div
+                className={
+                  leaderboardRank != null &&
+                  leaderboardRank >= 1 &&
+                  leaderboardRank <= 3
+                    ? `${medalIcons[leaderboardRank - 1].classname} text-sm mb-2 px-3 py-0.5 rounded-3xl w-fit`
+                    : "text-sm mb-2 px-3 py-0.5 rounded-3xl"
+                }
+              >
+                {leaderboardRank != null &&
+                  leaderboardRank >= 1 &&
+                  leaderboardRank <= 3 &&
+                  medalIcons[leaderboardRank - 1].badge}
+              </div> */}
+                <span
+                  className={`${
+                    leaderboardRank >= 1 &&
+                    leaderboardRank <= 3 &&
+                    medalIcons[leaderboardRank - 1].classname
+                  } !bg-transparent font-medium`}
+                >
+                  {user?.name || "User"}
+                </span>
+                <span className="text-muted-foreground text-sm font-normal">
+                  {user?.username ? `@${user.username}` : ""}
+                </span>
+              </div>
+            </div>
           </div>
           <Separator className="!w-10/12" />
           <div className="flex flex-col w-full justify-center py-4 px-6">
@@ -249,9 +281,9 @@ const ProfileView = ({
               </>
             )}
           </div>
-          <Separator className="!w-10/12" />
           {!isPublicView && (
             <>
+              <Separator className="!w-10/12" />
               <div className="flex flex-row w-full justify-between py-4 px-6 gap-2">
                 <span className="text-sm text-muted-foreground">
                   Public Profile
