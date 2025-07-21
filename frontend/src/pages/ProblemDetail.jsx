@@ -1,15 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "@/components/use-auth";
+import { useAuth } from "@/components/auth/use-auth";
 import { problemsAPI, problemDetailsAPI, testCasesAPI } from "@/utils/api";
-import TopNavbar from "@/components/top-navbar";
-import ProblemDescription from "@/components/problem-description";
+import TopNavbar from "@/components/layout/top-navbar";
+import ProblemDescription from "@/components/problems/problem-description";
 import CodeEditorPanel from "@/components/code-editor-panel";
-import { ProblemsSidebar } from "@/components/problems-sidebar";
-import { ProblemsSidebarProvider } from "@/components/problems-sidebar-context";
+import { ProblemsSidebar } from "@/components/problems/problems-sidebar";
+import { ProblemsSidebarProvider } from "@/components/problems/problems-sidebar-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, History, RefreshCw } from "lucide-react";
-import SubmissionList from "@/components/submission-list";
+import SubmissionList from "@/components/problems/submission-list";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();

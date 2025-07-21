@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/card";
 import { CheckCircle, XCircle, Mail, ArrowRight } from "lucide-react";
 import { authAPI } from "@/utils/api";
-import { AuthContext } from "@/components/auth-context";
-import ProfileCompletionModal from "@/components/profile-completion-modal";
+import { AuthContext } from "@/components/auth/auth-context";
+import ProfileCompletionModal from "@/components/profile/profile-completion-modal";
 import { jwtDecode } from "jwt-decode";
 
 export default function VerifyEmail() {

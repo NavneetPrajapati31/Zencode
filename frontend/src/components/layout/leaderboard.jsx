@@ -9,8 +9,8 @@ import {
   PaginationPrevious,
   PaginationNext,
   PaginationEllipsis,
-} from "./ui/pagination";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+} from "@/components/ui/pagination";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 
 const medalIcons = [

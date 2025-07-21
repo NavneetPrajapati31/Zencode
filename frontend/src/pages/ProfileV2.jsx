@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "@/components/use-auth";
-import ProfileView from "@/components/profile-view";
+import { useAuth } from "@/components/auth/use-auth";
+import ProfileView from "@/components/profile/profile-view";
 import {
   leaderboardAPI,
   submissionAPI,

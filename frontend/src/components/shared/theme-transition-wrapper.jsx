@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "./theme-context-utils";
+import { useTheme } from "@/components/theme-context-utils";
 
 /**
  * ThemeTransitionWrapper - A utility component that applies theme transition classes

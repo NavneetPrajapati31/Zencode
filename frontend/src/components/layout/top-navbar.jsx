@@ -18,8 +18,8 @@ import {
 import { LuX } from "react-icons/lu";
 import { RiFocus2Line, RiGeminiFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "./use-auth";
-import { useTheme } from "./theme-context-utils";
+import { useAuth } from "@/components/auth/use-auth";
+import { useTheme } from "@/components/theme-context-utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,12 +27,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Button } from "./ui/button";
-import { useProblemsSidebar } from "./problems-sidebar-context";
+import { useProblemsSidebar } from "@/components/problems/problems-sidebar-context";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Sanitize markdown: remove code fences, normalize line breaks, remove non-breaking spaces, trim leading spaces

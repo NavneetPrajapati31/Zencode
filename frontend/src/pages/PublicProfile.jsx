@@ -7,7 +7,7 @@ import {
   leaderboardAPI,
   submissionAPI,
 } from "@/utils/api";
-import ProfileView from "@/components/profile-view";
+import ProfileView from "@/components/profile/profile-view";
 
 const PublicProfile = () => {
   const { username } = useParams();

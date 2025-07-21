@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
-import App from "../App.jsx";
-import { NavigationLoadingProvider } from "./navigation-loading-context";
+import App from "@/App";
+import { NavigationLoadingProvider } from "@/components/shared/navigation-loading-context";
 import Navbar from "./navbar-v2";
 import Footer from "./footer";
 

@@ -21,11 +21,11 @@ import {
   SheetTitle as DialogTitle,
   SheetFooter as DialogFooter,
 } from "@/components/ui/sheet";
-import { useAuth } from "@/components/use-auth";
+import { useAuth } from "@/components/auth/use-auth";
 import { useEffect, useState } from "react";
 import { problemsAPI } from "@/utils/api";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // Problem form modal component
 function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {

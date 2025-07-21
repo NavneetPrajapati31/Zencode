@@ -17,7 +17,7 @@ import { Eye, EyeOff, Code2, Github, Mail, Check, X } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { authAPI } from "@/utils/api";
-import { AuthContext } from "@/components/auth-context";
+import { AuthContext } from "@/components/auth/auth-context";
 import { jwtDecode } from "jwt-decode";
 
 const GITHUB_OAUTH_URL = `http://localhost:5000/api/auth/github`;

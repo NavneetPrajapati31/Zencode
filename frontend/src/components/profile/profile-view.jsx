@@ -7,8 +7,8 @@ import { BiSolidBarChartAlt2 } from "react-icons/bi";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
-import Heatmap from "@/components/heatmap";
-import SocialProfileModal from "@/components/social-profile-modal";
+import Heatmap from "@/components/profile/heatmap";
+import SocialProfileModal from "@/components/profile/social-profile-modal";
 import { Switch } from "@/components/ui/switch";
 
 const medalIcons = [
@@ -140,7 +140,7 @@ const ProfileView = ({
             <Link to={"/leaderboard"}>
               <Button
                 variant={"outline"}
-                className="w-full text-sm !bg-primary/10 text-primary hover:text-primary border-none"
+                className="w-full text-sm !bg-primary/10 text-primary hover:text-primary border-none !shadow-none"
               >
                 View Leaderboard
               </Button>
@@ -156,7 +156,7 @@ const ProfileView = ({
                 <Button
                   onClick={() => onSocialClick && onSocialClick("github")}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
                   aria-label="GitHub profile"
                   disabled={!socialProfiles.github}
                 >
@@ -166,7 +166,7 @@ const ProfileView = ({
                 <Button
                   onClick={() => onSocialClick && onSocialClick("linkedin")}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
                   aria-label="LinkedIn profile"
                   disabled={!socialProfiles.linkedin}
                 >
@@ -176,7 +176,7 @@ const ProfileView = ({
                 <Button
                   onClick={() => onSocialClick && onSocialClick("twitter")}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
                   aria-label="Twitter profile"
                   disabled={!socialProfiles.twitter}
                 >
@@ -188,7 +188,7 @@ const ProfileView = ({
               <>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
                   onClick={() => onSocialClick && onSocialClick("github")}
                 >
                   <FaGithub className="h-6 w-6" />
@@ -198,7 +198,7 @@ const ProfileView = ({
                 </Button>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
                   onClick={() => onSocialClick && onSocialClick("linkedin")}
                 >
                   <FaLinkedin className="h-6 w-6" />
@@ -209,7 +209,7 @@ const ProfileView = ({
                 </Button>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
                   onClick={() => onSocialClick && onSocialClick("twitter")}
                 >
                   <FaXTwitter className="h-6 w-6" />
@@ -266,14 +266,14 @@ const ProfileView = ({
           <div className="flex flex-col w-full justify-center py-4 px-6 gap-2">
             <Button
               variant={"outline"}
-              className="text-sm justify-between !bg-green-600/10 !text-green-600 border-none"
+              className="text-sm justify-between !bg-green-600/10 !text-green-600 border-none !shadow-none"
             >
               <span className="text-sm font-normal">Easy</span>
               <span className="text-sm font-normal">{progressStats.easy}</span>
             </Button>
             <Button
               variant={"outline"}
-              className="!bg-primary/10 !text-primary text-sm justify-between border-none"
+              className="!bg-primary/10 !text-primary text-sm justify-between border-none !shadow-none"
             >
               <span className="text-sm font-normal">Medium</span>
               <span className="text-sm font-normal">
@@ -282,7 +282,7 @@ const ProfileView = ({
             </Button>
             <Button
               variant={"outline"}
-              className="!bg-red-600/10 !text-destructive text-sm justify-between border-none"
+              className="!bg-red-600/10 !text-destructive text-sm justify-between border-none !shadow-none"
             >
               <span className="text-sm font-normal">Hard</span>
               <span className="text-sm font-normal">{progressStats.hard}</span>
@@ -309,7 +309,7 @@ const ProfileView = ({
                 <Button
                   key={sub._id || idx}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm justify-between"
+                  className="!bg-accent text-muted-foreground text-sm justify-between !shadow-none"
                 >
                   <span className="text-sm font-normal truncate">
                     {sub.problemTitle || sub.problemName || sub.title || "-"}

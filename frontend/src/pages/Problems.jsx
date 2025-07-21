@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/components/use-auth";
+import { useAuth } from "@/components/auth/use-auth";
 import { problemsAPI } from "@/utils/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -268,7 +268,7 @@ export default function ProblemsPage() {
         <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3 theme-transition">
           <Link to={`/profile/${username}`}>
             <Button
-              className="bg-card text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 theme-transition"
+              className="bg-card text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 !shadow-none theme-transition"
               aria-label="back to dashboard"
             >
               <ChevronLeft className="w-4 h-4" /> Back to Profile
@@ -279,7 +279,7 @@ export default function ProblemsPage() {
             <Input
               type="text"
               placeholder="Search questions"
-              className="pl-10 pr-4 py-2 rounded-md !bg-card border border-border !text-card-foreground placeholder:text-muted-foreground !focus:ring-0 focus:border-transparent w-full theme-transition"
+              className="pl-10 pr-4 py-2 rounded-md !bg-card border border-border !text-card-foreground placeholder:text-muted-foreground !focus:ring-0 focus:border-transparent w-full theme-transition !shadow-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search problems"

@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "@/components/auth-context";
-import ProfileCompletionModal from "@/components/profile-completion-modal";
+import { AuthContext } from "@/components/auth/auth-context";
+import ProfileCompletionModal from "@/components/profile/profile-completion-modal";
 
 const OAuthCallback = () => {
   const { login, user } = useContext(AuthContext);

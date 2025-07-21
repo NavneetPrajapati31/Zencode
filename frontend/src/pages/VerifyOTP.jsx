@@ -15,8 +15,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Mail, ArrowLeft, RefreshCw, CheckCircle } from "lucide-react";
 import { authAPI } from "@/utils/api";
-import { AuthContext } from "@/components/auth-context";
-import ProfileCompletionCard from "@/components/profile-completion-card";
+import { AuthContext } from "@/components/auth/auth-context";
+import ProfileCompletionCard from "@/components/profile/profile-completion-card";
 import { jwtDecode } from "jwt-decode";
 
 export default function VerifyOTP() {

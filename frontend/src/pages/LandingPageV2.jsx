@@ -1,7 +1,7 @@
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
-import FeatureCard from "../components/feature-card";
-import TestimonialCard from "../components/testimonial-card";
+import Navbar from "@/components/layout/navbar";
+import Footer from "@/components/layout/footer";
+import FeatureCard from "@/components/shared/feature-card";
+import TestimonialCard from "@/components/shared/testimonial-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -12,7 +12,6 @@ import {
   BarChart,
   ArrowRight,
 } from "lucide-react";
-import Page from "@/components/Dashboard01";
 import { Link } from "react-router-dom";
 
 export default function LandingPage() {

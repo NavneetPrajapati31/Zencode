@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./use-auth";
+import { useAuth } from "@/components/auth/use-auth";
 
 const ProfileRedirect = () => {
   const { user, isAuthenticated, loading } = useAuth();

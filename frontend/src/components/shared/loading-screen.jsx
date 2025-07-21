@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "./theme-context-utils";
+import { useTheme } from "@/components/theme-context-utils";
 import { Code2, Loader2 } from "lucide-react";
 
 /**

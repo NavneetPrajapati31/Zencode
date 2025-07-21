@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { AuthProvider } from "@/components/auth-context";
+import { AuthProvider } from "@/components/auth/auth-context";
 import ThemeProvider from "@/components/theme-context";
-import { RootLayout } from "@/components/root-layout";
+import { RootLayout } from "@/components/layout/root-layout";
 import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")).render(

@@ -15,7 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff, Code2, Github, Mail } from "lucide-react";
 import { authAPI } from "@/utils/api";
-import { AuthContext } from "@/components/auth-context";
+import { AuthContext } from "@/components/auth/auth-context";
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";

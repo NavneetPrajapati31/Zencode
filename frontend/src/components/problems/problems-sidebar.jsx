@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useProblemsSidebar } from "./problems-sidebar-context";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAuth } from "@/components/use-auth";
+import { useAuth } from "@/components/auth/use-auth";
 
 export function ProblemsSidebar() {
   const { id: currentProblemId } = useParams();

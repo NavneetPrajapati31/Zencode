@@ -14,9 +14,9 @@ import Profile from "./pages/ProfileV2";
 import ProfileRoute from "./pages/ProfileRoute";
 import OAuthCallback from "./pages/OAuthCallback";
 import LeaderboardPage from "./pages/Leaderboard";
-import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
+import ThemeTransitionWrapper from "@/components/shared/theme-transition-wrapper";
 import { useTheme } from "./components/theme-context-utils";
-import ProfileRedirect from "./components/profile-redirect";
+import ProfileRedirect from "@/components/profile/profile-redirect";
 
 function AppContent() {
   const { isInitialized } = useTheme();

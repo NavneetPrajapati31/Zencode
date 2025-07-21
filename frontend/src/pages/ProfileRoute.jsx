@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "@/components/use-auth";
+import { useAuth } from "@/components/auth/use-auth";
 import Profile from "./ProfileV2";
 import PublicProfile from "./PublicProfile";
 

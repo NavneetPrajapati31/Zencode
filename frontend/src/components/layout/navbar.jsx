@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Code, Sun, Moon, ChevronRight } from "lucide-react";
 import { RiFocus2Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { useAuth } from "./use-auth";
+import { useAuth } from "@/components/auth/use-auth";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTheme } from "./theme-context-utils";
+import { useTheme } from "@/components/theme-context-utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
