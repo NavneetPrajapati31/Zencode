@@ -31,12 +31,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { useProblemsSidebar } from "@/components/problems/problems-sidebar-context";
 import { AnimatePresence } from "framer-motion";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Switch } from "../ui/switch";
+import { UploadButton } from "@/utils/uploadthing";
+import { profileAPI } from "@/utils/api";
+import { uploadFiles } from "@/utils/uploadthing";
 
 // Sanitize markdown: remove code fences, normalize line breaks, remove non-breaking spaces, trim leading spaces
 const cleanMarkdown = (str) =>
@@ -57,7 +61,7 @@ export default function TopNavbar({
   canGoPrevious = false,
   canGoNext = false,
 }) {
-  const { user, logout } = useAuth();
+  const { user, logout, setUser } = useAuth();
   const { toggleSidebar } = useProblemsSidebar();
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -101,6 +105,9 @@ export default function TopNavbar({
   const [visibilityLoading, setVisibilityLoading] = useState(false);
   const [visibilityError, setVisibilityError] = useState("");
   const [visibilitySuccess, setVisibilitySuccess] = useState("");
+  const [avatarLoading, setAvatarLoading] = useState(false);
+  const [avatarError, setAvatarError] = useState("");
+  const fileInputRef = useRef(null);
 
   const sidebarItems = [
     { key: "basic", label: "Basic Info", icon: <User className="w-5 h-5" /> },
@@ -142,15 +149,18 @@ export default function TopNavbar({
       return;
     }
     try {
-      // Call backend API to update password
+      await profileAPI.changePassword({
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword,
+      });
       setPasswordSuccess("Password updated successfully.");
       setPasswordForm({
         oldPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
-    } catch {
-      setPasswordError("Failed to update password.");
+    } catch (err) {
+      setPasswordError(err.message || "Failed to update password.");
     } finally {
       setPasswordLoading(false);
     }
@@ -160,21 +170,20 @@ export default function TopNavbar({
     const { name, value } = e.target;
     setBasicInfoForm((prev) => ({ ...prev, [name]: value }));
   };
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setBasicInfoForm((prev) => ({ ...prev, avatar: url }));
-  };
   const handleBasicInfoSave = async () => {
     setBasicInfoLoading(true);
     setBasicInfoError("");
     setBasicInfoSuccess("");
     try {
-      // PATCH/PUT to backend for name, username, avatar
+      const payload = {
+        name: basicInfoForm.name,
+        username: basicInfoForm.username,
+        avatar: basicInfoForm.avatar,
+      };
+      await profileAPI.updateBasicInfo(payload);
       setBasicInfoSuccess("Profile updated successfully.");
-    } catch {
-      setBasicInfoError("Failed to update profile.");
+    } catch (err) {
+      setBasicInfoError(err.message || "Failed to update profile.");
     } finally {
       setBasicInfoLoading(false);
     }
@@ -188,29 +197,54 @@ export default function TopNavbar({
     setSocialsError("");
     setSocialsSuccess("");
     try {
-      // PUT to backend for social profiles
+      await profileAPI.updateSocialProfiles(user.username, socialsForm);
       setSocialsSuccess("Social profiles updated.");
-    } catch {
-      setSocialsError("Failed to update social profiles.");
+    } catch (err) {
+      setSocialsError(err.message || "Failed to update social profiles.");
     } finally {
       setSocialsLoading(false);
     }
   };
-  const handleVisibilityToggle = async () => {
+  const [publicProfile, setPublicProfile] = useState(user?.isPublicProfile);
+  useEffect(() => {
+    setPublicProfile(user?.isPublicProfile);
+  }, [user?.isPublicProfile]);
+  const handleVisibilityToggle = async (newValue) => {
     setVisibilityLoading(true);
     setVisibilityError("");
     setVisibilitySuccess("");
     try {
-      // PATCH to backend for isPublicProfile
-      setBasicInfoForm((prev) => ({
-        ...prev,
-        isPublicProfile: !user.isPublicProfile,
-      }));
+      await profileAPI.patchPublicProfile({ isPublicProfile: newValue });
       setVisibilitySuccess("Profile visibility updated.");
-    } catch {
-      setVisibilityError("Failed to update visibility.");
+      setUser({ ...user, isPublicProfile: newValue });
+      setPublicProfile(newValue);
+    } catch (err) {
+      setVisibilityError(err.message || "Failed to update visibility.");
     } finally {
       setVisibilityLoading(false);
+    }
+  };
+
+  const handleAvatarFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setAvatarLoading(true);
+    setAvatarError("");
+    try {
+      const res = await uploadFiles("avatarUploader", {
+        files: [file],
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (res && res.length > 0) {
+        setBasicInfoForm((prev) => ({ ...prev, avatar: res[0].url }));
+        handleBasicInfoSave();
+      }
+    } catch (err) {
+      setAvatarError(err.message || "Failed to upload avatar.");
+    } finally {
+      setAvatarLoading(false);
     }
   };
 
@@ -524,15 +558,31 @@ export default function TopNavbar({
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <label className="block text-sm font-medium text-left mb-1">
+                          <label className="block text-sm font-medium text-left text-muted-foreground mb-1">
                             Change Avatar
                           </label>
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={handleAvatarChange}
-                            className="text-sm cursor-pointer"
+                            style={{ display: "none" }}
+                            ref={fileInputRef}
+                            onChange={handleAvatarFileChange}
                           />
+                          <button
+                            className="text-sm font-medium bg-primary text-primary-foreground rounded-lg px-4 py-1 cursor-pointer"
+                            onClick={() =>
+                              fileInputRef.current &&
+                              fileInputRef.current.click()
+                            }
+                            disabled={avatarLoading}
+                          >
+                            {avatarLoading ? "Uploading..." : "Upload Avatar"}
+                          </button>
+                          {avatarError && (
+                            <div className="text-destructive text-sm mt-2">
+                              {avatarError}
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="mb-4">
@@ -673,10 +723,10 @@ export default function TopNavbar({
                     </p>
                     <div className="flex items-center gap-2 mb-4">
                       <label className="text-base">Public Profile</label>
-                      <input
-                        type="checkbox"
-                        checked={user?.isPublicProfile}
-                        onChange={handleVisibilityToggle}
+
+                      <Switch
+                        checked={publicProfile}
+                        onCheckedChange={handleVisibilityToggle}
                         className="accent-primary"
                         disabled={visibilityLoading}
                       />

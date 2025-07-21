@@ -97,7 +97,7 @@ const PublicProfile = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-full w-full">
+      <div className="flex flex-1 min-h-[80vh] w-full items-center justify-center py-4 px-6 gap-2">
         <span className="text-muted-foreground text-sm">
           Loading profile...
         </span>
@@ -107,8 +107,8 @@ const PublicProfile = () => {
 
   if (error || !profile) {
     return (
-      <div className="flex justify-center items-center h-full w-full">
-        <span className="text-red-500 text-sm">{error}</span>
+      <div className="flex flex-1 min-h-[80vh] w-full items-center justify-center py-4 px-6 gap-2">
+        <span className="text-destructive text-sm">{error}</span>
       </div>
     );
   }

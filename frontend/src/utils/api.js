@@ -168,12 +168,22 @@ export const profileAPI = {
       method: "PUT",
       body: JSON.stringify(socialProfiles),
     }),
-  patchPublicProfile: (isPublicProfile) =>
+  patchPublicProfile: ({ isPublicProfile }) =>
     apiCall(`/profile/public`, {
       method: "PATCH",
-      body: JSON.stringify({ isPublicProfile }),
+      body: JSON.stringify({ isPublicProfile: !!isPublicProfile }),
     }),
   getPublicProfile: (username) => apiCall(`/profile/public/${username}`),
+  updateBasicInfo: (basicInfo) =>
+    apiCall(`/profile/basic`, {
+      method: "PATCH",
+      body: JSON.stringify(basicInfo),
+    }),
+  changePassword: ({ oldPassword, newPassword }) =>
+    apiCall(`/profile/password`, {
+      method: "PATCH",
+      body: JSON.stringify({ oldPassword, newPassword }),
+    }),
 };
 
 // Compiler API calls

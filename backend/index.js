@@ -16,23 +16,43 @@ const GitHubStrategy = require("passport-github2").Strategy;
 const User = require("./models/User");
 const axios = require("axios");
 const leaderboardRoutes = require("./routes/leaderboard");
+const { uploadRouter } = require("./routes/uploadthing.js");
 
-console.log("TEST_ENV:", process.env.TEST_ENV); // Debug: should print 'hello' if .env is loaded
+console.log("TEST_ENV:", process.env.TEST_ENV);
+console.log("TEST_ENV:", process.env.JWT_SECRET); // Debug: should print 'hello' if .env is loaded
 console.log("TEST_ENV:", process.env.TEST_ENV); // Add this for testing
 console.log("[DEBUG] GITHUB_CLIENT_ID:", process.env.GITHUB_CLIENT_ID);
 console.log("[DEBUG] GITHUB_CALLBACK_URL:", process.env.GITHUB_CALLBACK_URL);
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  optionsSuccessStatus: 200,
+  credentials: true,
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Content-Type-Options",
+    "Accept",
+    "X-Requested-With",
+    "Origin",
+    "Access-Control-Request-Method",
+    "Access-Control-Request-Headers",
+  ],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Session middleware (for OAuth handshake only)
 app.use(
   session({
-    secret: process.env.JWT_SECRET || "supersecretkey",
+    secret:
+      process.env.JWT_SECRET ||
+      "935dacfee06f8c8bcf458d9fcab55704d0ceaa6a94e05d68796f9905855282f5a67d8322e305b2b970baebaa4507d4837157f2829c737547a779c4558e9de3c5",
     resave: false,
     saveUninitialized: false,
   })
@@ -131,6 +151,7 @@ app.get("/", (req, res) => {
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/uploadthing", uploadRouter);
 app.use("/api/problems", problemRoutes);
 app.use("/api/submission", submissionRoutes);
 app.use("/api/testcases", testcaseRoutes);

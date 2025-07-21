@@ -18,7 +18,7 @@ const LoadingScreen = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-background ${className}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-background !no-scrollbar ${className}`}
     >
       <div className="flex flex-col items-center space-y-6 p-8">
         {/* Logo */}

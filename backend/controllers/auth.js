@@ -4,7 +4,9 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { GoogleAuth } = require("google-auth-library");
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  "935dacfee06f8c8bcf458d9fcab55704d0ceaa6a94e05d68796f9905855282f5a67d8322e305b2b970baebaa4507d4837157f2829c737547a779c4558e9de3c5";
 const JWT_EXPIRES_IN = "7d";
 
 // Email configuration with OAuth2
@@ -88,7 +90,8 @@ const createTransporter = async () => {
 
 // Helper: Generate JWT
 const generateToken = (user) => {
-  return jwt.sign(
+  console.log("[JWT SIGN] JWT_SECRET in use:", JWT_SECRET);
+  const token = jwt.sign(
     {
       id: user._id,
       email: user.email,
@@ -101,6 +104,8 @@ const generateToken = (user) => {
       expiresIn: JWT_EXPIRES_IN,
     }
   );
+  console.log("[JWT SIGN] Token generated:", token);
+  return token;
 };
 
 const generateRandomUsername = async (email) => {

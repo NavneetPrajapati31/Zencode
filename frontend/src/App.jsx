@@ -23,7 +23,7 @@ function AppContent() {
 
   return (
     <div
-      className={`font-inter min-h-screen bg-background text-foreground theme-transition ${!isInitialized ? "theme-not-initialized" : ""}`}
+      className={`font-inter min-h-screen !no-scrollbar bg-background text-foreground theme-transition ${!isInitialized ? "theme-not-initialized" : ""}`}
     >
       <Routes>
         <Route path="/" element={<LandingPage />} />

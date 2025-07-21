@@ -160,28 +160,56 @@ router.put(
   }
 );
 
-// PATCH /api/profile/public
-router.patch("/public", authenticateJWT, async (req, res) => {
+// PATCH /api/profile/basic
+router.patch("/basic", authenticateJWT, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { isPublicProfile } = req.body;
-    if (typeof isPublicProfile !== "boolean") {
-      return res
-        .status(400)
-        .json({ message: "isPublicProfile must be boolean" });
+    const { name, username, avatar } = req.body;
+    if (!name && !username && !avatar) {
+      return res.status(400).json({ message: "No fields to update." });
     }
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { isPublicProfile },
-      { new: true }
-    );
+    const update = {};
+    if (name !== undefined) update.name = name;
+    if (avatar !== undefined) update.avatar = avatar;
+    if (username !== undefined) {
+      // Check if username is unique
+      const existing = await User.findOne({ username });
+      if (existing && existing._id.toString() !== userId) {
+        return res.status(409).json({ message: "Username is already taken." });
+      }
+      update.username = username;
+    }
+    const user = await User.findByIdAndUpdate(userId, update, { new: true });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json({
-      message: "Profile visibility updated",
-      isPublicProfile: user.isPublicProfile,
-    });
+    res.json({ message: "Profile updated successfully.", user });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// PATCH /api/profile/password
+router.patch("/password", authenticateJWT, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ message: "Both old and new password are required." });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const isMatch = await user.comparePassword(oldPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Old password is incorrect." });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.json({ message: "Password updated successfully." });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -213,6 +241,22 @@ router.get("/public/:username", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+router.patch("/public", authenticateJWT, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { isPublicProfile } = req.body;
+    if (typeof isPublicProfile !== "boolean") {
+      return res
+        .status(400)
+        .json({ message: "Invalid value for isPublicProfile." });
+    }
+    await User.findByIdAndUpdate(userId, { isPublicProfile });
+    res.json({ message: "Profile visibility updated.", isPublicProfile });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update visibility." });
   }
 });
 

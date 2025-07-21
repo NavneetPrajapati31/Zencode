@@ -108,7 +108,7 @@ const ProfileView = ({
                 leaderboardRank >= 1 &&
                 leaderboardRank <= 3
                   ? `${medalIcons[leaderboardRank - 1].classname} text-sm px-3 py-0.5 mx-6 w-fit mt-4 rounded-3xl flex flex-row`
-                  : "text-xs px-3 py-0.5 rounded-3xl w-fit mt-4 flex flex-row"
+                  : "text-sm px-3 py-0.5 rounded-3xl w-fit mt-4 flex flex-row"
               }
             >
               {leaderboardRank != null &&

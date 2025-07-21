@@ -26,7 +26,7 @@ export const RootLayout = () => {
   );
 
   return (
-    <div className="font-inter min-h-screen bg-background text-foreground theme-transition">
+    <div className="font-inter min-h-screen !no-scrollbar bg-background text-foreground theme-transition">
       <NavigationLoadingProvider>
         {!hideNavFooter && <Navbar />}
         <App />
