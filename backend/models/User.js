@@ -71,6 +71,10 @@ const UserSchema = new mongoose.Schema({
     linkedin: { type: String, default: "" },
     twitter: { type: String, default: "" },
   },
+  isPublicProfile: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

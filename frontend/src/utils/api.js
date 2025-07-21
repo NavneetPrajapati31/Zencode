@@ -168,6 +168,12 @@ export const profileAPI = {
       method: "PUT",
       body: JSON.stringify(socialProfiles),
     }),
+  patchPublicProfile: (isPublicProfile) =>
+    apiCall(`/profile/public`, {
+      method: "PATCH",
+      body: JSON.stringify({ isPublicProfile }),
+    }),
+  getPublicProfile: (username) => apiCall(`/profile/public/${username}`),
 };
 
 // Compiler API calls

@@ -11,11 +11,30 @@ import {
   PaginationEllipsis,
 } from "./ui/pagination";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Link } from "react-router-dom";
 
 const medalIcons = [
-  { icon: "🥇", label: "Gold Medal" },
-  { icon: "🥈", label: "Silver Medal" },
-  { icon: "🥉", label: "Bronze Medal" },
+  {
+    icon: "🥇",
+    label: "Gold Medal",
+    badge: "Zen Master",
+    classname: "bg-blue-600/20 text-blue-600",
+    ring: "border-blue-600",
+  },
+  {
+    icon: "🥈",
+    label: "Silver Medal",
+    badge: "Zen Sage",
+    classname: "bg-rose-600/20 text-rose-600",
+    ring: "border-rose-600",
+  },
+  {
+    icon: "🥉",
+    label: "Bronze Medal",
+    badge: "Zen Sensei",
+    classname: "bg-violet-600/20 text-violet-600",
+    ring: "border-violet-600",
+  },
 ];
 
 // const Avatar = ({ src, alt }) =>
@@ -41,31 +60,42 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
       // rank % 2 === 1 ? "bg-accent/70" : "bg-background"
     )}
   >
-    <td className="px-4 py-3 flex items-center gap-3 min-w-[220px] theme-transition">
-      <Avatar className="h-10 w-10 theme-transition">
-        <AvatarImage
-          src={user?.avatar}
-          alt={user?.name || user?.email || "User"}
-        />
-        <AvatarFallback className="text-sm border border-border theme-transition">
-          {user?.name
-            ? user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()
-            : "U"}
-        </AvatarFallback>
-      </Avatar>
-      <div className="flex flex-col gap-0.5 theme-transition">
-        <span className="font-medium text-sm text-foreground leading-tight theme-transition">
-          {user.name}
-        </span>
-        <span className="text-xs text-muted-foreground leading-tight theme-transition font-normal">
-          {user.handle}
-        </span>
-      </div>
-    </td>
+    <Link to={`/profile/${user.handle}`}>
+      <td className="px-4 py-3 flex items-center gap-3 min-w-[220px] theme-transition">
+        <Avatar className="h-10 w-10 theme-transition">
+          <AvatarImage
+            src={user?.avatar}
+            alt={user?.name || user?.email || "User"}
+          />
+          <AvatarFallback className="text-sm text-foreground border border-border theme-transition">
+            {user?.name
+              ? user.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()
+              : "U"}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col gap-0.5 theme-transition">
+          <span className="flex flex-row gap-4 font-medium text-sm text-foreground leading-tight theme-transition">
+            {user.name}
+            <div
+              className={
+                rank != null && rank >= 0 && rank < 3
+                  ? `${medalIcons[rank].classname} text-xs px-3 py-0.5 rounded-3xl`
+                  : "text-xs px-2 py-0.5 rounded-3xl"
+              }
+            >
+              {rank != null && rank >= 0 && rank < 3 && medalIcons[rank].badge}
+            </div>
+          </span>
+          <span className="text-xs text-muted-foreground leading-tight theme-transition font-normal">
+            @{user.handle}
+          </span>
+        </div>
+      </td>
+    </Link>
     <td className="px-4 py-3 text-center font-normal text-foreground theme-transition">
       {user.totalQuestions}
     </td>
@@ -73,10 +103,14 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
       {isTop3 ? (
         <span
           role="img"
-          aria-label={medalIcons[rank].label}
+          aria-label={
+            rank != null && rank >= 0 && rank < 3
+              ? medalIcons[rank].label
+              : undefined
+          }
           className="text-lg align-middle theme-transition"
         >
-          {medalIcons[rank].icon}
+          {rank != null && rank >= 0 && rank < 3 && medalIcons[rank].icon}
         </span>
       ) : (
         <span className="text-foreground theme-transition">#{rank + 1}</span>

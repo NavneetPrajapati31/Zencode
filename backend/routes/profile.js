@@ -33,18 +33,41 @@ router.get(
 );
 
 // GET /api/profile/:username/progress
-router.get(
-  "/:username/progress",
-  authenticateJWT,
-  requireProfileComplete,
-  getUserProgress
-);
+router.get("/:username/progress", async (req, res, next) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (user && user.isPublicProfile) {
+      console.log(`[PUBLIC PROGRESS] for ${user.username}`);
+      return getUserProgress(req, res, next);
+    }
+  } catch (e) {
+    console.log("Error in public progress wrapper", e);
+  }
+  console.log(`[PRIVATE PROGRESS] for ${req.params.username}`);
+  authenticateJWT(req, res, () =>
+    requireProfileComplete(req, res, () => getUserProgress(req, res, next))
+  );
+});
 
 // GET /api/profile/:username/heatmap
 router.get(
   "/:username/heatmap",
-  authenticateJWT,
-  requireProfileComplete,
+  async (req, res, next) => {
+    try {
+      const user = await User.findOne({ username: req.params.username });
+      if (user && user.isPublicProfile) {
+        console.log(`[PUBLIC HEATMAP] for ${user.username}`);
+        req.user = user; // for downstream logic
+        return next();
+      }
+    } catch (e) {
+      console.log("Error in public heatmap wrapper", e);
+    }
+    console.log(`[PRIVATE HEATMAP] for ${req.params.username}`);
+    authenticateJWT(req, res, () =>
+      requireProfileComplete(req, res, () => next())
+    );
+  },
   async (req, res) => {
     try {
       const username = req.params.username;
@@ -136,5 +159,61 @@ router.put(
     }
   }
 );
+
+// PATCH /api/profile/public
+router.patch("/public", authenticateJWT, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { isPublicProfile } = req.body;
+    if (typeof isPublicProfile !== "boolean") {
+      return res
+        .status(400)
+        .json({ message: "isPublicProfile must be boolean" });
+    }
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isPublicProfile },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({
+      message: "Profile visibility updated",
+      isPublicProfile: user.isPublicProfile,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// GET /api/profile/public/:username
+router.get("/public/:username", async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user || !user.isPublicProfile) {
+      return res.status(404).json({ message: "Public profile not found" });
+    }
+    // Only return public fields
+    const {
+      username,
+      name,
+      avatar,
+      socialProfiles,
+      solvedProblems,
+      createdAt,
+    } = user;
+    res.json({
+      username,
+      name,
+      avatar,
+      socialProfiles,
+      solvedProblems,
+      createdAt,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
 
 module.exports = router;

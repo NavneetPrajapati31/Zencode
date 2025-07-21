@@ -16,6 +16,7 @@ router.get("/", getProblems);
 // GET /api/problems/count
 router.get("/count", async (req, res) => {
   try {
+    console.log("[PROBLEMS COUNT] Public endpoint hit");
     const count = await Problem.countDocuments();
     res.json({ count });
   } catch (err) {

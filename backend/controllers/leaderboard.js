@@ -61,7 +61,7 @@ const getLeaderboard = async (req, res) => {
         }
         return {
           name: user.name || user.username,
-          handle: `@${user.username}`,
+          handle: user.username,
           avatar: user.avatar,
           totalQuestions: user.solvedProblems.length,
           totalSubmissions,

@@ -11,6 +11,7 @@ import ProblemsPage from "./pages/Problems";
 import CodeRunnerPage from "./pages/CodeRunner";
 import ProblemDetail from "./pages/ProblemDetail";
 import Profile from "./pages/ProfileV2";
+import ProfileRoute from "./pages/ProfileRoute";
 import OAuthCallback from "./pages/OAuthCallback";
 import LeaderboardPage from "./pages/Leaderboard";
 import ThemeTransitionWrapper from "./components/theme-transition-wrapper";
@@ -33,7 +34,7 @@ function AppContent() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/profile" element={<ProfileRedirect />} />
-        <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/profile/:username" element={<ProfileRoute />} />
         <Route path="/problems" element={<ProblemsPage />} />
         <Route path="/problems/:id" element={<ProblemDetail />} />
         <Route path="/compiler" element={<CodeRunnerPage />} />
