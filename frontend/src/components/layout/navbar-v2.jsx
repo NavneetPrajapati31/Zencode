@@ -18,6 +18,7 @@ import { useTheme } from "@/components/theme-context-utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LuX } from "react-icons/lu";
+import SettingsModal from "./settings-modal";
 
 export default function Navbar({ sticky = false }) {
   const navLinks = [
@@ -27,7 +28,7 @@ export default function Navbar({ sticky = false }) {
     // { name: "Pricing", href: "#pricing" },
   ];
 
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, setUser, isAuthenticated, logout } = useAuth();
   const { theme, toggleTheme, isTransitioning } = useTheme();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -289,7 +290,7 @@ export default function Navbar({ sticky = false }) {
                         </span>
                       </DropdownMenuItem> */}
                           <DropdownMenuItem
-                            onClick={logout}
+                            onClick={handleOpenSettingsModal}
                             className="text-muted-foreground cursor-pointer theme-transition"
                             aria-label="Logout"
                           >
@@ -380,56 +381,13 @@ export default function Navbar({ sticky = false }) {
           </Sheet>
         </div>
       </header>
-      {/* Settings Modal - Rendered outside header for proper positioning */}
-      {isSettingsModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm">
-          <div
-            className="bg-card border border-border text-foreground rounded-xl shadow-2xl max-w-md w-full mx-4 py-6 px-6 relative"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            tabIndex={-1}
-          >
-            <button
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-accent"
-              onClick={handleCloseSettingsModal}
-              aria-label="Close settings modal"
-              tabIndex={0}
-            >
-              <LuX className="h-5 w-5" />
-            </button>
-            <div className="pr-8">
-              <h2 className="text-xl font-semibold mb-6 text-foreground">
-                Settings
-              </h2>
-              <div className="flex flex-col gap-3">
-                <button
-                  className="w-full text-left px-4 py-3 rounded-lg bg-accent hover:bg-accent/80 transition-colors text-accent-foreground font-medium"
-                  tabIndex={0}
-                  aria-label="Profile settings"
-                >
-                  Profile
-                </button>
-                <button
-                  className="w-full text-left px-4 py-3 rounded-lg bg-accent hover:bg-accent/80 transition-colors text-accent-foreground font-medium"
-                  tabIndex={0}
-                  aria-label="Preferences settings"
-                >
-                  Preferences
-                </button>
-                <button
-                  className="w-full text-left px-4 py-3 rounded-lg bg-accent hover:bg-accent/80 transition-colors text-accent-foreground font-medium"
-                  tabIndex={0}
-                  aria-label="Theme settings"
-                >
-                  Theme
-                </button>
-                {/* Add more settings options here */}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Settings Modal - Only for the highlighted button */}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={handleCloseSettingsModal}
+        user={user}
+        setUser={setUser}
+      />
     </>
   );
 }

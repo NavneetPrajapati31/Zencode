@@ -152,7 +152,7 @@ const ProfileView = ({
                     leaderboardRank >= 1 &&
                     leaderboardRank <= 3 &&
                     medalIcons[leaderboardRank - 1].classname
-                  } !bg-transparent font-medium`}
+                  } !bg-transparent !text-foreground font-medium`}
                 >
                   {user?.name || "User"}
                 </span>
