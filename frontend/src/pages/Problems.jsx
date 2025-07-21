@@ -8,11 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
-  Sheet as Dialog,
-  SheetContent as DialogContent,
-  SheetHeader as DialogHeader,
-  SheetTitle as DialogTitle,
-  SheetFooter as DialogFooter,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
 } from "@/components/ui/sheet";
 import {
   Search,
@@ -59,8 +66,23 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
     }
   }, [initialData]);
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [open]);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleDifficultyChange = (value) => {
+    setForm({ ...form, difficulty: value });
   };
 
   const handleSubmit = async (e) => {
@@ -68,17 +90,29 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
     await onSubmit(form);
   };
 
+  if (!open) return null;
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-lg transition-all duration-300"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg mx-auto rounded-lg bg-card border border-border shadow-lg px-6 py-4 text-left relative"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        tabIndex={-1}
+      >
+        <div className="p-0 mb-4">
+          <div className="font-medium text-lg">
             {initialData ? "Edit Problem" : "Create New Problem"}
-          </DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+          </div>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm font-medium mb-2">Name</label>
+            <label className="block text-sm text-muted-foreground font-normal mb-2">
+              Name
+            </label>
             <Input
               name="name"
               value={form.name}
@@ -88,18 +122,20 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Statement</label>
+            <label className="block text-sm text-muted-foreground  font-normal mb-2">
+              Statement
+            </label>
             <textarea
               name="statement"
               value={form.statement}
               onChange={handleChange}
               placeholder="Problem statement"
-              className="w-full min-h-[100px] p-3 border rounded-md"
+              className="w-full min-h-[100px] p-3 text-sm border border-muted focus:outline-none focus:border-border rounded-md"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm text-muted-foreground  font-normal mb-2">
               Code Template
             </label>
             <textarea
@@ -107,34 +143,47 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
               value={form.code}
               onChange={handleChange}
               placeholder="Code template"
-              className="w-full min-h-[100px] p-3 border rounded-md font-mono"
+              className="w-full min-h-[100px] p-3 text-sm border border-muted focus:outline-none focus:border-border rounded-md font-mono"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Difficulty</label>
-            <select
-              name="difficulty"
+            <label className="block text-sm text-muted-foreground  font-normal mb-2">
+              Difficulty
+            </label>
+            <Select
               value={form.difficulty}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-md"
+              onValueChange={handleDifficultyChange}
             >
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
-            </select>
+              <SelectTrigger
+                className="w-full p-3 text-sm text-muted-foreground  border border-muted focus:outline-none focus:border-border rounded-md"
+                aria-label="Select difficulty"
+              >
+                <SelectValue placeholder="Select difficulty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Easy">Easy</SelectItem>
+                <SelectItem value="Medium">Medium</SelectItem>
+                <SelectItem value="Hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <div className="flex flex-row gap-2 px-0 py-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="w-1/2"
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="w-1/2">
               {loading ? "Saving..." : initialData ? "Update" : "Create"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }
 
@@ -245,6 +294,18 @@ export default function ProblemsPage() {
       setDeleteLoading(false);
     }
   };
+
+  // Add useEffect for delete modal scroll lock
+  useEffect(() => {
+    if (deleteId) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [deleteId]);
 
   if (loading || authLoading) {
     return (
@@ -387,29 +448,42 @@ export default function ProblemsPage() {
       />
 
       {/* Delete Confirmation Modal */}
-      <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Problem</DialogTitle>
-          </DialogHeader>
-          <p>
-            Are you sure you want to delete this problem? This action cannot be
-            undone.
-          </p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteId(null)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={deleteLoading}
-            >
-              {deleteLoading ? "Deleting..." : "Delete"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {deleteId && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-lg transition-all duration-300"
+          onClick={() => setDeleteId(null)}
+        >
+          <div
+            className="w-full max-w-md mx-auto rounded-xl bg-card border border-border shadow-none px-6 py-4 text-left relative"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
+          >
+            <div className="mb-4 font-medium text-md">Delete Problem</div>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Are you sure you want to delete this problem? This action cannot
+              be undone.
+            </p>
+            <div className="flex flex-row gap-2 px-0 py-2">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteId(null)}
+                className="w-1/2"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDelete}
+                disabled={deleteLoading}
+                className="w-1/2 !bg-destructive text-destructive-foreground"
+              >
+                {deleteLoading ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
