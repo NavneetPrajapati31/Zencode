@@ -457,6 +457,15 @@ export default function TopNavbar({
                         </span>
                       </DropdownMenuItem> */}
                   <DropdownMenuItem
+                    onClick={() => {
+                      navigate("/profile");
+                    }}
+                    className="text-muted-foreground cursor-pointer theme-transition"
+                    aria-label="profile"
+                  >
+                    My Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     onClick={handleOpenSettingsModal}
                     className="text-muted-foreground cursor-pointer theme-transition"
                     aria-label="Logout"

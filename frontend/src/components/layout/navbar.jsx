@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Code, Sun, Moon, ChevronRight } from "lucide-react";
 import { RiFocus2Line } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/use-auth";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -34,6 +34,8 @@ export default function Navbar({ sticky = false }) {
 
   const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
   const handleCloseSettingsModal = () => setIsSettingsModalOpen(false);
+
+  const navigate = useNavigate();
 
   console.log("Navbar user:", user); // Log user object
 
@@ -226,6 +228,15 @@ export default function Navbar({ sticky = false }) {
                             {theme === "dark" ? "Light Mode" : "Dark Mode"}
                           </span>
                         </DropdownMenuItem> */}
+                        <DropdownMenuItem
+                          onClick={() => {
+                            navigate("/profile");
+                          }}
+                          className="text-muted-foreground cursor-pointer theme-transition"
+                          aria-label="profile"
+                        >
+                          My Profile
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={handleOpenSettingsModal}
                           className="text-muted-foreground cursor-pointer theme-transition"
