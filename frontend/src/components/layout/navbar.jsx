@@ -21,9 +21,9 @@ import SettingsModal from "./settings-modal";
 
 export default function Navbar({ sticky = false }) {
   const navLinks = [
+    { name: "Home", href: "#" },
     { name: "Features", href: "#features" },
     { name: "Dashboard", href: "#dashboard" },
-    { name: "Testimonials", href: "#testimonials" },
     // { name: "Pricing", href: "#pricing" },
   ];
 
@@ -44,7 +44,7 @@ export default function Navbar({ sticky = false }) {
       <header
         className={`${sticky ? "sticky top-0" : "relative"} z-50 w-full backdrop-blur-3xl theme-transition`}
       >
-        <div className="container mx-auto h-20 flex items-center justify-between px-4 lg:px-8">
+        <div className="w-full h-20 flex items-center justify-between px-6 sm:px-12">
           {/* Left: Logo */}
           <div className="flex-1 flex items-center">
             <Link
@@ -70,7 +70,7 @@ export default function Navbar({ sticky = false }) {
           </nav>
 
           {/* Right: Theme Toggler and Auth */}
-          <div className="flex-1 flex items-center justify-end gap-2">
+          <div className="flex-1 items-center justify-end gap-2 hidden md:flex">
             <Link to={"/problems"}>
               <button
                 className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${

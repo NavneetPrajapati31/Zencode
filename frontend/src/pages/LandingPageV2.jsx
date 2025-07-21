@@ -28,7 +28,7 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section - Replicated Design */}
-        <section className="relative h-[calc(90vh-4rem)] flex items-center justify-center !px-12 py-16 md:py-24 overflow-hidden">
+        <section className="relative h-[calc(90vh-4rem)] flex items-center justify-center px-6 sm:px-12 py-16 md:py-24 overflow-hidden">
           <div className="relative z-10 max-w-full mx-auto w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
             {/* Hero Content */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-2xl p-0 lg:px-0 lg:py-0 rounded-2xl border border-border bg-card hover:scale-105 transition-all duration-300 theme-transition-override">
@@ -80,7 +80,7 @@ export default function LandingPage() {
         {/* Features Section */}
         <section
           id="features"
-          className="py-16 md:py-24 px-4 bg-background theme-transition"
+          className="py-12 md:py-24 px-6 sm:px-12 bg-background theme-transition"
         >
           <div className="max-w-6xl mx-auto">
             <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-3 theme-transition">
@@ -137,7 +137,7 @@ export default function LandingPage() {
         {/* Progress Dashboard Showcase */}
         <section
           id="dashboard"
-          className="py-16 md:py-24 px-4 bg-background theme-transition"
+          className="py-16 md:py-24 px-6 sm:px-12 bg-background theme-transition"
         >
           <div className="max-w-full mx-auto text-center">
             <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-3 theme-transition">
@@ -146,7 +146,7 @@ export default function LandingPage() {
             <h2 className="text-xl md:text-2xl font-bold mb-3 text-foreground theme-transition">
               See Your Progress Unfold
             </h2>
-            <p className="text-md text-muted-foreground mb-12 max-w-3xl mx-auto theme-transition">
+            <p className="text-md text-muted-foreground mb-10 max-w-3xl mx-auto theme-transition">
               Our intuitive dashboard provides clear insights into your coding
               habits and skill development.
             </p>
@@ -215,7 +215,7 @@ export default function LandingPage() {
         </section> */}
 
         {/* CTA Section */}
-        <section className="py-16 md:py-24 px-4 bg-background text-center theme-transition">
+        <section className="py-16 md:py-24 px-6 sm:px-12 bg-background text-center theme-transition">
           <div className="max-w-3xl mx-auto items-center">
             <h2 className="text-xl md:text-2xl font-bold mb-6 text-foreground theme-transition">
               Ready to Achieve Deep Work?
@@ -225,7 +225,7 @@ export default function LandingPage() {
               productivity.
             </p>
             <Link to={user ? "/problems" : "/signup"}>
-              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-lg !text-md shadow-lg theme-transition">
+              <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold !py-6 !px-6 rounded-lg text-md shadow-lg theme-transition">
                 Start Coding Now
               </Button>
             </Link>

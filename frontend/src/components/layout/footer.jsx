@@ -1,124 +1,115 @@
-import { Code, Github, DiscIcon as Discord, Twitter } from "lucide-react";
+import { Github, DiscIcon as Discord, Twitter } from "lucide-react";
 import { RiFocus2Line } from "react-icons/ri";
+import { FaGithub } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { useAuth } from "@/components/auth/use-auth";
 
 export default function Footer() {
+  const { user } = useAuth();
   return (
-    <footer className="bg-background py-12 px-12 border-t border-border theme-transition">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-        {/* Logo and Description */}
-        <div className="flex flex-col items-center">
+    <footer className="bg-background py-8 px-8 sm:px-12 lg:px-20 border-t border-border theme-transition">
+      <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+        <div className="col-span-2 max-w-md space-y-4 flex flex-col items-start">
           <a
-            href="#"
-            className="flex items-center gap-2 text-lg font-bold text-primary mb-4 theme-transition"
+            href="/"
+            className="flex items-center gap-1.5 text-sm font-bold text-primary mb-3 theme-transition"
+            aria-label="Home"
+            tabIndex={0}
           >
-            {/* <Code className="h-7 w-7" /> */}
-            <RiFocus2Line className="h-7 w-7" />
-            {/* <svg
-              width="36"
-              height="36"
-              viewBox="0 0 100 100"
-              aria-label="Petal Logo"
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-primary rotate-135"
-            >
-           
-              <path
-                d="M50,50 Q20,20 50,5 Q35,35 50,50 Z"
-                fill="currentColor"
-                transform="rotate(0 50 50)"
-              />
-           
-              <path
-                d="M50,50 Q80,20 50,5 Q65,35 50,50 Z"
-                fill="currentColor"
-                transform="rotate(90 50 50)"
-              />
-          
-              <path
-                d="M50,50 Q80,80 95,50 Q65,65 50,50 Z"
-                fill="currentColor"
-                transform="rotate(180 50 50)"
-              />
-            
-              <path
-                d="M50,50 Q20,80 5,50 Q35,65 50,50 Z"
-                fill="currentColor"
-                transform="rotate(270 50 50)"
-              />
-            </svg> */}
+            <RiFocus2Line className="h-6 w-6" />
             Zencode
           </a>
-          <p className="text-muted-foreground text-sm max-w-sm theme-transition">
-            Your calm, distraction-free platform for deep coding and skill
-            improvement.
+          <p className="text-muted-foreground text-sm text-left max-w-xs md:max-w-sm">
+            A calm, distraction-free coding platform for deep focus and skill
+            growth.
           </p>
-        </div>
-
-        {/* Navigation Links */}
-        <div className="flex flex-col items-center">
-          <h3 className="text-md font-semibold text-foreground mb-4 theme-transition">
-            Quick Links
-          </h3>
-          <ul className="space-y-2 text-muted-foreground text-sm">
-            <li>
-              <a
-                href="#features"
-                className="hover:text-primary transition-colors duration-200 theme-transition"
-              >
-                Features
-              </a>
-            </li>
-            <li>
-              <a
-                href="#dashboard"
-                className="hover:text-primary transition-colors duration-200 theme-transition"
-              >
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a
-                href="#testimonials"
-                className="hover:text-primary transition-colors duration-200 theme-transition"
-              >
-                Testimonials
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        {/* Social Links */}
-        <div className="flex flex-col items-center">
-          <h3 className="text-md font-semibold text-foreground mb-4 theme-transition">
-            Connect With Us
-          </h3>
-          <div className="flex justify-center md:justify-start gap-4 text-sm">
+          <div className="flex gap-4 mt-0">
             <a
-              href="#"
+              href="https://github.com/navneetPrajapati31"
               aria-label="GitHub"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+              tabIndex={0}
             >
-              <Github className="h-5 w-5" />
+              <FaGithub className="h-4 w-4" />
             </a>
             <a
-              href="#"
-              aria-label="Discord"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition"
+              href="https://www.linkedin.com/in/navneet-prajapati-640345290"
+              aria-label="LinkedIn"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+              tabIndex={0}
             >
-              <Discord className="h-5 w-5" />
+              <FaLinkedin className="h-4 w-4" />
             </a>
             <a
-              href="#"
+              href="/"
               aria-label="Twitter"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200 theme-transition"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+              tabIndex={0}
             >
-              <Twitter className="h-5 w-5" />
+              <FaXTwitter className="h-4 w-4" />
             </a>
           </div>
-          <p className="text-sm text-muted-foreground mt-8 theme-transition">
-            &copy; {new Date().getFullYear()} Zencode. All rights reserved.
-          </p>
         </div>
+        <div className="space-y-4 flex flex-col items-start">
+          <h3 className="text-sm font-medium text-foreground theme-transition">
+            Product
+          </h3>
+          <a
+            href={user ? "/problems" : "/signup"}
+            className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm mb-1"
+            tabIndex={0}
+          >
+            Problems
+          </a>
+          <a
+            href={user ? "/leaderboard" : "/signup"}
+            className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm mb-1"
+            tabIndex={0}
+          >
+            Leaderboard
+          </a>
+          <a
+            href={user ? "/settings" : "/signup"}
+            className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
+            tabIndex={0}
+          >
+            Settings
+          </a>
+        </div>
+        <div className="space-y-4 flex flex-col items-start">
+          <h3 className="text-sm font-medium text-foreground theme-transition">
+            Resources
+          </h3>
+          <a
+            href="#"
+            className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm mb-1"
+            tabIndex={0}
+          >
+            GitHub
+          </a>
+          <a
+            href="#"
+            className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm mb-1"
+            tabIndex={0}
+          >
+            Discord
+          </a>
+          <a
+            href="#contact"
+            className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
+            tabIndex={0}
+          >
+            Contact
+          </a>
+        </div>
+        <div className="space-y-4"></div>
+      </div>
+      <div className="border-t border-border mt-0 w-full" />
+      <div className="max-w-full mx-auto flex flex-col md:flex-row justify-between items-start pt-6 px-0 text-xs text-muted-foreground">
+        <span className="mb-2 md:mb-0">
+          &copy; {new Date().getFullYear()} Zencode. All rights reserved.
+        </span>
       </div>
     </footer>
   );
