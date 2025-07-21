@@ -13,8 +13,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTheme } from "@/components/theme-context-utils";
 
 export default function LandingPage() {
+  const { theme } = useTheme();
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground font-sans hide-scrollbar theme-transition">
       {/* Navbar */}
@@ -125,16 +127,37 @@ export default function LandingPage() {
           id="dashboard"
           className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
-          <div className="max-w-6xl mx-auto text-center">
+          <div className="max-w-full mx-auto text-center">
             <h2 className="!text-2xl !md:text-4xl font-semibold mb-4 text-foreground theme-transition">
               See Your Progress Unfold
             </h2>
-            <p className="text-md text-muted-foreground mb-12 max-w-2xl mx-auto theme-transition">
+            <p className="text-md text-muted-foreground mb-8 max-w-2xl mx-auto theme-transition">
               Our intuitive dashboard provides clear insights into your coding
               habits and skill development.
             </p>
             <Card className="flex justify-center items-center !border-none shadow-none bg-transparent rounded-xl theme-transition">
-              <CardContent className="p-6 md:p-8 max-w-5xl"></CardContent>
+              <CardContent className="p-0 sm:p-2 md:p-4 max-w-full">
+                <div className="grid">
+                  <img
+                    src="/Screenshot 2025-07-21 182018.png"
+                    alt="ZenCode Dashboard Preview (Light)"
+                    height={1180}
+                    width={1180}
+                    className={`mt-0.5 col-start-1 row-start-1 transition-opacity duration-300 ease-in ${
+                      theme === "light" ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                  <img
+                    src="/Screenshot 2025-07-21 181950.png"
+                    alt="ZenCode Dashboard Preview (Dark)"
+                    height={1180}
+                    width={1180}
+                    className={`col-start-1 row-start-1 transition-opacity duration-300 ease-in ${
+                      theme === "dark" ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                </div>
+              </CardContent>
             </Card>
           </div>
         </section>
