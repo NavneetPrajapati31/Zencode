@@ -44,8 +44,21 @@ const getDayColor = (count) => {
 };
 
 const generateHeatmapData = (externalData) => {
+  // --- Ensure today is present in the data ---
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  let data = Array.isArray(externalData) ? [...externalData] : [];
+  const hasToday = data.some((d) => {
+    const dDate = new Date(d.date);
+    dDate.setHours(0, 0, 0, 0);
+    return dDate.getTime() === today.getTime();
+  });
+  if (!hasToday) {
+    data.push({ date: new Date(today), count: 0 });
+  }
+  // --- End ensure today is present ---
+
   const startDate = new Date(today);
   startDate.setDate(startDate.getDate() - 364);
 
@@ -59,14 +72,14 @@ const generateHeatmapData = (externalData) => {
 
   let date = new Date(startDate);
   let dataMap = {};
-  if (Array.isArray(externalData) && externalData.length > 0) {
-    externalData.forEach(({ date, count }) => {
+  if (data.length > 0) {
+    data.forEach(({ date, count }) => {
       dataMap[date] = count;
     });
   }
   while (date <= today) {
     let count = 0;
-    if (Array.isArray(externalData) && externalData.length > 0) {
+    if (data.length > 0) {
       const dateStr =
         date.getFullYear() +
         "-" +
