@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
       const userData = await profileAPI.getProfile(username);
       console.log("[Auth] Profile API response:", userData);
 
-      let user = userData.user || null;
+      let user = userData || null;
       if (user && !user.role && decoded.role) {
         user = { ...user, role: decoded.role };
       }
@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
 
       console.log("[Auth] Setting user state:", user);
       setUser(user);
-      console.log("[Auth] User loaded from backend:", userData.user);
+      console.log("[Auth] User loaded from backend:", user);
     } catch (error) {
       console.error("[Auth] Error in fetchUserProfile:", error);
       localStorage.removeItem("token");

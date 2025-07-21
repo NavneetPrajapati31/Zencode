@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { BiSolidBarChartAlt2 } from "react-icons/bi";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { GoLinkExternal } from "react-icons/go";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,11 +12,13 @@ import { useAuth } from "@/components/use-auth";
 import { ProblemsBarChart } from "@/components/problems-bar-chart";
 import { Separator } from "@/components/ui/separator";
 import Heatmap from "@/components/heatmap";
+import SocialProfileModal from "@/components/social-profile-modal";
 import {
   leaderboardAPI,
   submissionAPI,
   progressAPI,
   problemsAPI,
+  profileAPI,
 } from "@/utils/api";
 
 export default function Profile() {
@@ -29,6 +32,13 @@ export default function Profile() {
   });
   const [recentSubmissions, setRecentSubmissions] = useState([]);
   const [totalProblems, setTotalProblems] = useState(0);
+  const [socialProfiles, setSocialProfiles] = useState({
+    github: "",
+    linkedin: "",
+    twitter: "",
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,7 +77,21 @@ export default function Profile() {
         try {
           const countRes = await problemsAPI.getTotalCount();
           setTotalProblems(countRes.count || 0);
-        } catch {}
+        } catch {
+          //
+        }
+
+        // Fetch user profile to get social profiles
+        try {
+          const profileRes = await profileAPI.getProfile(user.username);
+          setSocialProfiles({
+            github: profileRes.socialProfiles?.github || "",
+            linkedin: profileRes.socialProfiles?.linkedin || "",
+            twitter: profileRes.socialProfiles?.twitter || "",
+          });
+        } catch {
+          //
+        }
       } catch {
         // handle error (optional: set error state)
       }
@@ -75,7 +99,35 @@ export default function Profile() {
     fetchData();
   }, [user]);
 
+  const handleUpdateSocialProfiles = async (profiles) => {
+    try {
+      await profileAPI.updateSocialProfiles(user.username, profiles);
+      // Fetch the latest profile from backend
+      const profileRes = await profileAPI.getProfile(user.username);
+      setSocialProfiles({
+        github: profileRes.socialProfiles?.github || "",
+        linkedin: profileRes.socialProfiles?.linkedin || "",
+        twitter: profileRes.socialProfiles?.twitter || "",
+      });
+    } catch (error) {
+      console.error("Failed to update social profiles:", error);
+      throw error;
+    }
+  };
+
+  const handleSocialButtonClick = (platform) => {
+    const profile = socialProfiles[platform];
+    if (profile) {
+      window.open(profile, "_blank");
+    } else {
+      setSelectedPlatform(platform);
+      setIsModalOpen(true);
+    }
+  };
+
   if (!user) return null;
+
+  console.log("socialProfiles state:", socialProfiles);
 
   return (
     <div className="h-full flex justify-center items-center px-6 lg:px-10 mb-8 theme-transition">
@@ -142,24 +194,35 @@ export default function Profile() {
             <Button
               variant={"outline"}
               className="!bg-accent text-muted-foreground text-sm"
+              onClick={() => handleSocialButtonClick("github")}
             >
-              <FaGithub className="h-6 w-6" />
-              Add Github
+              <>
+                <FaGithub className="h-6 w-6" />
+                {socialProfiles.github && socialProfiles.github.trim() !== ""
+                  ? "GitHub"
+                  : "Add Github"}
+              </>
             </Button>
 
             <Button
               variant={"outline"}
               className="!bg-accent text-muted-foreground text-sm"
+              onClick={() => handleSocialButtonClick("linkedin")}
             >
               <FaLinkedin className="h-6 w-6" />
-              Add LinkedIn
+              {socialProfiles.linkedin && socialProfiles.linkedin.trim() !== ""
+                ? "LinkedIn"
+                : "Add LinkedIn"}
             </Button>
             <Button
               variant={"outline"}
               className="!bg-accent text-muted-foreground text-sm"
+              onClick={() => handleSocialButtonClick("twitter")}
             >
               <FaXTwitter className="h-6 w-6" />
-              Add Twitter
+              {socialProfiles.twitter && socialProfiles.twitter.trim() !== ""
+                ? "Twitter"
+                : "Add Twitter"}
             </Button>
           </div>
         </Card>
@@ -269,6 +332,13 @@ export default function Profile() {
           <Heatmap />
         </Card>
       </div>
+      <SocialProfileModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleUpdateSocialProfiles}
+        currentProfiles={socialProfiles}
+        platform={selectedPlatform}
+      />
     </div>
   );
 }

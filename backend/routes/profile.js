@@ -23,7 +23,7 @@ router.get(
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      res.json({ user });
+      res.json(user);
     } catch (err) {
       res.status(500).json({ message: "Server error", error: err.message });
     }
@@ -36,6 +36,40 @@ router.get(
   authenticateJWT,
   requireProfileComplete,
   getUserProgress
+);
+
+// PUT /api/profile/:username/social
+router.put(
+  "/:username/social",
+  authenticateJWT,
+  requireProfileComplete,
+  async (req, res) => {
+    try {
+      const { github, linkedin, twitter } = req.body;
+      const username = req.params.username;
+      // Fetch current socialProfiles
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      // Merge new values with existing ones
+      const updatedProfiles = {
+        github: github !== undefined ? github : user.socialProfiles.github,
+        linkedin:
+          linkedin !== undefined ? linkedin : user.socialProfiles.linkedin,
+        twitter: twitter !== undefined ? twitter : user.socialProfiles.twitter,
+      };
+      user.socialProfiles = updatedProfiles;
+      await user.save();
+      res.json({
+        message: "Social profiles updated successfully",
+        socialProfiles: user.socialProfiles,
+      });
+    } catch (error) {
+      console.error("Update social profiles error:", error);
+      res.status(500).json({ error: "Failed to update social profiles" });
+    }
+  }
 );
 
 module.exports = router;

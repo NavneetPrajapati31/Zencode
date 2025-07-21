@@ -162,6 +162,11 @@ export const submissionsAPI = {
 // Profile API calls
 export const profileAPI = {
   getProfile: (username) => apiCall(`/profile/${username}`),
+  updateSocialProfiles: (username, socialProfiles) =>
+    apiCall(`/profile/${username}/social`, {
+      method: "PUT",
+      body: JSON.stringify(socialProfiles),
+    }),
 };
 
 // Compiler API calls
