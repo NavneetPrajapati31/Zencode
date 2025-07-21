@@ -139,10 +139,13 @@ export default function Profile() {
     setIsPublicProfileLoading(true);
     setIsPublicProfileError("");
     try {
-      await profileAPI.patchPublicProfile(!isPublicProfile);
+      await profileAPI.patchPublicProfile({
+        isPublicProfile: !isPublicProfile,
+      });
       setIsPublicProfile((prev) => !prev);
-    } catch {
+    } catch (error) {
       setIsPublicProfileError("Failed to update public profile setting");
+      console.error("Failed to update public profile:", error);
     } finally {
       setIsPublicProfileLoading(false);
     }

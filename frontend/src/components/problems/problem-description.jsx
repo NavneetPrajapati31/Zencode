@@ -161,7 +161,7 @@ export default function ProblemDescription({ problem }) {
         return "bg-green-600/20 text-green-600";
       case "Med.":
       case "Medium":
-        return "bg-primary/20 text-primary";
+        return "bg-primary/10 text-primary";
       case "Hard":
         return "bg-red-600/30 text-destructive";
       default:

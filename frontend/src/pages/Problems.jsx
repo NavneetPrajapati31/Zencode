@@ -279,7 +279,7 @@ export default function ProblemsPage() {
             <Input
               type="text"
               placeholder="Search questions"
-              className="pl-10 pr-4 py-2 rounded-md !bg-card border border-border !text-card-foreground placeholder:text-muted-foreground !focus:ring-0 focus:border-transparent w-full theme-transition !shadow-none"
+              className="pl-10 pr-4 py-2 rounded-md !bg-card placeholder:text-muted-foreground border border-border !focus:ring-0 focus:border-transparent w-full !shadow-none theme-transition"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search problems"
@@ -331,7 +331,7 @@ export default function ProblemsPage() {
                       className={`text-sm font-semibold ${getDifficultyColor(problem.difficulty)}`}
                     >
                       {problem.difficulty === "Medium"
-                        ? "Medium"
+                        ? "Med."
                         : problem.difficulty}
                     </span>
                     {/* <ProgressBar /> */}

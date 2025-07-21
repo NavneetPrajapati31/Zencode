@@ -31,7 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { useProblemsSidebar } from "@/components/problems/problems-sidebar-context";
 import { motion, AnimatePresence } from "framer-motion";
@@ -40,6 +40,9 @@ import { Button } from "../ui/button";
 import { Switch } from "../ui/switch";
 import { UploadButton } from "@/utils/uploadthing";
 import SettingsModal from "./settings-modal";
+import { getCurrentStreakFromHeatmapData } from "@/lib/utils";
+import { profileAPI } from "@/utils/api";
+import { TbFlameFilled } from "react-icons/tb";
 
 // Sanitize markdown: remove code fences, normalize line breaks, remove non-breaking spaces, trim leading spaces
 const cleanMarkdown = (str) =>
@@ -75,6 +78,24 @@ export default function TopNavbar({
   const handleCloseSettingsModal = () => setIsSettingsModalOpen(false);
   const { theme, toggleTheme, isTransitioning } = useTheme();
   const navigate = useNavigate();
+  const [currentStreak, setCurrentStreak] = useState(0);
+
+  useEffect(() => {
+    const fetchHeatmapData = async () => {
+      if (user?.username) {
+        try {
+          const heatmapData = await profileAPI.getHeatmap(user.username);
+          console.log("Fetched heatmapData for streak:", heatmapData);
+          const streak = getCurrentStreakFromHeatmapData(heatmapData.heatmap);
+          setCurrentStreak(streak);
+        } catch (error) {
+          console.error("Failed to fetch heatmap data for streak:", error);
+        }
+      }
+    };
+
+    fetchHeatmapData();
+  }, [user]);
 
   // Remove handleAvatarFileChange, setAvatarLoading, setAvatarError, setBasicInfoForm, handleBasicInfoSave, dropdownOpen, and all related modal state/handlers that are not used in this file.
   // --- Handlers ---
@@ -220,7 +241,7 @@ export default function TopNavbar({
           <span className="text-sm font-normal">Submit</span>
         </button>
         <button
-          className="bg-primary/20 text-primary px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 border border-none"
+          className="bg-primary/10 text-primary px-3 py-1.5 rounded-md flex items-center space-x-1.5 hover:cursor-pointer disabled:opacity-60 border border-none"
           onClick={handleAiReview}
           aria-label="AI Review code"
           disabled={isAiReviewing}
@@ -316,8 +337,12 @@ export default function TopNavbar({
         setUser={setUser}
       />
 
-      <div className="flex items-center gap-2">
+      <div className="flex justify-center items-center gap-2">
         {/* Theme Toggler */}
+        <button className="text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-full flex flex-row justify-center items-center border border-primary/10">
+          <TbFlameFilled className="mr-0.5 h-4 w-4" />
+          {currentStreak}
+        </button>
         <button
           onClick={toggleTheme}
           disabled={isTransitioning}
@@ -331,7 +356,7 @@ export default function TopNavbar({
               toggleTheme();
             }
           }}
-          className={`ml-2 p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
+          className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
             theme === "dark"
               ? "bg-accent border border-border"
               : "bg-card border border-border"
@@ -343,7 +368,8 @@ export default function TopNavbar({
             <Moon className="h-4 w-4 text-muted-foreground" />
           )}
         </button>
-        <button
+
+        {/* <button
           className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
             theme === "dark"
               ? "bg-accent border border-border"
@@ -361,7 +387,7 @@ export default function TopNavbar({
         >
           <Settings className="mr-2 h-4 w-4" />
           Settings
-        </button>
+        </button> */}
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <button

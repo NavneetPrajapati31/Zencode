@@ -184,7 +184,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
       onClick={onClose}
     >
       <div
-        className="flex flex-col !bg-card border border-border text-foreground rounded-xl shadow-lg max-w-4xl h-9/12 w-full p-0 relative"
+        className="flex flex-col !bg-card border border-border text-foreground rounded-xl shadow-lg max-w-4xl h-10/12 w-full p-0 relative"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

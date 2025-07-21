@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { BiSolidBarChartAlt2 } from "react-icons/bi";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { TbFlameFilled } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import Heatmap from "@/components/profile/heatmap";
 import SocialProfileModal from "@/components/profile/social-profile-modal";
 import { Switch } from "@/components/ui/switch";
+import { getCurrentStreakFromHeatmapData } from "@/lib/utils";
 
 const medalIcons = [
   {
@@ -68,10 +70,13 @@ const ProfileView = ({
     isPublicView,
   });
 
+  // Calculate current streak from heatmapData
+  const currentStreak = getCurrentStreakFromHeatmapData(heatmapData);
+
   return (
     <div className="h-full flex justify-center items-center px-6 lg:px-10 mb-8 theme-transition">
       <div
-        className="w-full grid grid-cols-1 md:grid-cols-4 md:[grid-template-rows:auto_1fr] min-h-[500px] gap-6 pb-4 lg:px-0 lg:pb-6"
+        className="w-full grid grid-cols-1 md:grid-cols-4 md:[grid-template-rows:auto_1fr] min-h-[500px] gap-6 py-4 lg:px-0 lg:py-6"
         aria-label="Profile bento grid"
       >
         {/* First row: 3 cards */}
@@ -85,7 +90,9 @@ const ProfileView = ({
             aria-label="Window controls"
             tabIndex={0}
           >
-            <span className="text-sm text-muted-foreground">Profile</span>
+            <span className="text-sm text-muted-foreground theme-transition">
+              Profile
+            </span>
             {/* <div
               className={
                 leaderboardRank != null &&
@@ -102,20 +109,35 @@ const ProfileView = ({
             </div> */}
           </div>
           <div className="flex flex-col w-full">
-            <div
-              className={
-                leaderboardRank != null &&
-                leaderboardRank >= 1 &&
-                leaderboardRank <= 3
-                  ? `${medalIcons[leaderboardRank - 1].classname} text-sm px-3 py-0.5 mx-6 w-fit mt-4 rounded-3xl flex flex-row`
-                  : "text-sm px-3 py-0.5 rounded-3xl w-fit mt-4 flex flex-row"
-              }
-            >
-              {leaderboardRank != null &&
-                leaderboardRank >= 1 &&
-                leaderboardRank <= 3 &&
-                medalIcons[leaderboardRank - 1].badge}
-            </div>
+            {((leaderboardRank != null &&
+              leaderboardRank >= 1 &&
+              leaderboardRank <= 3) ||
+              currentStreak >= 1) && (
+              <div className="flex flex-row justify-start">
+                <div
+                  className={
+                    leaderboardRank != null &&
+                    leaderboardRank >= 1 &&
+                    leaderboardRank <= 3
+                      ? `${medalIcons[leaderboardRank - 1].classname} text-sm px-3 py-0.5 ml-6 w-fit mt-4 rounded-3xl flex flex-row mr-1`
+                      : "text-sm px-3 py-0.5 rounded-3xl w-fit mt-4 flex flex-row"
+                  }
+                >
+                  {leaderboardRank != null &&
+                    leaderboardRank >= 1 &&
+                    leaderboardRank <= 3 &&
+                    medalIcons[leaderboardRank - 1].badge}
+                </div>
+                {/* Streak badge: only show if streak >= 1 */}
+                {currentStreak >= 1 && (
+                  <div className="text-sm bg-primary/10 text-primary px-3 py-0.5 w-fit mt-4 rounded-3xl flex flex-row justify-center items-center">
+                    <TbFlameFilled className="mr-1 h-3 w-3" />
+                    {currentStreak}
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="flex flex-row gap-3 w-full justify-start items-center py-4 pt-3 px-6">
               <Avatar className="h-13 w-13">
                 <AvatarImage
@@ -152,11 +174,11 @@ const ProfileView = ({
                     leaderboardRank >= 1 &&
                     leaderboardRank <= 3 &&
                     medalIcons[leaderboardRank - 1].classname
-                  } !bg-transparent !text-foreground font-medium`}
+                  } !bg-transparent !text-foreground font-medium theme-transition`}
                 >
                   {user?.name || "User"}
                 </span>
-                <span className="text-muted-foreground text-sm font-normal">
+                <span className="text-muted-foreground text-sm font-normal theme-transition">
                   {user?.username ? `@${user.username}` : ""}
                 </span>
               </div>
@@ -164,9 +186,9 @@ const ProfileView = ({
           </div>
           <Separator className="!w-10/12" />
           <div className="flex flex-col w-full justify-center py-4 px-6">
-            <span className="flex flex-row justify-between text-sm font-normal text-muted-foreground text-left mb-0.5">
+            <span className="flex flex-row justify-between text-sm font-normal text-muted-foreground text-left mb-0.5 theme-transition">
               Leaderboard Rank
-              <span className="flex flex-row gap-2 text-md font-semibold mb-2 ml-2 text-muted-foreground">
+              <span className="flex flex-row gap-2 text-md font-semibold mb-2 ml-2 text-muted-foreground theme-transition">
                 {leaderboardRank !== null ? (
                   <span
                     className={`${
@@ -182,9 +204,9 @@ const ProfileView = ({
                 )}
               </span>
             </span>
-            <span className="flex flex-row justify-between text-sm font-normal text-muted-foreground text-left mb-2">
+            <span className="flex flex-row justify-between text-sm font-normal text-muted-foreground text-left mb-2 theme-transition">
               Zen Score
-              <span className="flex flex-row gap-2 text-md font-semibold mb-1 ml-2 text-muted-foreground">
+              <span className="flex flex-row gap-2 text-md font-semibold mb-1 ml-2 text-muted-foreground theme-transition">
                 <span
                   className={`${
                     leaderboardRank >= 1 &&
@@ -208,7 +230,7 @@ const ProfileView = ({
           </div>
           <Separator className="!w-10/12" />
           <div className="flex flex-col w-full justify-center py-4 px-6 gap-2">
-            <span className="text-sm text-muted-foreground text-left">
+            <span className="text-sm text-muted-foreground text-left theme-transition">
               Socials
             </span>
             {isPublicView ? (
@@ -216,7 +238,7 @@ const ProfileView = ({
                 <Button
                   onClick={() => onSocialClick && onSocialClick("github")}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
                   aria-label="GitHub profile"
                   disabled={!socialProfiles.github}
                 >
@@ -226,7 +248,7 @@ const ProfileView = ({
                 <Button
                   onClick={() => onSocialClick && onSocialClick("linkedin")}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
                   aria-label="LinkedIn profile"
                   disabled={!socialProfiles.linkedin}
                 >
@@ -236,7 +258,7 @@ const ProfileView = ({
                 <Button
                   onClick={() => onSocialClick && onSocialClick("twitter")}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
                   aria-label="Twitter profile"
                   disabled={!socialProfiles.twitter}
                 >
@@ -248,7 +270,7 @@ const ProfileView = ({
               <>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
                   onClick={() => onSocialClick && onSocialClick("github")}
                 >
                   <FaGithub className="h-6 w-6" />
@@ -258,7 +280,7 @@ const ProfileView = ({
                 </Button>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
                   onClick={() => onSocialClick && onSocialClick("linkedin")}
                 >
                   <FaLinkedin className="h-6 w-6" />
@@ -269,7 +291,7 @@ const ProfileView = ({
                 </Button>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none"
+                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
                   onClick={() => onSocialClick && onSocialClick("twitter")}
                 >
                   <FaXTwitter className="h-6 w-6" />
@@ -285,7 +307,7 @@ const ProfileView = ({
             <>
               <Separator className="!w-10/12" />
               <div className="flex flex-row w-full justify-between py-4 px-6 gap-2">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-muted-foreground theme-transition">
                   Public Profile
                 </span>
                 <Switch
@@ -297,6 +319,7 @@ const ProfileView = ({
                       ? "Your profile is public. Toggle to make private."
                       : "Your profile is private. Toggle to make public."
                   }
+                  className="cursor-pointer"
                 />
               </div>
               {isPublicProfileError && (
@@ -317,8 +340,10 @@ const ProfileView = ({
             aria-label="Window controls"
             tabIndex={0}
           >
-            <span className="text-sm text-muted-foreground">Progress</span>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground theme-transition">
+              Progress
+            </span>
+            <span className="text-sm text-muted-foreground theme-transition">
               {progressStats.easy + progressStats.medium + progressStats.hard}/
               {totalProblems}
             </span>
@@ -359,7 +384,7 @@ const ProfileView = ({
             aria-label="Window controls"
             tabIndex={0}
           >
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground theme-transition">
               Recent Submissions
             </span>
           </div>
@@ -369,7 +394,7 @@ const ProfileView = ({
                 <Button
                   key={sub._id || idx}
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm justify-between !shadow-none"
+                  className="!bg-accent text-muted-foreground text-sm justify-between !shadow-none theme-transition"
                 >
                   <span className="text-sm font-normal truncate">
                     {sub.problemTitle || sub.problemName || sub.title || "-"}
@@ -387,7 +412,7 @@ const ProfileView = ({
               ))
             ) : (
               <div className="flex flex-1 min-h-[120px] w-full items-center justify-center py-4 px-6 gap-2">
-                <span className="text-muted-foreground text-sm">
+                <span className="text-muted-foreground text-sm theme-transition">
                   No recent submissions
                 </span>
               </div>
@@ -405,7 +430,9 @@ const ProfileView = ({
             aria-label="Window controls"
             tabIndex={0}
           >
-            <span className="text-sm text-muted-foreground">Activity</span>
+            <span className="text-sm text-muted-foreground theme-transition">
+              Activity
+            </span>
           </div>
           <Heatmap data={heatmapData} />
         </Card>

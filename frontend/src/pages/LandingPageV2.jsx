@@ -78,6 +78,9 @@ export default function LandingPage() {
           className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
           <div className="max-w-6xl mx-auto">
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-4 theme-transition">
+              02 Features
+            </span>
             <h2 className="!text-2xl !md:text-4xl font-semibold text-center mb-12 text-foreground theme-transition">
               Features Designed for Focus
             </h2>
@@ -128,10 +131,13 @@ export default function LandingPage() {
           className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
           <div className="max-w-full mx-auto text-center">
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-4 theme-transition">
+              03 Dashboard
+            </span>
             <h2 className="!text-2xl !md:text-4xl font-semibold mb-4 text-foreground theme-transition">
               See Your Progress Unfold
             </h2>
-            <p className="text-md text-muted-foreground mb-8 max-w-2xl mx-auto theme-transition">
+            <p className="text-md text-muted-foreground mb-2 max-w-2xl mx-auto theme-transition">
               Our intuitive dashboard provides clear insights into your coding
               habits and skill development.
             </p>
@@ -168,6 +174,9 @@ export default function LandingPage() {
           className="py-16 md:py-24 px-4 bg-background theme-transition"
         >
           <div className="max-w-6xl mx-auto">
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary !text-xs font-medium mb-4 theme-transition">
+              04 Testimonials
+            </span>
             <h2 className="!text-2xl !md:text-4xl font-semibold text-center mb-12 text-foreground theme-transition">
               What Developers Are Saying
             </h2>

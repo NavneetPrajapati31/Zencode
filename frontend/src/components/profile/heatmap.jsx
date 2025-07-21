@@ -236,11 +236,11 @@ const Heatmap = ({ data }) => {
   return (
     <Card className="w-full max-w-full px-6 bg-card rounded-xl gap-0 border-none shadow-none theme-transition">
       <CardHeader className="flex flex-row items-center justify-between p-0">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground theme-transition">
           <span className="font-semibold text-sm">{totalSubmissions}</span>{" "}
           submissions in the past one year
         </div>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground theme-transition">
           <span>
             Total active days:{" "}
             <span className="font-semibold text-gh-text-light">
@@ -258,21 +258,21 @@ const Heatmap = ({ data }) => {
       <div className="pt-6">
         <div
           ref={scrollContainerRef}
-          className="relative overflow-x-auto no-scrollbar h-full"
+          className="relative overflow-x-auto no-scrollbar h-full theme-transition"
         >
           {/* Month blocks with centered labels */}
           <div className="flex">
             {monthBlocks.map((block, blockIdx) => (
               <div
                 key={`${block.name}-${block.year}`}
-                className={`flex flex-col items-center ${blockIdx > 0 ? "ml-0" : ""}`}
+                className={`flex flex-col items-center theme-transition ${blockIdx > 0 ? "ml-0" : ""}`}
                 style={{ minWidth: `${block.weekColumns.length * 16}px` }}
               >
-                <div className="flex">
+                <div className="flex theme-transition">
                   {block.weekColumns.map((column, weekIdx) => (
                     <div
                       key={weekIdx}
-                      className={`flex flex-col gap-0.5 ${
+                      className={`flex flex-col gap-0.5 theme-transition ${
                         weekIdx > 0 ? "ml-0.5" : ""
                       }`}
                     >
@@ -285,16 +285,17 @@ const Heatmap = ({ data }) => {
                         return (
                           <TooltipProvider
                             key={`${day.date.getTime()}-${dayIdx}`}
+                            className="theme-transition"
                           >
-                            <Tooltip>
+                            <Tooltip className="theme-transition">
                               <TooltipTrigger asChild>
                                 <div
                                   tabIndex={0}
                                   aria-label={`${day.count} submissions on ${getMonthName(day.date.getMonth())} ${day.date.getDate()}, ${day.date.getFullYear()}`}
-                                  className={`w-3 h-3 rounded-xs ${getDayColor(day.count)} cursor-pointer`}
+                                  className={`w-3 h-3 rounded-xs ${getDayColor(day.count)} cursor-pointer theme-transition`}
                                 />
                               </TooltipTrigger>
-                              <TooltipContent className="bg-accent text-muted-foreground text-sm p-2 rounded-md">
+                              <TooltipContent className="bg-accent text-muted-foreground text-sm p-2 rounded-md theme-transition">
                                 <span>
                                   {day.count} submissions on{" "}
                                   {getMonthName(day.date.getMonth())}{" "}
@@ -308,7 +309,7 @@ const Heatmap = ({ data }) => {
                     </div>
                   ))}
                 </div>
-                <span className="text-xs text-muted-foreground mt-4">
+                <span className="text-xs text-muted-foreground mt-4 theme-transition">
                   {block.name}
                 </span>
               </div>
