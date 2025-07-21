@@ -23,6 +23,7 @@ const PublicProfile = () => {
   const [totalProblems, setTotalProblems] = useState(0);
   const [recentSubmissions, setRecentSubmissions] = useState([]);
   const [leaderboardRank, setLeaderboardRank] = useState(null);
+  const [userScore, setUserScore] = useState(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -58,12 +59,13 @@ const PublicProfile = () => {
         } catch {
           setTotalProblems(0);
         }
-        // Fetch leaderboard rank
+        // Fetch leaderboard rank and score
         try {
           console.log("Calling leaderboardAPI.getRank()");
           const leaderboardRes = await leaderboardAPI.getRank(username);
           console.log("LEADERBOARD RESPONSE", leaderboardRes);
           setLeaderboardRank(leaderboardRes.rank || null);
+          setUserScore(leaderboardRes.score || 0);
         } catch {
           setLeaderboardRank(null);
         }
@@ -113,7 +115,7 @@ const PublicProfile = () => {
 
   return (
     <ProfileView
-      user={profile}
+      user={{ ...profile, score: userScore }}
       leaderboardRank={leaderboardRank}
       progressStats={progressStats}
       totalProblems={totalProblems}

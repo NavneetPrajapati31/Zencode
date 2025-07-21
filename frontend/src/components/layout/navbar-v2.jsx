@@ -290,6 +290,13 @@ export default function Navbar({ sticky = false }) {
                       </DropdownMenuItem> */}
                           <DropdownMenuItem
                             onClick={logout}
+                            className="text-muted-foreground cursor-pointer theme-transition"
+                            aria-label="Logout"
+                          >
+                            Settings
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={logout}
                             className="text-destructive focus:text-destructive cursor-pointer theme-transition"
                             aria-label="Logout"
                           >

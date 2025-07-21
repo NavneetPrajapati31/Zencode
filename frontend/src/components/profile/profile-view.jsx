@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BiSolidBarChartAlt2 } from "react-icons/bi";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Heatmap from "@/components/profile/heatmap";
 import SocialProfileModal from "@/components/profile/social-profile-modal";
 import { Switch } from "@/components/ui/switch";
@@ -16,22 +16,22 @@ const medalIcons = [
     icon: "🥇",
     label: "Gold Medal",
     badge: "Zen Master",
-    classname: "bg-blue-600/20 text-blue-600",
-    ring: "border-blue-600",
+    classname: "bg-blue-600/20 text-blue-500",
+    ring: "border-blue-500",
   },
   {
     icon: "🥈",
     label: "Silver Medal",
     badge: "Zen Sage",
-    classname: "bg-rose-600/20 text-rose-600",
-    ring: "border-rose-600",
+    classname: "bg-rose-600/20 text-rose-500",
+    ring: "border-rose-500",
   },
   {
     icon: "🥉",
     label: "Bronze Medal",
     badge: "Zen Sensei",
-    classname: "bg-violet-600/20 text-violet-600",
-    ring: "border-violet-600",
+    classname: "bg-violet-600/20 text-violet-500",
+    ring: "border-violet-500",
   },
 ];
 
@@ -46,7 +46,6 @@ const ProfileView = ({
   isModalOpen,
   setIsModalOpen,
   selectedPlatform,
-  setSelectedPlatform,
   onUpdateSocialProfiles,
   heatmapData,
   isPublicProfile,
@@ -68,8 +67,6 @@ const ProfileView = ({
     heatmapData,
     isPublicView,
   });
-
-  const navigate = useNavigate();
 
   return (
     <div className="h-full flex justify-center items-center px-6 lg:px-10 mb-8 theme-transition">
@@ -120,7 +117,13 @@ const ProfileView = ({
                   : "U"}
               </AvatarFallback>
             </Avatar>
-            <span className="text-md mb-1 font-medium">
+            <span
+              className={`${
+                leaderboardRank >= 1 &&
+                leaderboardRank <= 3 &&
+                medalIcons[leaderboardRank - 1].classname
+              } !bg-transparent`}
+            >
               {user?.name || "User"}
             </span>
             <span className="text-muted-foreground text-sm font-normal">
@@ -129,14 +132,39 @@ const ProfileView = ({
           </div>
           <Separator className="!w-10/12" />
           <div className="flex flex-col w-full justify-center py-4 px-6">
-            <span className="text-sm font-normal text-muted-foreground text-left mb-2">
+            <span className="flex flex-row justify-between text-sm font-normal text-muted-foreground text-left mb-0.5">
               Leaderboard Rank
+              <span className="flex flex-row gap-2 text-md font-semibold mb-2 ml-2 text-muted-foreground">
+                {leaderboardRank !== null ? (
+                  <span
+                    className={`${
+                      leaderboardRank >= 1 &&
+                      leaderboardRank <= 3 &&
+                      medalIcons[leaderboardRank - 1].classname
+                    } !bg-transparent`}
+                  >
+                    #{leaderboardRank}
+                  </span>
+                ) : (
+                  <span>-</span>
+                )}
+              </span>
             </span>
-            <span className="flex flex-row gap-2 text-md font-semibold mb-2 text-muted-foreground">
-              <BiSolidBarChartAlt2 className="w-5 h-5 " />
-              {leaderboardRank !== null ? "#" : ""}
-              {leaderboardRank !== null ? leaderboardRank : "-"}
+            <span className="flex flex-row justify-between text-sm font-normal text-muted-foreground text-left mb-2">
+              Zen Score
+              <span className="flex flex-row gap-2 text-md font-semibold mb-1 ml-2 text-muted-foreground">
+                <span
+                  className={`${
+                    leaderboardRank >= 1 &&
+                    leaderboardRank <= 3 &&
+                    medalIcons[leaderboardRank - 1].classname
+                  } !bg-transparent`}
+                >
+                  {user?.score ?? "-"}
+                </span>
+              </span>
             </span>
+
             <Link to={"/leaderboard"}>
               <Button
                 variant={"outline"}

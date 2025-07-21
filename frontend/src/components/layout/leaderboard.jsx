@@ -18,22 +18,22 @@ const medalIcons = [
     icon: "🥇",
     label: "Gold Medal",
     badge: "Zen Master",
-    classname: "bg-blue-600/20 text-blue-600",
-    ring: "border-blue-600",
+    classname: "bg-blue-600/20 text-blue-500",
+    ring: "border-blue-500",
   },
   {
     icon: "🥈",
     label: "Silver Medal",
     badge: "Zen Sage",
-    classname: "bg-rose-600/20 text-rose-600",
-    ring: "border-rose-600",
+    classname: "bg-rose-600/20 text-rose-500",
+    ring: "border-rose-500",
   },
   {
     icon: "🥉",
     label: "Bronze Medal",
     badge: "Zen Sensei",
-    classname: "bg-violet-600/20 text-violet-600",
-    ring: "border-violet-600",
+    classname: "bg-violet-600/20 text-violet-500",
+    ring: "border-violet-500",
   },
 ];
 
@@ -83,7 +83,7 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
             <div
               className={
                 rank != null && rank >= 0 && rank < 3
-                  ? `${medalIcons[rank].classname} text-xs px-3 py-0.5 rounded-3xl`
+                  ? `${medalIcons[rank].classname} text-xs px-3 py-0.5 rounded-3xl font-normal`
                   : "text-xs px-2 py-0.5 rounded-3xl"
               }
             >
@@ -202,7 +202,7 @@ const Leaderboard = () => {
                   Rank
                 </th>
                 <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
-                  Score
+                  Zen Score
                 </th>
               </tr>
             </thead>

@@ -31,14 +31,16 @@ export default function Profile() {
   const [isPublicProfile, setIsPublicProfile] = useState(false);
   const [isPublicProfileLoading, setIsPublicProfileLoading] = useState(false);
   const [isPublicProfileError, setIsPublicProfileError] = useState("");
+  const [userScore, setUserScore] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!user?.username) return;
       try {
-        // Fetch leaderboard rank
+        // Fetch leaderboard rank and score
         const leaderboardRes = await leaderboardAPI.getRank(user.username);
         setLeaderboardRank(leaderboardRes.rank || null);
+        setUserScore(leaderboardRes.score || 0);
 
         // Fetch progress stats
         try {
@@ -150,7 +152,7 @@ export default function Profile() {
 
   return (
     <ProfileView
-      user={user}
+      user={{ ...user, score: userScore }}
       leaderboardRank={leaderboardRank}
       progressStats={progressStats}
       totalProblems={totalProblems}

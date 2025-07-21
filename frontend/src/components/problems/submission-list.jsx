@@ -61,9 +61,17 @@ export default function SubmissionList({ problemId, refreshKey }) {
   return (
     <div className="p-4">
       {loading ? (
-        <div className="text-muted-foreground">Loading submissions...</div>
+        <div className="flex flex-1 min-h-[50vh] w-full items-center justify-center py-4 px-6 gap-2">
+          <span className="text-muted-foreground text-sm">
+            Loading submissions...
+          </span>
+        </div>
       ) : submissions.length === 0 ? (
-        <div className="text-muted-foreground p-8">No submissions yet.</div>
+        <div className="flex flex-1 min-h-[50vh] w-full items-center justify-center py-4 px-6 gap-2">
+          <span className="text-muted-foreground text-sm">
+            No recent submissions
+          </span>
+        </div>
       ) : selectedId ? (
         <div className="bg-card border border-border rounded-lg p-0 overflow-x-auto no-scrollbar h-full max-h-[78vh] theme-transition">
           <div
