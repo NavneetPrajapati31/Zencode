@@ -91,6 +91,7 @@ export const problemsAPI = {
     apiCall(`/problems/${id}`, {
       method: "DELETE",
     }),
+  getTotalCount: () => apiCall("/problems/count"),
 };
 
 // Problem Details API calls
@@ -139,21 +140,21 @@ export const testCasesAPI = {
 
 // Submissions API calls
 export const submissionsAPI = {
-  getAll: () => apiCall("/submissions"),
-  getById: (id) => apiCall(`/submissions/${id}`),
-  getByProblemId: (problemId) => apiCall(`/submissions/problem/${problemId}`),
+  getAll: () => apiCall("/submission"),
+  getById: (id) => apiCall(`/submission/${id}`),
+  getByProblemId: (problemId) => apiCall(`/submission/problem/${problemId}`),
   create: (submissionData) =>
-    apiCall("/submissions", {
+    apiCall("/submission", {
       method: "POST",
       body: JSON.stringify(submissionData),
     }),
   update: (id, submissionData) =>
-    apiCall(`/submissions/${id}`, {
+    apiCall(`/submission/${id}`, {
       method: "PUT",
       body: JSON.stringify(submissionData),
     }),
   delete: (id) =>
-    apiCall(`/submissions/${id}`, {
+    apiCall(`/submission/${id}`, {
       method: "DELETE",
     }),
 };
@@ -181,4 +182,19 @@ export const compilerAPI = {
     }
     return data;
   },
+};
+
+// Leaderboard API calls
+export const leaderboardAPI = {
+  getRank: (username) => apiCall(`/leaderboard/${username}`),
+};
+
+// Submissions API calls
+export const submissionAPI = {
+  getUserSubmissions: (username) => apiCall(`/submission/user/${username}`),
+};
+
+// Progress stats API (if available)
+export const progressAPI = {
+  getUserProgress: (username) => apiCall(`/profile/${username}/progress`),
 };

@@ -86,4 +86,66 @@ const getLeaderboard = async (req, res) => {
   }
 };
 
-module.exports = { getLeaderboard };
+// GET /api/leaderboard/:username
+const getUserRank = async (req, res) => {
+  try {
+    const username = req.params.username;
+    if (!username) return res.status(400).json({ error: "Username required" });
+    // Fetch all users sorted by solvedProblems length (descending)
+    const users = await User.find()
+      .sort({ solvedProblems: -1 })
+      .select("name username avatar solvedProblems");
+    // Scoring constants
+    const DIFFICULTY_POINTS = { Easy: 10, Medium: 20, Hard: 30 };
+    const PENALTY_PER_EXTRA_SUBMISSION = 2;
+    const MIN_SCORE_PER_PROBLEM = 1;
+    // Map to leaderboard format with score calculation
+    const leaderboard = await Promise.all(
+      users.map(async (user) => {
+        let score = 0;
+        let totalSubmissions = 0;
+        for (const problemId of user.solvedProblems) {
+          const problem =
+            await Problem.findById(problemId).select("difficulty");
+          const difficulty = problem?.difficulty || "Easy";
+          const basePoints = DIFFICULTY_POINTS[difficulty] || 10;
+          const submissions = await Submission.find({
+            user: user._id,
+            problem: problemId,
+          });
+          const submissionCount = submissions.length;
+          totalSubmissions += submissionCount;
+          const penalty = Math.max(
+            0,
+            (submissionCount - 1) * PENALTY_PER_EXTRA_SUBMISSION
+          );
+          const problemScore = Math.max(
+            MIN_SCORE_PER_PROBLEM,
+            basePoints - penalty
+          );
+          score += problemScore;
+        }
+        return {
+          username: user.username,
+          score,
+        };
+      })
+    );
+    // Sort leaderboard by score descending
+    leaderboard.sort((a, b) => b.score - a.score);
+    // Find the user's rank
+    const userIndex = leaderboard.findIndex(
+      (entry) => entry.username === username
+    );
+    if (userIndex === -1)
+      return res.status(404).json({ error: "User not found in leaderboard" });
+    const userRank = userIndex + 1;
+    const userScore = leaderboard[userIndex].score;
+    res.json({ rank: userRank, score: userScore });
+  } catch (error) {
+    console.error("Leaderboard user rank error:", error);
+    res.status(500).json({ error: "Failed to fetch user rank." });
+  }
+};
+
+module.exports = { getLeaderboard, getUserRank };

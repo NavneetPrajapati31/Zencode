@@ -12,10 +12,12 @@ const {
   updateSubmission,
   deleteSubmission,
 } = require("../controllers/submission");
+const { getUserSubmissions } = require("../controllers/submission-user");
 
 // Public routes
 router.get("/", getSubmissions);
 router.get("/problem/:problemId", authenticateJWT, getSubmissionsByProblem);
+router.get("/user/:username", getUserSubmissions);
 router.get("/:id", getSubmissionById);
 
 // Protected routes

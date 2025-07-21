@@ -145,7 +145,7 @@ export default function Navbar({ sticky = false }) {
             ) : (
               <div className="flex items-center gap-2">
                 <button
-                  className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
+                  className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-medium !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
                     theme === "dark"
                       ? "bg-accent border border-border"
                       : "bg-card border border-border"

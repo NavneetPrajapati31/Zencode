@@ -8,9 +8,21 @@ const {
   updateProblem,
   deleteProblem,
 } = require("../controllers/problem");
+const Problem = require("../models/Problem");
 
 // Public
 router.get("/", getProblems);
+
+// GET /api/problems/count
+router.get("/count", async (req, res) => {
+  try {
+    const count = await Problem.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to count problems" });
+  }
+});
+
 router.get("/:id", getProblemById);
 
 // Protected

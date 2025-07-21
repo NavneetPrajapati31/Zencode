@@ -132,7 +132,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/problems", problemRoutes);
-app.use("/api/submissions", submissionRoutes);
+app.use("/api/submission", submissionRoutes);
 app.use("/api/testcases", testcaseRoutes);
 app.use("/api/problem-details", problemDetailsRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);

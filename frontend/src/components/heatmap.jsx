@@ -233,7 +233,7 @@ const Heatmap = () => {
   }, [weekColumns, weekColumnLeftOffsets]);
 
   return (
-    <Card className="w-full max-w-full px-6 bg-card rounded-none gap-0 border-none shadow-none theme-transition">
+    <Card className="w-full max-w-full px-6 bg-card rounded-xl gap-0 border-none shadow-none theme-transition">
       <CardHeader className="flex flex-row items-center justify-between p-0">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span className="font-semibold text-sm">{totalSubmissions}</span>{" "}

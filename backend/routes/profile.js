@@ -4,6 +4,7 @@ const {
   requireProfileComplete,
 } = require("../middleware/auth");
 const User = require("../models/User");
+const { getUserProgress } = require("../controllers/profile-progress");
 
 const router = express.Router();
 
@@ -27,6 +28,14 @@ router.get(
       res.status(500).json({ message: "Server error", error: err.message });
     }
   }
+);
+
+// GET /api/profile/:username/progress
+router.get(
+  "/:username/progress",
+  authenticateJWT,
+  requireProfileComplete,
+  getUserProgress
 );
 
 module.exports = router;

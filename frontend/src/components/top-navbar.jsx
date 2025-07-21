@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { LuX } from "react-icons/lu";
 import { RiFocus2Line, RiGeminiFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./use-auth";
 import { useTheme } from "./theme-context-utils";
 import {
@@ -65,6 +65,7 @@ export default function TopNavbar({
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { theme, toggleTheme, isTransitioning } = useTheme();
+  const navigate = useNavigate();
 
   const handleRun = async () => {
     setIsRunning(true);
@@ -482,6 +483,15 @@ export default function TopNavbar({
                           {theme === "dark" ? "Light Mode" : "Dark Mode"}
                         </span>
                       </DropdownMenuItem> */}
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigate("/profile");
+                    }}
+                    className="text-muted-foreground cursor-pointer theme-transition"
+                    aria-label="Logout"
+                  >
+                    My Profile
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={logout}
                     className="text-destructive focus:text-destructive cursor-pointer theme-transition"
