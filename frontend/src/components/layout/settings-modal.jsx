@@ -57,9 +57,19 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
   const [avatarError, setAvatarError] = useState("");
   const fileInputRef = useRef(null);
   const [publicProfile, setPublicProfile] = useState(user?.isPublicProfile);
+
   useEffect(() => {
+    setBasicInfoForm({
+      avatar: user?.avatar || "",
+      name: user?.name || "",
+      username: user?.username || "",
+      email: user?.email || "",
+    });
+    setSocialsForm(
+      user?.socialProfiles || { github: "", linkedin: "", twitter: "" }
+    );
     setPublicProfile(user?.isPublicProfile);
-  }, [user?.isPublicProfile]);
+  }, [user]);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -184,7 +194,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
       onClick={onClose}
     >
       <div
-        className="flex flex-col !bg-card border border-border text-foreground rounded-xl shadow-lg max-w-4xl h-10/12 w-full p-0 relative"
+        className="flex flex-col !bg-card border border-border text-foreground rounded-xl shadow-lg max-w-3xl h-9/12 w-full p-0 relative"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -217,7 +227,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
               {sidebarItems.map((item) => (
                 <button
                   key={item.key}
-                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors ${settingsSection === item.key ? "bg-primary/5 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${settingsSection === item.key ? "bg-primary/5 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}
                   onClick={() => setSettingsSection(item.key)}
                 >
                   {item.icon}
@@ -235,7 +245,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                   <p className="text-sm text-muted-foreground mb-6">
                     Update your basic profile information.
                   </p>
-                  <div className="flex items-center gap-4 mb-6">
+                  <div className="flex items-center gap-4 mb-5">
                     <Avatar className="h-15 w-15 theme-transition">
                       <AvatarImage
                         src={basicInfoForm?.avatar}
@@ -280,7 +290,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                       )}
                     </div>
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-3">
                     <label className="block text-sm text-muted-foreground font-medium mb-2">
                       Name
                     </label>
@@ -293,7 +303,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                       placeholder="Your name"
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-3">
                     <label className="block text-sm text-muted-foreground font-medium mb-2">
                       Username
                     </label>
@@ -309,7 +319,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                       pattern="^[a-zA-Z0-9_]+$"
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-3">
                     <label className="block text-sm text-muted-foreground font-medium mb-2">
                       Email
                     </label>
@@ -348,7 +358,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                 <p className="text-sm text-muted-foreground mb-6">
                   Add or update your social links.
                 </p>
-                <div className="mb-4">
+                <div className="mb-3">
                   <label className="block text-sm text-muted-foreground font-medium mb-2">
                     GitHub
                   </label>
@@ -361,7 +371,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                     placeholder="GitHub URL"
                   />
                 </div>
-                <div className="mb-4">
+                <div className="mb-3">
                   <label className="block text-sm text-muted-foreground font-medium mb-2">
                     LinkedIn
                   </label>
@@ -374,7 +384,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                     placeholder="LinkedIn URL"
                   />
                 </div>
-                <div className="mb-4">
+                <div className="mb-3">
                   <label className="block text-sm text-muted-foreground font-medium mb-2">
                     Twitter
                   </label>

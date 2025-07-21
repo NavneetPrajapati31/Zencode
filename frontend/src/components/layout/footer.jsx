@@ -70,11 +70,11 @@ export default function Footer() {
             Leaderboard
           </a>
           <a
-            href={user ? "/settings" : "/signup"}
+            href={user ? "/profile" : "/signup"}
             className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm"
             tabIndex={0}
           >
-            Settings
+            Profile
           </a>
         </div>
         <div className="space-y-4 flex flex-col items-start">

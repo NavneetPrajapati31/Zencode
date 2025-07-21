@@ -262,8 +262,8 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground px-4 theme-transition">
-      <div className="max-w-full mx-auto rounded-lg shadow-none px-4 sm:px-6 mb-8 theme-transition">
+    <div className="min-h-screen bg-background text-foreground theme-transition">
+      <div className="max-w-full mx-auto rounded-lg shadow-none px-6 sm:px-12 mb-8 theme-transition">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3 theme-transition">
           <Link to={`/profile/${username}`}>
