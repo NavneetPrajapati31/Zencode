@@ -262,7 +262,7 @@ export default function TopNavbar({
             className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md transition-all duration-300"
             onClick={handleCloseModal}
           >
-            <div
+            <motion.div
               className="!bg-card border border-border text-foreground rounded-2xl shadow-lg max-w-2xl w-full pb-6 relative"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
@@ -327,7 +327,7 @@ export default function TopNavbar({
                   <ReactMarkdown>{cleanMarkdown(aiReviewResult)}</ReactMarkdown>
                 </div>
               )}
-            </div>
+            </motion.div>
           </div>
         )}
       </AnimatePresence>

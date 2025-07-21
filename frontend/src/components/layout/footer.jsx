@@ -20,7 +20,7 @@ export default function Footer() {
             <RiFocus2Line className="h-6 w-6" />
             Zencode
           </a>
-          <p className="text-muted-foreground text-sm text-left max-w-xs md:max-w-sm">
+          <p className="text-muted-foreground text-sm text-left max-w-xs md:max-w-sm theme-transition">
             A calm, distraction-free coding platform for deep focus and skill
             growth.
           </p>
@@ -106,7 +106,7 @@ export default function Footer() {
         <div className="space-y-4"></div>
       </div>
       <div className="border-t border-border mt-0 w-full" />
-      <div className="max-w-full mx-auto flex flex-col md:flex-row justify-between items-start pt-6 px-0 text-xs text-muted-foreground">
+      <div className="max-w-full mx-auto flex flex-col md:flex-row justify-between items-start pt-6 px-0 text-xs text-muted-foreground theme-transition">
         <span className="mb-2 md:mb-0">
           &copy; {new Date().getFullYear()} Zencode. All rights reserved.
         </span>
