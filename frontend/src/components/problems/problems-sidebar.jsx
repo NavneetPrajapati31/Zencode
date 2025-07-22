@@ -176,7 +176,7 @@ export function ProblemsSidebar() {
                     {error}
                   </div>
                 ) : (
-                  filteredProblems.map((problem, index) => (
+                  filteredProblems.map((problem) => (
                     <div key={problem._id} className="mb-3">
                       <Button
                         className={`bg-card border w-full justify-between h-auto p-3 theme-transition ${
@@ -201,7 +201,7 @@ export function ProblemsSidebar() {
                                   }`}
                                 />
                               )}
-                              <span
+                              {/* <span
                                 className={`text-sm font-medium text-muted-foreground shrink-0 theme-transition ${
                                   currentProblemId === problem._id
                                     ? "!text-primary"
@@ -209,7 +209,7 @@ export function ProblemsSidebar() {
                                 }`}
                               >
                                 {index + 1}.
-                              </span>
+                              </span> */}
                               <span
                                 className={`text-sm truncate min-w-0 text-foreground theme-transition ${
                                   currentProblemId === problem._id

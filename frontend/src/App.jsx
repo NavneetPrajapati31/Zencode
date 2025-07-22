@@ -18,6 +18,7 @@ import ThemeTransitionWrapper from "@/components/shared/theme-transition-wrapper
 import { useTheme } from "./components/theme-context-utils";
 import ProfileRedirect from "@/components/profile/profile-redirect";
 import Dashboard from "./pages/Dashboard";
+import AdminRoute from "./components/auth/admin-route";
 
 function AppContent() {
   const { isInitialized } = useTheme();
@@ -41,7 +42,14 @@ function AppContent() {
         <Route path="/compiler" element={<CodeRunnerPage />} />
         <Route path="/oauth/callback" element={<OAuthCallback />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <AdminRoute>
+              <Dashboard />
+            </AdminRoute>
+          }
+        />
       </Routes>
     </div>
   );

@@ -10,7 +10,15 @@ const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 // Helper: Generate JWT
 const generateToken = (user) => {
   return jwt.sign(
-    { id: user._id, email: user.email, avatar: user.avatar, name: user.name },
+    {
+      id: user._id,
+      email: user.email,
+      avatar: user.avatar,
+      name: user.name,
+      username: user.username,
+      profileComplete: user.profileComplete,
+      role: user.role,
+    },
     JWT_SECRET,
     { expiresIn: "7d" }
   );
@@ -73,6 +81,7 @@ const oauthCallback = async (req, res) => {
       name: user.name,
       username: user.username,
       profileComplete: user.profileComplete,
+      role: user.role,
     },
     JWT_SECRET,
     { expiresIn: "7d" }

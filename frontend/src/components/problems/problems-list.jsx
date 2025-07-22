@@ -1,39 +1,18 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/components/auth/use-auth";
 import { problemsAPI } from "@/utils/api";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "@/components/auth/use-auth";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { CheckCircle, Edit, Trash2 } from "lucide-react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-} from "@/components/ui/sheet";
-import {
-  Search,
-  Plus,
-  Edit,
-  Trash2,
-  CheckCircle,
-  ChevronLeft,
-} from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RiLayoutGridLine } from "react-icons/ri";
-import { RiListCheck } from "react-icons/ri";
-import ProblemsGrid from "@/components/problems/problems-grid";
-import ProblemsList from "@/components/problems/problems-list";
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 // Problem form modal component
 function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
@@ -126,7 +105,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
               value={form.statement}
               onChange={handleChange}
               placeholder="Problem statement"
-              className="w-full min-h-[100px] p-3 text-sm border border-muted focus:outline-none focus:border-border rounded-lg"
+              className="w-full min-h-[100px] p-3 text-sm border border-muted focus:outline-none focus:border-border rounded-md"
               required
             />
           </div>
@@ -139,7 +118,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
               value={form.code}
               onChange={handleChange}
               placeholder="Code template"
-              className="w-full min-h-[100px] p-3 text-sm border border-muted focus:outline-none focus:border-border rounded-lg font-mono"
+              className="w-full min-h-[100px] p-3 text-sm border border-muted focus:outline-none focus:border-border rounded-md font-mono"
               required
             />
           </div>
@@ -152,7 +131,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
               onValueChange={handleDifficultyChange}
             >
               <SelectTrigger
-                className="w-full p-3 text-sm text-muted-foreground  border border-muted focus:outline-none focus:border-border rounded-lg"
+                className="w-full p-3 text-sm text-muted-foreground  border border-muted focus:outline-none focus:border-border rounded-md"
                 aria-label="Select difficulty"
               >
                 <SelectValue placeholder="Select difficulty" />
@@ -183,25 +162,38 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
   );
 }
 
-export default function ProblemsPage() {
-  const { isAuthenticated, user, loading: authLoading } = useAuth();
-  const username = user?.username;
+function ProblemsList({ searchTerm }) {
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const [editProblem, setEditProblem] = useState(null);
-  const [modalLoading, setModalLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("grid-view");
+  const [modalLoading, setModalLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (!authLoading) {
-      fetchProblems();
-    }
+    if (!authLoading) fetchProblems();
   }, [authLoading]);
+
+  // Debug: Log user and isAuthenticated before rendering admin controls
+  useEffect(() => {
+    console.log("[ProblemsList] user:", user);
+    console.log("[ProblemsList] isAuthenticated:", isAuthenticated);
+    const token =
+      localStorage.getItem("token") || localStorage.getItem("tempToken");
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        console.log("[ProblemsList] Decoded JWT payload:", payload);
+      } catch (e) {
+        console.log("[ProblemsList] Could not decode JWT:", e);
+      }
+    } else {
+      console.log("[ProblemsList] No token found in localStorage");
+    }
+  }, [user, isAuthenticated]);
 
   const fetchProblems = async () => {
     setError("");
@@ -216,30 +208,6 @@ export default function ProblemsPage() {
     }
   };
 
-  // Check if the current user has solved this problem
-  const isSolved = (problem) => {
-    if (!user || !user.solvedProblems) return false;
-    return user.solvedProblems.some(
-      (solvedProblem) =>
-        solvedProblem._id === problem._id || solvedProblem === problem._id
-    );
-  };
-
-  // Restore getDifficultyColor for badge coloring
-  const getDifficultyColor = (difficulty) => {
-    switch (difficulty) {
-      case "Easy":
-        return "text-green-500";
-      case "Med.":
-      case "Medium":
-        return "text-amber-500";
-      case "Hard":
-        return "text-destructive";
-      default:
-        return "text-muted-foreground";
-    }
-  };
-
   // Filter problems based on search term (search in name and statement)
   const filteredProblems = problems.filter(
     (problem) =>
@@ -248,6 +216,25 @@ export default function ProblemsPage() {
       (problem.statement &&
         problem.statement.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  const isSolved = (problem) =>
+    user?.solvedProblems?.some(
+      (sp) => sp._id === problem._id || sp === problem._id
+    );
+
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case "Easy":
+        return "bg-green-600/20 text-green-600";
+      case "Medium":
+      case "Med.":
+        return "bg-primary/10 text-primary";
+      case "Hard":
+        return "bg-red-600/30 text-destructive";
+      default:
+        return "bg-muted text-muted-foreground";
+    }
+  };
 
   const handleCreate = async (form, setError) => {
     setModalLoading(true);
@@ -260,11 +247,6 @@ export default function ProblemsPage() {
     } finally {
       setModalLoading(false);
     }
-  };
-
-  const handleEdit = (problem) => {
-    setEditProblem(problem);
-    setShowModal(true);
   };
 
   const handleUpdate = async (form, setError) => {
@@ -281,17 +263,6 @@ export default function ProblemsPage() {
     }
   };
 
-  const handleDelete = async () => {
-    setDeleteLoading(true);
-    try {
-      await problemsAPI.delete(deleteId);
-      setDeleteId(null);
-      fetchProblems();
-    } finally {
-      setDeleteLoading(false);
-    }
-  };
-
   // Add useEffect for delete modal scroll lock
   useEffect(() => {
     if (deleteId) {
@@ -304,101 +275,109 @@ export default function ProblemsPage() {
     };
   }, [deleteId]);
 
+  const handleDelete = async () => {
+    setDeleteLoading(true);
+    // Debug: Log Authorization header before making delete request
+    const token =
+      localStorage.getItem("token") || localStorage.getItem("tempToken");
+    console.log(
+      "[ProblemsList] handleDelete Authorization header:",
+      token ? `Bearer ${token}` : "none"
+    );
+    try {
+      await problemsAPI.delete(deleteId);
+      setDeleteId(null);
+      fetchProblems();
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleEdit = (problem) => {
+    setEditProblem(problem);
+    setShowModal(true);
+  };
+
   if (loading || authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-[90vh] bg-background flex items-center justify-center">
         <div className="text-muted-foreground">Loading problems...</div>
       </div>
     );
   }
   if (error) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-destructive">{error}</div>
-      </div>
-    );
+    return <div className="py-8 text-center text-destructive">{error}</div>;
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground theme-transition">
-      <div className="max-w-full mx-auto rounded-lg shadow-none px-6 sm:px-12 mb-8 theme-transition">
-        {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3 theme-transition">
-          <Link to={`/profile/${username}`}>
-            <Button
-              className="bg-card rounded-lg text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 !shadow-none theme-transition"
-              aria-label="back to dashboard"
-            >
-              <ChevronLeft className="w-4 h-4" /> Back to Profile
-            </Button>
-          </Link>
-          <div className="relative flex-grow w-full sm:w-auto theme-transition">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground theme-transition" />
-            <Input
-              type="text"
-              placeholder="Search questions"
-              className="pl-10 pr-4 py-2 rounded-lg !bg-card placeholder:text-muted-foreground border border-border !focus:ring-0 focus:border-transparent w-full !shadow-none theme-transition"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              aria-label="Search problems"
-            />
-          </div>
-          {isAuthenticated && user?.role === "admin" && (
-            <>
-              <Button
-                className="bg-card rounded-lg text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 theme-transition"
-                onClick={() => {
-                  setEditProblem(null);
-                  setShowModal(true);
-                }}
-                aria-label="Add Problem"
+    <>
+      <div className="w-full">
+        <div className="space-y-3">
+          {filteredProblems.map((problem) => {
+            return (
+              <Card
+                key={problem._id}
+                className="flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer bg-card border border-border focus-within:ring-0 focus-within:outline-0 theme-transition hover:bg-accent/50 shadow-none"
               >
-                <Plus className="w-4 h-4" /> Add Problem
-              </Button>
-              <Button
-                className="bg-card rounded-lg text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 theme-transition"
-                onClick={() => {
-                  setEditProblem(null);
-                  setShowModal(true);
-                }}
-                aria-label="Add Problem"
-              >
-                Upload Multiple
-              </Button>
-            </>
-          )}
-          {/* Tab Triggers */}
-          <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-            <TabsList>
-              <TabsTrigger
-                value="grid-view"
-                className="rounded-lg cursor-pointer"
-              >
-                <RiLayoutGridLine className="h-3 w-3" />
-                Grid View
-              </TabsTrigger>
-              <TabsTrigger
-                value="list-view"
-                className="rounded-lg cursor-pointer"
-              >
-                <RiListCheck className="h-3 w-3" />
-                List View
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+                <Link
+                  to={`/problems/${problem._id}`}
+                  tabIndex={0}
+                  aria-label={`Open problem ${problem.name}`}
+                  className="flex flex-row items-center justify-between focus:outline-none focus:ring-0 rounded-md flex-1 min-w-0"
+                >
+                  <div className="flex items-center min-w-0 max-w-[70%] flex-shrink-0">
+                    {isSolved(problem) ? (
+                      <CheckCircle className="h-4 w-4 mr-3 text-green-500 shrink-0" />
+                    ) : (
+                      <span className="h-5 w-5 border-2 border-muted rounded-full shrink-0 inline-block mr-3" />
+                    )}
+                    {/* <span className="text-base font-medium text-foreground mr-2 shrink-0 theme-transition">
+                      {idx + 1}.
+                    </span> */}
+                    <span className="text-md font-medium text-foreground truncate min-w-0 theme-transition">
+                      {problem.name}
+                    </span>
+                  </div>
+                  {/* Right: Difficulty badge and ProgressBar */}
+                </Link>
 
-        {/* Render selected tab content OUTSIDE */}
-        <div>
-          {selectedTab === "grid-view" && (
-            <ProblemsGrid searchTerm={searchTerm} />
-          )}
-          {selectedTab === "list-view" && (
-            <ProblemsList searchTerm={searchTerm} />
-          )}
+                {/* Author controls */}
+                {isAuthenticated && (
+                  <div className="flex gap-2 mt-0">
+                    <span
+                      className={`px-3 py-1 rounded-md text-sm ${getDifficultyColor(problem.difficulty)}`}
+                      aria-label={`Difficulty: ${problem.difficulty}`}
+                    >
+                      {problem.difficulty === "Medium"
+                        ? "Med."
+                        : problem.difficulty}
+                    </span>
+                    {user?.role === "admin" && (
+                      <>
+                        <button
+                          size="sm"
+                          className="bg-accent rounded-md text-sm px-3 py-1 text-muted-foreground flex items-center gap-1 hover:bg-muted shadow-none theme-transition"
+                          onClick={() => handleEdit(problem)}
+                          aria-label="Edit problem"
+                        >
+                          <Edit className="w-3 h-3" /> Edit
+                        </button>
+                        <button
+                          size="sm"
+                          className="bg-accent rounded-md text-sm px-3 py-1 flex items-center gap-1 text-destructive hover:text-destructive hover:bg-destructive/20 theme-transition shadow-none"
+                          onClick={() => setDeleteId(problem._id)}
+                          aria-label="Delete problem"
+                        >
+                          <Trash2 className="w-3 h-3" /> Delete
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </Card>
+            );
+          })}
         </div>
-
-        {/* Empty state */}
         {filteredProblems.length === 0 && !loading && (
           <div className="text-center py-8 text-muted-foreground">
             {searchTerm
@@ -407,7 +386,6 @@ export default function ProblemsPage() {
           </div>
         )}
       </div>
-
       {/* Problem Form Modal */}
       <ProblemFormModal
         open={showModal}
@@ -457,6 +435,8 @@ export default function ProblemsPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
+
+export default ProblemsList;

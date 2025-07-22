@@ -155,6 +155,9 @@ export default function ProblemDescription({ problem }) {
     );
   }
 
+  const getTags = (problem) =>
+    Array.isArray(problem.tags) ? problem.tags : [];
+
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
@@ -241,7 +244,7 @@ export default function ProblemDescription({ problem }) {
               </span>
             )}
             {/* Admin-only: Edit/Delete buttons */}
-            {user?.role === "admin" && (
+            {/* {user?.role === "admin" && (
               <div className="flex gap-2">
                 <Button
                   size="sm"
@@ -260,7 +263,7 @@ export default function ProblemDescription({ problem }) {
                   <Trash2 className="w-4 h-4" /> Delete
                 </Button>
               </div>
-            )}
+            )} */}
           </div>
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4 theme-transition">
@@ -269,11 +272,21 @@ export default function ProblemDescription({ problem }) {
             >
               {problem.difficulty || "Unknown"}
             </span>
+            {getTags(problem).map((tag) => (
+              <span
+                className={`px-3 py-1 rounded-full text-sm bg-muted text-muted-foreground capitalize theme-transition`}
+              >
+                {tag}
+              </span>
+            ))}
             {/* Add more tags if available in problem object */}
           </div>
+
           {/* Problem Statement */}
           <div className="text-foreground leading-relaxed space-y-4 !text-md font-normal text-left theme-transition">
-            <p className="theme-transition">{problem.description}</p>
+            <p className="text-muted-foreground theme-transition">
+              {problem.description}
+            </p>
             {/* Render examples if available */}
             {problem.examples && problem.examples.length > 0 && (
               <div className="space-y-4 theme-transition">
