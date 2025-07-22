@@ -290,6 +290,17 @@ export default function Navbar({ sticky = false }) {
                           {theme === "dark" ? "Light Mode" : "Dark Mode"}
                         </span>
                       </DropdownMenuItem> */}
+                          {user && user.role === "admin" && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                navigate("/dashboard");
+                              }}
+                              className="text-muted-foreground cursor-pointer theme-transition"
+                              aria-label="admin dashboard"
+                            >
+                              Admin Dashboard
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem
                             onClick={() => {
                               navigate("/profile");
