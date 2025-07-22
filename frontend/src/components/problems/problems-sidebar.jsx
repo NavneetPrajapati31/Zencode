@@ -14,6 +14,13 @@ import { Button } from "@/components/ui/button";
 import { useProblemsSidebar } from "./problems-sidebar-context";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/auth/use-auth";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function ProblemsSidebar() {
   const { id: currentProblemId } = useParams();
@@ -23,6 +30,7 @@ export function ProblemsSidebar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState("");
   const { user } = useAuth();
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
 
   useEffect(() => {
     fetchProblems();
@@ -65,10 +73,13 @@ export function ProblemsSidebar() {
   // Filter problems based on search term
   const filteredProblems = problems.filter(
     (problem) =>
-      (problem.name &&
+      ((problem.name &&
         problem.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (problem.statement &&
-        problem.statement.toLowerCase().includes(searchTerm.toLowerCase()))
+        (problem.statement &&
+          problem.statement
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()))) &&
+      (difficultyFilter === "all" || problem.difficulty === difficultyFilter)
   );
 
   const handleProblemClick = () => {
@@ -151,7 +162,7 @@ export function ProblemsSidebar() {
                 </button>
               </div>
             </div>
-            <div className="relative p-3 px-5">
+            <div className="relative p-3 px-5 flex items-center gap-2">
               <Search className="absolute left-8 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground theme-transition pointer-events-none" />
               <Input
                 type="text"
@@ -161,6 +172,38 @@ export function ProblemsSidebar() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+              <Select
+                value={difficultyFilter}
+                onValueChange={setDifficultyFilter}
+              >
+                <SelectTrigger
+                  id="difficulty-select"
+                  className="w-[120px] shadow-none"
+                >
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem
+                    value="Easy"
+                    className="text-green-500  focus:text-green-500 "
+                  >
+                    Easy
+                  </SelectItem>
+                  <SelectItem
+                    value="Medium"
+                    className="text-primary focus:text-primary  "
+                  >
+                    Medium
+                  </SelectItem>
+                  <SelectItem
+                    value="Hard"
+                    className="text-destructive focus:text-destructive"
+                  >
+                    Hard
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex-1 overflow-y-auto no-scrollbar bg-background theme-transition">
               <div className="p-2 px-5 pt-0">

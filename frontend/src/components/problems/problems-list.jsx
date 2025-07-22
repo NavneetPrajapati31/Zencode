@@ -162,9 +162,9 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
   );
 }
 
-function ProblemsList({ searchTerm }) {
+function ProblemsList({ problems }) {
+  console.log("ProblemsList problems:", problems);
   const { user, loading: authLoading, isAuthenticated } = useAuth();
-  const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editProblem, setEditProblem] = useState(null);
@@ -174,7 +174,7 @@ function ProblemsList({ searchTerm }) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (!authLoading) fetchProblems();
+    if (!authLoading) setLoading(false);
   }, [authLoading]);
 
   // Debug: Log user and isAuthenticated before rendering admin controls
@@ -195,28 +195,6 @@ function ProblemsList({ searchTerm }) {
     }
   }, [user, isAuthenticated]);
 
-  const fetchProblems = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const data = await problemsAPI.getAll();
-      setProblems(data);
-    } catch (err) {
-      setError(err.message || "Failed to fetch problems.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Filter problems based on search term (search in name and statement)
-  const filteredProblems = problems.filter(
-    (problem) =>
-      (problem.name &&
-        problem.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (problem.statement &&
-        problem.statement.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
   const isSolved = (problem) =>
     user?.solvedProblems?.some(
       (sp) => sp._id === problem._id || sp === problem._id
@@ -236,12 +214,12 @@ function ProblemsList({ searchTerm }) {
     }
   };
 
-  const handleCreate = async (form, setError) => {
+  const handleCreate = async (form) => {
     setModalLoading(true);
     try {
       await problemsAPI.create(form);
       setShowModal(false);
-      fetchProblems();
+      // Parent will refresh problems
     } catch (err) {
       setError(err.message || "Failed to create problem.");
     } finally {
@@ -249,13 +227,13 @@ function ProblemsList({ searchTerm }) {
     }
   };
 
-  const handleUpdate = async (form, setError) => {
+  const handleUpdate = async (form) => {
     setModalLoading(true);
     try {
       await problemsAPI.update(editProblem._id, form);
       setShowModal(false);
       setEditProblem(null);
-      fetchProblems();
+      // Parent will refresh problems
     } catch (err) {
       setError(err.message || "Failed to update problem.");
     } finally {
@@ -277,17 +255,10 @@ function ProblemsList({ searchTerm }) {
 
   const handleDelete = async () => {
     setDeleteLoading(true);
-    // Debug: Log Authorization header before making delete request
-    const token =
-      localStorage.getItem("token") || localStorage.getItem("tempToken");
-    console.log(
-      "[ProblemsList] handleDelete Authorization header:",
-      token ? `Bearer ${token}` : "none"
-    );
     try {
       await problemsAPI.delete(deleteId);
       setDeleteId(null);
-      fetchProblems();
+      // Parent will refresh problems
     } finally {
       setDeleteLoading(false);
     }
@@ -313,7 +284,7 @@ function ProblemsList({ searchTerm }) {
     <>
       <div className="w-full">
         <div className="space-y-3">
-          {filteredProblems.map((problem) => {
+          {problems.map((problem) => {
             return (
               <Card
                 key={problem._id}
@@ -378,11 +349,9 @@ function ProblemsList({ searchTerm }) {
             );
           })}
         </div>
-        {filteredProblems.length === 0 && !loading && (
+        {problems.length === 0 && !loading && (
           <div className="text-center py-8 text-muted-foreground">
-            {searchTerm
-              ? "No problems found matching your search."
-              : "No problems available."}
+            No problems available.
           </div>
         )}
       </div>

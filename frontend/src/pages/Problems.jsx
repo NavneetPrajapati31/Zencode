@@ -35,6 +35,7 @@ import { RiListCheck } from "react-icons/ri";
 import ProblemsGrid from "@/components/problems/problems-grid";
 import ProblemsList from "@/components/problems/problems-list";
 import UploadMultipleModal from "@/components/problems/upload-multiple-modal";
+import { Label } from "@/components/ui/label";
 
 // Problem form modal component
 function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
@@ -198,6 +199,7 @@ export default function ProblemsPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("grid-view");
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
 
   useEffect(() => {
     if (!authLoading) {
@@ -221,10 +223,13 @@ export default function ProblemsPage() {
   // Filter problems based on search term (search in name and statement)
   const filteredProblems = problems.filter(
     (problem) =>
-      (problem.name &&
+      ((problem.name &&
         problem.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (problem.statement &&
-        problem.statement.toLowerCase().includes(searchTerm.toLowerCase()))
+        (problem.statement &&
+          problem.statement
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()))) &&
+      (difficultyFilter === "all" || problem.difficulty === difficultyFilter)
   );
 
   const handleCreate = async (form, setError) => {
@@ -309,12 +314,52 @@ export default function ProblemsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground theme-transition" />
             <Input
               type="text"
-              placeholder="Search questions"
+              placeholder="Search problems"
               className="pl-10 pr-4 py-2 rounded-lg !bg-card placeholder:text-muted-foreground border border-border !focus:ring-0 focus:border-transparent w-full !shadow-none theme-transition"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search problems"
             />
+          </div>
+          {/* Sort by Difficulty Filter */}
+          <div className="flex items-center gap-2">
+            <Select
+              value={difficultyFilter}
+              onValueChange={setDifficultyFilter}
+            >
+              <SelectTrigger
+                id="difficulty-select"
+                className="w-[120px] shadow-none"
+              >
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  value="all"
+                  className="text-muted-foreground  focus:text-foreground"
+                >
+                  All
+                </SelectItem>
+                <SelectItem
+                  value="Easy"
+                  className="text-green-500  focus:text-green-500"
+                >
+                  Easy
+                </SelectItem>
+                <SelectItem
+                  value="Medium"
+                  className="text-primary focus:text-primary"
+                >
+                  Medium
+                </SelectItem>
+                <SelectItem
+                  value="Hard"
+                  className="text-destructive focus:text-destructive"
+                >
+                  Hard
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           {isAuthenticated && user?.role === "admin" && (
             <>
@@ -361,21 +406,12 @@ export default function ProblemsPage() {
         {/* Render selected tab content OUTSIDE */}
         <div>
           {selectedTab === "grid-view" && (
-            <ProblemsGrid searchTerm={searchTerm} />
+            <ProblemsGrid problems={filteredProblems} />
           )}
           {selectedTab === "list-view" && (
-            <ProblemsList searchTerm={searchTerm} />
+            <ProblemsList problems={filteredProblems} />
           )}
         </div>
-
-        {/* Empty state */}
-        {filteredProblems.length === 0 && !loading && (
-          <div className="text-center py-8 text-muted-foreground">
-            {searchTerm
-              ? "No problems found matching your search."
-              : "No problems available."}
-          </div>
-        )}
       </div>
 
       {/* Problem Form Modal */}

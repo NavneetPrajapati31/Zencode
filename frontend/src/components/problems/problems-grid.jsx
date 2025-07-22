@@ -162,9 +162,9 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
   );
 }
 
-function ProblemsGrid({ searchTerm }) {
+function ProblemsGrid({ problems }) {
+  console.log("ProblemsGrid problems:", problems);
   const { user, loading: authLoading, isAuthenticated } = useAuth();
-  const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editProblem, setEditProblem] = useState(null);
@@ -222,22 +222,13 @@ function ProblemsGrid({ searchTerm }) {
         tags: tagsMap[problem._id] || [],
       }));
       console.log("[ProblemsGrid] merged problems with tags:", merged);
-      setProblems(merged);
+      // setProblems(merged); // This line is removed as per the edit hint
     } catch (err) {
       setError(err.message || "Failed to fetch problems or tags.");
     } finally {
       setLoading(false);
     }
   };
-
-  // Filter problems based on search term (search in name and statement)
-  const filteredProblems = problems.filter(
-    (problem) =>
-      (problem.name &&
-        problem.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (problem.statement &&
-        problem.statement.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
 
   // Helper: get tags (fallback to empty array if not present)
   const getTags = (problem) =>
@@ -340,7 +331,7 @@ function ProblemsGrid({ searchTerm }) {
     <>
       <div className="w-full mt-2 theme-transition">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProblems.map((problem) => (
+          {problems.map((problem) => (
             <Card
               key={problem._id}
               className="flex flex-col justify-between h-full p-5 rounded-xl bg-card border border-border shadow-none hover:bg-accent/50 theme-transition cursor-pointer
@@ -407,11 +398,9 @@ function ProblemsGrid({ searchTerm }) {
             </Card>
           ))}
         </div>
-        {filteredProblems.length === 0 && !loading && (
+        {problems.length === 0 && !loading && (
           <div className="text-center py-8 text-muted-foreground">
-            {searchTerm
-              ? "No problems found matching your search."
-              : "No problems available."}
+            No problems available.
           </div>
         )}
       </div>
