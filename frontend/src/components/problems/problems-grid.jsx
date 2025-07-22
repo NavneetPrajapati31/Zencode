@@ -353,7 +353,7 @@ function ProblemsGrid({ searchTerm }) {
                 className="flex flex-col gap-2 focus:outline-none focus:ring-0 min-w-0 flex-1 p-0"
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <h2 className="text-md font-medium truncate min-w-0 flex-1 text-foreground theme-transition">
+                  <h2 className="text-md mr-1 font-medium truncate min-w-0 flex-1 text-foreground theme-transition">
                     {problem.name}
                   </h2>
                   {isSolved(problem) && (

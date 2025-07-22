@@ -827,7 +827,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                           </span>
                         )}
                         {res.verdict === "Error" && (
-                          <span className="text-warning theme-transition">
+                          <span className="text-destructive theme-transition">
                             Error
                           </span>
                         )}
