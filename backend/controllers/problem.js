@@ -1,4 +1,5 @@
 const Problem = require("../models/Problem");
+const TestCase = require("../models/TestCase");
 
 // Create a new problem
 const createProblem = async (req, res) => {
@@ -77,10 +78,73 @@ const deleteProblem = async (req, res) => {
   }
 };
 
+// Bulk create problems and details
+const bulkCreateProblems = async (req, res) => {
+  try {
+    const problems = req.body;
+    if (!Array.isArray(problems)) {
+      return res.status(400).json({ message: "Input must be an array" });
+    }
+    const results = [];
+    for (const item of problems) {
+      // Validate required fields
+      if (!item.name || !item.statement || !item.code || !item.difficulty) {
+        return res.status(400).json({
+          message:
+            "Each problem must have name, statement, code, and difficulty",
+        });
+      }
+      // Create Problem
+      const problem = new Problem({
+        name: item.name,
+        statement: item.statement,
+        code: item.code,
+        difficulty: item.difficulty,
+      });
+      await problem.save();
+      // Create ProblemDetails
+      const ProblemDetails = require("../models/ProblemDetails");
+      const details = new ProblemDetails({
+        problemId: problem._id,
+        tags: item.tags || [],
+        constraints: item.constraints || [],
+        examples: item.examples || [],
+        boilerplate: item.boilerplate || {},
+        harness: item.harness || {},
+        originalId: item.originalId || "",
+      });
+      await details.save();
+      // Create TestCases if provided
+      let testcases = [];
+      if (Array.isArray(item.testcases)) {
+        for (const tc of item.testcases) {
+          if (!tc.input || !tc.output) {
+            return res
+              .status(400)
+              .json({ message: "Each testcase must have input and output" });
+          }
+          const testcase = new TestCase({
+            input: tc.input,
+            output: tc.output,
+            problem: problem._id,
+          });
+          await testcase.save();
+          testcases.push(testcase);
+        }
+      }
+      results.push({ problem, details, testcases });
+    }
+    res.status(201).json({ message: "Bulk insert successful", results });
+  } catch (error) {
+    res.status(500).json({ message: "Bulk insert failed", error });
+  }
+};
+
 module.exports = {
   createProblem,
   getProblems,
   getProblemById,
   updateProblem,
   deleteProblem,
+  bulkCreateProblems,
 };

@@ -225,12 +225,12 @@ function ProblemsList({ searchTerm }) {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
-        return "bg-green-600/20 text-green-600";
+        return "bg-green-500/20 text-green-500";
       case "Medium":
       case "Med.":
-        return "bg-primary/10 text-primary";
+        return "bg-primary/20 text-primary";
       case "Hard":
-        return "bg-red-600/30 text-destructive";
+        return "bg-red-500/20 text-destructive";
       default:
         return "bg-muted text-muted-foreground";
     }

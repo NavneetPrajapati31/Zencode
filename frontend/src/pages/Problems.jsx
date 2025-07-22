@@ -34,6 +34,7 @@ import { RiLayoutGridLine } from "react-icons/ri";
 import { RiListCheck } from "react-icons/ri";
 import ProblemsGrid from "@/components/problems/problems-grid";
 import ProblemsList from "@/components/problems/problems-list";
+import UploadMultipleModal from "@/components/problems/upload-multiple-modal";
 
 // Problem form modal component
 function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
@@ -196,6 +197,7 @@ export default function ProblemsPage() {
   const [deleteId, setDeleteId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("grid-view");
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   useEffect(() => {
     if (!authLoading) {
@@ -213,30 +215,6 @@ export default function ProblemsPage() {
       setError(err.message || "Failed to fetch problems.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Check if the current user has solved this problem
-  const isSolved = (problem) => {
-    if (!user || !user.solvedProblems) return false;
-    return user.solvedProblems.some(
-      (solvedProblem) =>
-        solvedProblem._id === problem._id || solvedProblem === problem._id
-    );
-  };
-
-  // Restore getDifficultyColor for badge coloring
-  const getDifficultyColor = (difficulty) => {
-    switch (difficulty) {
-      case "Easy":
-        return "text-green-500";
-      case "Med.":
-      case "Medium":
-        return "text-amber-500";
-      case "Hard":
-        return "text-destructive";
-      default:
-        return "text-muted-foreground";
     }
   };
 
@@ -260,11 +238,6 @@ export default function ProblemsPage() {
     } finally {
       setModalLoading(false);
     }
-  };
-
-  const handleEdit = (problem) => {
-    setEditProblem(problem);
-    setShowModal(true);
   };
 
   const handleUpdate = async (form, setError) => {
@@ -357,11 +330,8 @@ export default function ProblemsPage() {
               </Button>
               <Button
                 className="bg-card rounded-lg text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 theme-transition"
-                onClick={() => {
-                  setEditProblem(null);
-                  setShowModal(true);
-                }}
-                aria-label="Add Problem"
+                onClick={() => setShowUploadModal(true)}
+                aria-label="Upload Multiple"
               >
                 Upload Multiple
               </Button>
@@ -457,6 +427,16 @@ export default function ProblemsPage() {
           </div>
         </div>
       )}
+
+      {/* Upload Multiple Modal */}
+      <UploadMultipleModal
+        open={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onSuccess={() => {
+          setShowUploadModal(false);
+          fetchProblems(); // or your refresh function
+        }}
+      />
     </div>
   );
 }

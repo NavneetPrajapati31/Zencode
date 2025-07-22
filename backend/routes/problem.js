@@ -7,11 +7,13 @@ const {
   getProblemById,
   updateProblem,
   deleteProblem,
+  bulkCreateProblems,
 } = require("../controllers/problem");
 const Problem = require("../models/Problem");
 
 // Public
 router.get("/", getProblems);
+router.post("/bulk", bulkCreateProblems);
 
 // GET /api/problems/count
 router.get("/count", async (req, res) => {

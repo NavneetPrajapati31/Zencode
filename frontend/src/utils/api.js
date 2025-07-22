@@ -92,6 +92,11 @@ export const problemsAPI = {
       method: "DELETE",
     }),
   getTotalCount: () => apiCall("/problems/count"),
+  bulkCreate: (problemsArray) =>
+    apiCall("/problems/bulk", {
+      method: "POST",
+      body: JSON.stringify(problemsArray),
+    }),
 };
 
 // Problem Details API calls

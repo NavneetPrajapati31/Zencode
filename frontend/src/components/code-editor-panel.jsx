@@ -136,6 +136,10 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   // Helper to get the correct problemId string
   const getProblemId = () => problem?._id?.$oid || problem?._id || problem?.id;
 
+  // Helper to display input/output with real newlines
+  const displayWithNewlines = (str) =>
+    typeof str === "string" ? str.replace(/\\n/g, "\n") : str;
+
   // --- Boilerplate Handling ---
   useEffect(() => {
     if (problem && problem.boilerplate && problem.boilerplate[language]) {
@@ -546,7 +550,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                     Input:
                   </span>
                   <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap text-left min-h-8 theme-transition">
-                    {publicTestcases[activeTestcaseIdx].input}
+                    {displayWithNewlines(
+                      publicTestcases[activeTestcaseIdx].input
+                    )}
                   </div>
                 </div>
                 <div className="theme-transition">
@@ -554,7 +560,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                     Expected Output:
                   </span>
                   <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap theme-transition">
-                    {publicTestcases[activeTestcaseIdx].output}
+                    {displayWithNewlines(
+                      publicTestcases[activeTestcaseIdx].output
+                    )}
                   </div>
                 </div>
                 {/* {publicTestcases[activeTestcaseIdx].explanation && (
@@ -608,7 +616,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                     />
                   ) : (
                     <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap min-h-8 theme-transition">
-                      {customTestcases[activeTestcaseIdx].input}
+                      {displayWithNewlines(
+                        customTestcases[activeTestcaseIdx].input
+                      )}
                     </div>
                   )}
                 </div>
@@ -649,7 +659,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                         Your Output:
                       </span>
                       <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap min-h-8">
-                        {customTestcases[activeTestcaseIdx].result.output}
+                        {displayWithNewlines(
+                          customTestcases[activeTestcaseIdx].result.output
+                        )}
                       </div>
                     </div>
                     {customTestcases[activeTestcaseIdx].result.error && (
