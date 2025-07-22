@@ -372,14 +372,14 @@ export default function ProblemsPage() {
             <TabsList>
               <TabsTrigger
                 value="grid-view"
-                className="rounded-lg cursor-pointer"
+                className="rounded-lg px-4 cursor-pointer"
               >
                 <RiLayoutGridLine className="h-3 w-3" />
                 Grid View
               </TabsTrigger>
               <TabsTrigger
                 value="list-view"
-                className="rounded-lg cursor-pointer"
+                className="rounded-lg px-4 cursor-pointer"
               >
                 <RiListCheck className="h-3 w-3" />
                 List View
