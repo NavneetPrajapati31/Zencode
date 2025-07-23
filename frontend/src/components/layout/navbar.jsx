@@ -226,7 +226,7 @@ export default function Navbar({ sticky = false }) {
                             {theme === "dark" ? "Light Mode" : "Dark Mode"}
                           </span>
                         </DropdownMenuItem> */}
-                        {user && user.role === "admin" && (
+                        {/* {user && user.role === "admin" && (
                           <DropdownMenuItem
                             onClick={() => {
                               navigate("/dashboard");
@@ -236,7 +236,7 @@ export default function Navbar({ sticky = false }) {
                           >
                             Admin Dashboard
                           </DropdownMenuItem>
-                        )}
+                        )} */}
                         <DropdownMenuItem
                           onClick={() => {
                             navigate("/profile");

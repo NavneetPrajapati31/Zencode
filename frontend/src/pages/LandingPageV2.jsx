@@ -17,6 +17,7 @@ import { FiLayers } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/components/theme-context-utils";
 import { useAuth } from "@/components/auth/use-auth";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 
 export default function LandingPage() {
   const { theme } = useTheme();
@@ -151,6 +152,16 @@ export default function LandingPage() {
               habits and skill development.
             </p>
             <Card className="flex justify-center items-center !border-none shadow-none bg-transparent rounded-xl theme-transition py-0">
+              {/* <ContainerScroll>
+                <img
+                  src={`/Screenshot 2025-07-21 181950.png`}
+                  alt="hero"
+                  height={1180}
+                  width={1180}
+                  className="mx-auto rounded-2xl object-cover h-full object-left-top"
+                  draggable={false}
+                />
+              </ContainerScroll> */}
               <CardContent className="p-0 max-w-full">
                 <div className="grid">
                   <img

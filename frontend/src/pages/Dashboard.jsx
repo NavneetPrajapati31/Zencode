@@ -317,10 +317,10 @@ export default function Dashboard() {
         {/* Render selected tab content OUTSIDE */}
         <div>
           {selectedTab === "grid-view" && (
-            <ProblemsGrid searchTerm={searchTerm} />
+            <ProblemsGrid problems={filteredProblems} searchTerm={searchTerm} />
           )}
           {selectedTab === "list-view" && (
-            <ProblemsList searchTerm={searchTerm} />
+            <ProblemsList problems={filteredProblems} searchTerm={searchTerm} />
           )}
         </div>
       </div>

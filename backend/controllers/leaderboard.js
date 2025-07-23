@@ -15,8 +15,6 @@ const getLeaderboard = async (req, res) => {
     // Fetch users sorted by solvedProblems length (descending)
     const users = await User.find()
       .sort({ solvedProblems: -1 })
-      .skip(skip)
-      .limit(limit)
       .select("name username avatar solvedProblems");
 
     // Scoring constants
@@ -75,12 +73,26 @@ const getLeaderboard = async (req, res) => {
     // Sort leaderboard by score descending
     leaderboard.sort((a, b) => b.score - a.score);
 
+    // Get top 3 legends
+    const legends = leaderboard.slice(0, 3);
+    // Paginate the full leaderboard (including legends)
+    const paginatedData = leaderboard.slice(skip, skip + limit);
+
+    // Debug logs for pagination
+    console.log("Leaderboard total users:", leaderboard.length);
+    console.log("Requested page:", page, "Limit:", limit, "Skip:", skip);
+    console.log("Paginated data length:", paginatedData.length);
+    if (paginatedData.length > 0) {
+      console.log("First user on this page:", paginatedData[0]);
+    }
+
     res.json({
-      data: leaderboard,
+      legends,
+      data: paginatedData,
       page,
       limit,
-      total: totalUsers,
-      totalPages: Math.ceil(totalUsers / limit),
+      total: leaderboard.length,
+      totalPages: Math.ceil(leaderboard.length / limit),
     });
   } catch (error) {
     console.error("Leaderboard fetch error:", error);

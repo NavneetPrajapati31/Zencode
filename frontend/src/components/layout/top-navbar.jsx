@@ -483,7 +483,7 @@ export default function TopNavbar({
                           {theme === "dark" ? "Light Mode" : "Dark Mode"}
                         </span>
                       </DropdownMenuItem> */}
-                  {user && user.role === "admin" && (
+                  {/* {user && user.role === "admin" && (
                     <DropdownMenuItem
                       onClick={() => {
                         navigate("/dashboard");
@@ -493,7 +493,7 @@ export default function TopNavbar({
                     >
                       Admin Dashboard
                     </DropdownMenuItem>
-                  )}
+                  )} */}
                   <DropdownMenuItem
                     onClick={() => {
                       navigate("/profile");
