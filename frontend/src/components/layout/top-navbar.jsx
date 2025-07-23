@@ -359,16 +359,14 @@ export default function TopNavbar({
               toggleTheme();
             }
           }}
-          className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
-            theme === "dark"
-              ? "bg-accent border border-border"
-              : "bg-card border border-border"
-          } ${isTransitioning ? "opacity-75" : ""}`}
+          className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer border border-border ${
+            theme === "dark" ? "bg-accent" : "bg-card"
+          }`}
         >
           {theme === "dark" ? (
-            <Sun className="h-4 w-4 text-muted-foreground" />
+            <Sun className="h-4 w-4 text-muted-foreground theme-transition" />
           ) : (
-            <Moon className="h-4 w-4 text-muted-foreground" />
+            <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
           )}
         </button>
 

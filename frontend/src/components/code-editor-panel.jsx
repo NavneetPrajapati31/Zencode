@@ -28,6 +28,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { submissionsAPI } from "@/utils/api";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 
 const SUPPORTED_LANGUAGES = [
   {
@@ -89,19 +101,50 @@ const compilerAPI = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ language, code, input, problemId, harness }),
     });
-    if (!res.ok) throw new Error("Compiler error");
-    return res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+    if (!res.ok || data.success === false) {
+      // Try to extract the most detailed error message
+      let errorMsg =
+        (data &&
+          (data.error?.stderr ||
+            data.error?.message ||
+            data.error ||
+            data.message)) ||
+        "Compiler error";
+      throw new Error(errorMsg);
+    }
+    return data;
   },
+};
+
+// Remove absolute file paths from error messages, keep function names and error details
+const sanitizeErrorMessage = (msg) => {
+  if (!msg || typeof msg !== "string") return msg;
+  // Remove Windows and Unix file paths (e.g., C:\...\file.cpp: or /home/user/file.cpp:)
+  // Keep only the filename and error message
+  return msg
+    .replace(/([A-Za-z]:)?[\\/][^:]+[\\/]([\w.-]+\.\w+):/g, "$2:")
+    .replace(/([\\/][^:]+)+[\\/]([\w.-]+\.\w+):/g, "$2:");
 };
 
 const extractErrorMessage = (err) => {
   if (!err) return "Unknown error";
-  if (err instanceof Error) return err.message || "Unknown error";
-  if (typeof err === "string") return err;
-  if (err.stderr) return err.stderr;
-  if (err.error && err.error.stderr) return err.error.stderr;
+  if (err instanceof Error)
+    return sanitizeErrorMessage(err.message || "Unknown error");
+  if (typeof err === "string") return sanitizeErrorMessage(err);
+  if (err.stderr) return sanitizeErrorMessage(err.stderr);
+  if (err.error && err.error.stderr)
+    return sanitizeErrorMessage(err.error.stderr);
+  if (err.error && typeof err.error === "string")
+    return sanitizeErrorMessage(err.error);
+  if (err.message) return sanitizeErrorMessage(err.message);
   if (typeof err === "object" && Object.keys(err).length > 0) {
-    return JSON.stringify(err, null, 2);
+    return sanitizeErrorMessage(JSON.stringify(err, null, 2));
   }
   return "Unknown error";
 };
@@ -113,6 +156,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   // --- State ---
   const [language, setLanguage] = useState(SUPPORTED_LANGUAGES[0].prism);
   const [code, setCode] = useState(SUPPORTED_LANGUAGES[0].defaultCode);
+  const [userEdited, setUserEdited] = useState(false);
   const [activeTab, setActiveTab] = useState("testcases");
   const [activeTestcaseType, setActiveTestcaseType] = useState("public"); // 'public' | 'custom' | 'add'
   const [activeTestcaseIdx, setActiveTestcaseIdx] = useState(0);
@@ -125,7 +169,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   const [submitResults, setSubmitResults] = useState([]); // [{input, expected, output, verdict, error, hidden}]
   const [error, setError] = useState("");
   const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // Removed isDropdownOpen, now handled by Shadcn Select
   const editorRootRef = useRef(null);
 
   // --- Helpers ---
@@ -142,13 +186,23 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
 
   // --- Boilerplate Handling ---
   useEffect(() => {
-    if (problem && problem.boilerplate && problem.boilerplate[language]) {
-      setCode(problem.boilerplate[language]);
-    } else {
-      setCode(langObj.defaultCode);
+    if (!userEdited) {
+      if (problem && problem.boilerplate && problem.boilerplate[language]) {
+        setCode(problem.boilerplate[language]);
+      } else {
+        setCode(langObj.defaultCode);
+      }
     }
     // eslint-disable-next-line
   }, [problem, language]);
+
+  // Mark as user-edited if code changes (but not on initial set)
+  useEffect(() => {
+    if (code !== (problem?.boilerplate?.[language] || langObj.defaultCode)) {
+      setUserEdited(true);
+    }
+    // eslint-disable-next-line
+  }, [code]);
 
   // --- Cursor Position ---
   const updateCursorPosition = () => {
@@ -309,6 +363,91 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
       }
     }
     setSubmitResults(results);
+
+    // Also run all public testcases and update runResults
+    const newRunResults = [];
+    for (let i = 0; i < publicTestcases.length; ++i) {
+      const tc = publicTestcases[i];
+      try {
+        const res = await compilerAPI.runCode({
+          language,
+          code,
+          input: tc.input,
+          problemId: getProblemId(),
+          harness: problem?.harness?.[language] || "",
+        });
+        let output = "";
+        if (typeof res.output?.stdout === "string" && res.output.stdout) {
+          output = res.output.stdout.trim();
+        } else if (
+          typeof res.output?.stderr === "string" &&
+          res.output.stderr
+        ) {
+          output = res.output.stderr.trim();
+        } else if (typeof res.output === "string") {
+          output = res.output.trim();
+        }
+        const expected = (tc.output || "").trim();
+        const verdict = output === expected ? "Correct" : "Wrong";
+        newRunResults.push({
+          input: tc.input,
+          expected: tc.output,
+          output,
+          verdict,
+          error: null,
+        });
+      } catch (err) {
+        newRunResults.push({
+          input: tc.input,
+          expected: tc.output,
+          output: "",
+          verdict: "Error",
+          error: extractErrorMessage(err),
+        });
+      }
+    }
+    setRunResults(newRunResults);
+
+    // Also run all custom testcases and update their results
+    if (customTestcases.length > 0) {
+      const newCustomTestcases = [...customTestcases];
+      for (let i = 0; i < customTestcases.length; ++i) {
+        try {
+          const res = await compilerAPI.runCode({
+            language,
+            code,
+            input: customTestcases[i].input,
+            problemId: getProblemId(),
+            harness: problem?.harness?.[language] || "",
+          });
+          let output = "";
+          if (typeof res.output?.stdout === "string" && res.output.stdout) {
+            output = res.output.stdout.trim();
+          } else if (
+            typeof res.output?.stderr === "string" &&
+            res.output.stderr
+          ) {
+            output = res.output.stderr.trim();
+          } else if (typeof res.output === "string") {
+            output = res.output.trim();
+          }
+          newCustomTestcases[i].result = {
+            output,
+            verdict: "Custom",
+            error: null,
+          };
+        } catch (err) {
+          newCustomTestcases[i].result = {
+            output: "",
+            verdict: "Error",
+            error: extractErrorMessage(err),
+          };
+        }
+      }
+      setCustomTestcases(newCustomTestcases);
+    }
+
+    // Switch to Results tab to show complete submission results
     setActiveTab("submit");
 
     // --- Create submission in backend ---
@@ -333,8 +472,8 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   const handleLanguageChange = (prism) => {
     const lang = SUPPORTED_LANGUAGES.find((l) => l.prism === prism);
     setLanguage(lang.prism);
-    setCode(lang.defaultCode);
-    setIsDropdownOpen(false);
+    setUserEdited(false);
+    // setCode will be handled by useEffect
   };
 
   // --- Custom Testcase Handlers ---
@@ -400,33 +539,18 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
           </span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="relative">
-            <button
-              className="text-muted-foreground hover:bg-muted px-2 py-1.5 rounded-md flex items-center space-x-1 text-sm theme-transition"
-              aria-label="Select language"
-              tabIndex={0}
-              onClick={() => setIsDropdownOpen((v) => !v)}
-              onKeyDown={(e) =>
-                e.key === "Enter" && setIsDropdownOpen((v) => !v)
-              }
-            >
-              <span className="theme-transition">{langObj.name}</span>
-              <ChevronDown className="h-4 w-4 theme-transition" />
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute top-full right-0 mt-1 bg-card border border-border text-sm text-foreground rounded-md shadow-none z-10 min-w-[120px] theme-transition">
-                {SUPPORTED_LANGUAGES.map((lang) => (
-                  <button
-                    key={lang.prism}
-                    onClick={() => handleLanguageChange(lang.prism)}
-                    className="block w-full text-left px-4 py-2 hover:bg-muted theme-transition"
-                  >
-                    {lang.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <Select value={language} onValueChange={handleLanguageChange}>
+            <SelectTrigger className="w-auto" aria-label="Select language">
+              <SelectValue>{langObj.name}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <SelectItem key={lang.prism} value={lang.prism}>
+                  {lang.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -455,7 +579,10 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                   <div ref={editorRootRef} className="h-full theme-transition">
                     <Editor
                       value={code}
-                      onValueChange={setCode}
+                      onValueChange={(val) => {
+                        setCode(val);
+                        setUserEdited(true);
+                      }}
                       highlight={(c) =>
                         highlight(c, languages[language] || languages.clike)
                       }
@@ -484,9 +611,28 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
       </div>
 
       {/* Tab Content */}
-      <div className="bg-background border-t border-border px-4 py-4 h-1/2 overflow-y-auto no-scrollbar theme-transition">
+      <div className="bg-background border-t border-border px-0 pb-4 h-1/2 overflow-y-auto no-scrollbar theme-transition">
+        {/* Tab Triggers for Custom and Output */}
+        <div className="h-10 flex items-center w-full border-b-2 border-border space-x-0 mb-4 theme-transition">
+          <button
+            className={`w-1/2 h-10 text-sm px-5 py-1 rounded-none font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition  border-r border-border  ${activeTab === "testcases" ? "bg-accent text-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}
+            onClick={() => setActiveTab("testcases")}
+            tabIndex={0}
+            aria-label="Testcases Tab"
+          >
+            Testcases
+          </button>
+          <button
+            className={`w-1/2 h-10 text-sm px-5 py-1 rounded-none font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition ${activeTab === "submit" ? "bg-accent text-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}
+            onClick={() => setActiveTab("submit")}
+            tabIndex={0}
+            aria-label="Submit Tab"
+          >
+            Results
+          </button>
+        </div>
         {activeTab === "testcases" && (
-          <div>
+          <div className="px-4">
             {/* Testcase Tabs */}
             <div className="flex items-center space-x-2 mb-4 theme-transition">
               {publicTestcases.map((tc, idx) => (
@@ -578,7 +724,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                       <span className="text-muted-foreground text-md theme-transition">
                         Your Output:
                       </span>
-                      <div className="bg-muted rounded p-2 mt-1 font-mono text-md whitespace-pre-wrap min-h-8 theme-transition">
+                      <div className="bg-muted rounded p-2 mt-1 mb-2 font-mono text-md whitespace-pre-wrap min-h-8 theme-transition">
                         {runResults[activeTestcaseIdx].output}
                       </div>
                     </div>
@@ -587,13 +733,13 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                         Verdict:
                       </span>
                       <span
-                        className={`ml-2 font-semibold text-md theme-transition ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-500" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-warning"}`}
+                        className={`ml-2 text-md theme-transition ${runResults[activeTestcaseIdx].verdict === "Correct" ? "text-green-500" : runResults[activeTestcaseIdx].verdict === "Wrong" ? "text-destructive" : "text-destructive"}`}
                       >
                         {runResults[activeTestcaseIdx].verdict}
                       </span>
                     </div>
                     {runResults[activeTestcaseIdx].error && (
-                      <div className="text-md text-destructive mt-1 theme-transition">
+                      <div className="text-md text-destructive bg-destructive/10 p-4 mt-2 rounded-lg theme-transition">
                         Error: {runResults[activeTestcaseIdx].error}
                       </div>
                     )}
@@ -697,81 +843,46 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
             )}
           </div>
         )}
-        {activeTab === "custom" && (
-          <div className="theme-transition">
-            <label
-              htmlFor="custom-input"
-              className="block text-md text-muted-foreground mb-1 theme-transition"
-            >
-              Custom Input (stdin):
-            </label>
-            <textarea
-              id="custom-input"
-              className="w-full min-h-[60px] bg-muted text-foreground rounded p-2 font-mono text-md border border-border focus:outline-none focus:ring-2 focus:ring-primary theme-transition"
-              value={customInputDraft}
-              onChange={(e) => setCustomInputDraft(e.target.value)}
-              aria-label="Custom input"
-            />
-            <div className="text-md text-muted-foreground mt-1 theme-transition">
-              This input will be included in the next Run.
-            </div>
-          </div>
-        )}
-        {activeTab === "output" && (
-          <div className="theme-transition">
-            <div className="text-md text-muted-foreground mb-2 theme-transition">
-              Last Run Output:
-            </div>
-            <pre className="bg-muted text-foreground font-mono text-md rounded p-4 whitespace-pre-wrap max-h-60 overflow-y-auto border border-border theme-transition">
-              {runResults.length > 0
-                ? runResults
-                    .map(
-                      (r, i) =>
-                        `#${r.verdict === "Custom" ? "Custom" : i + 1}\nInput:\n${r.input}\nOutput:\n${r.output}\n${r.expected ? `Expected:\n${r.expected}\nVerdict: ${r.verdict}` : ""}\n${r.error ? `Error: ${r.error}` : ""}\n\n`
-                    )
-                    .join("")
-                : "No output yet. Click Run to test your code."}
-            </pre>
-          </div>
-        )}
         {activeTab === "submit" && (
-          <div className="theme-transition">
+          <div className="px-4 theme-transition">
             <div className="overflow-x-auto">
               {submitResults.length > 0 && (
                 <div className="mb-4 text-md theme-transition text-left">
-                  <span className="font-semibold theme-transition">
-                    Summary:
-                  </span>{" "}
-                  {submitResults.filter((r) => r.verdict === "Passed").length} /{" "}
-                  {submitResults.length} testcases passed.
                   {submitResults.every((r) => r.verdict === "Passed") && (
-                    <span className="ml-2 text-success font-semibold theme-transition">
+                    <span className="mr-3 text-success font-medium theme-transition">
                       Accepted!
                     </span>
                   )}
                   {submitResults.some(
                     (r) => r.verdict === "Failed" || r.verdict === "Error"
                   ) && (
-                    <span className="ml-2 text-destructive font-semibold theme-transition">
+                    <span className="mr-3 text-destructive font-medium theme-transition">
                       Not Accepted
                     </span>
                   )}
+                  <span className="text-muted-foreground text-sm theme-transition">
+                    {submitResults.filter((r) => r.verdict === "Passed").length}{" "}
+                    / {submitResults.length} testcases passed.
+                  </span>
                 </div>
               )}
-              <table className="min-w-full text-sm border border-border rounded text-foreground theme-transition">
+
+              <table className="min-w-full text-muted-foreground text-sm border border-border !rounded-lg theme-transition">
                 <thead>
-                  <tr className="bg-muted text-foreground theme-transition">
-                    <th className="px-2 py-1 text-left theme-transition">#</th>
-                    <th className="px-2 py-1 text-left theme-transition">
+                  <tr className="bg-muted text-muted-foreground theme-transition">
+                    <th className="px-2 py-1 text-left theme-transition font-medium">
+                      #
+                    </th>
+                    <th className="px-2 py-1 text-left theme-transition font-medium">
                       Input
                     </th>
-                    <th className="px-2 py-1 text-left theme-transition">
+                    <th className="px-2 py-1 text-left theme-transition font-medium">
                       Expected
                     </th>
-                    <th className="px-2 py-1 text-left theme-transition">
+                    <th className="px-2 py-1 text-left theme-transition font-medium">
                       Output
                     </th>
-                    <th className="px-2 py-1 text-left theme-transition">
+                    <th className="px-2 py-1 text-left theme-transition font-medium">
                       Verdict
                     </th>
                   </tr>
@@ -781,9 +892,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                     <tr>
                       <td
                         colSpan={5}
-                        className="text-center text-muted-foreground py-4 theme-transition"
+                        className="text-center text-muted-foreground py-8 theme-transition"
                       >
-                        No submission yet. Click Submit to judge your code.
+                        Submit your code to see the results.
                       </td>
                     </tr>
                   )}
@@ -804,7 +915,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                             .length
                         )}
                       </td>
-                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs theme-transition">
+                      <td className="px-2 py-2 whitespace-pre-wrap w-auto theme-transition text-left">
                         {res.hidden ? (
                           <span className="italic text-muted-foreground theme-transition">
                             Hidden
@@ -813,7 +924,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                           res.input
                         )}
                       </td>
-                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs theme-transition">
+                      <td className="px-2 py-2 whitespace-pre-wrap w-auto theme-transition text-left">
                         {res.hidden ? (
                           <span className="italic text-muted-foreground theme-transition">
                             Hidden
@@ -822,27 +933,41 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                           res.expected
                         )}
                       </td>
-                      <td className="px-2 py-1 whitespace-pre-wrap max-w-xs theme-transition">
+                      <td className="px-2 py-2 whitespace-pre-wrap w-auto theme-transition text-left">
                         {res.output}
                       </td>
-                      <td className="px-2 py-1 theme-transition">
+                      <td className="px-2 py-2 theme-transition">
                         {res.verdict === "Passed" && (
                           <span className="text-green-500 flex items-center theme-transition">
-                            <CheckCircle2 className="w-4 h-4 mr-1 theme-transition" />
+                            {/* <CheckCircle2 className="w-4 h-4 mr-1 theme-transition" /> */}
                             Passed
                           </span>
                         )}
                         {res.verdict === "Failed" && (
                           <span className="text-destructive flex items-center theme-transition">
-                            <XCircle className="w-4 h-4 mr-1 theme-transition" />
+                            {/* <XCircle className="w-4 h-4 mr-1 theme-transition" /> */}
                             Failed
                           </span>
                         )}
-                        {res.verdict === "Error" && (
+                        {res.verdict === "Error" && res.error ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="text-destructive flex items-center cursor-pointer underline decoration-dotted underline-offset-2 theme-transition">
+                                {/* <XCircle className="w-4 h-4 mr-1 theme-transition" /> */}
+                                {res.error.split("\n")[0] || "Error"}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs break-words">
+                              <pre className="whitespace-pre-wrap text-xs">
+                                {res.error}
+                              </pre>
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : res.verdict === "Error" ? (
                           <span className="text-destructive theme-transition">
                             Error
                           </span>
-                        )}
+                        ) : null}
                       </td>
                     </tr>
                   ))}

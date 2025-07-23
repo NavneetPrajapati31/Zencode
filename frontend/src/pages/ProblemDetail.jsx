@@ -170,10 +170,11 @@ export default function ProblemDetailPage() {
               className="w-full flex flex-col flex-1 gap-0 theme-transition"
             >
               <div className="sticky top-0 z-10 bg-background theme-transition">
-                <TabsList className="flex flex-row gap-1 bg-background py-6 px-4 rounded-none theme-transition">
+                <TabsList className="flex flex-row gap-1 bg-background py-6.5 px-4 rounded-none theme-transition">
                   <TabsTrigger
                     value="description"
-                    className="flex items-center text-muted-foreground border-none rounded-md gap-1 !px-3 !py-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-0 aria-selected:text-accent-foreground  cursor-pointer theme-transition transition-colors duration-200 ease-in-out"
+                    className="flex items-center text-muted-foreground rounded-md gap-1 !px-3 !py-4 text-sm font-medium
+                    focus-visible:outline-none focus-visible:ring-0 aria-selected:text-accent-foreground  cursor-pointer theme-transition transition-colors duration-200 ease-in-out"
                     aria-label="Description Tab"
                     tabIndex={0}
                   >
@@ -182,7 +183,7 @@ export default function ProblemDetailPage() {
                   </TabsTrigger>
                   <TabsTrigger
                     value="submissions"
-                    className="flex items-center text-muted-foreground border-none rounded-md gap-1 !px-3 !py-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-0 aria-selected:text-accent-foreground cursor-pointer theme-transition transition-colors duration-200 ease-in-out"
+                    className="flex items-center text-muted-foreground rounded-md gap-1 !px-3 !py-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-0 aria-selected:text-accent-foreground cursor-pointer theme-transition transition-colors duration-200 ease-in-out"
                     aria-label="Submissions Tab"
                     tabIndex={0}
                   >

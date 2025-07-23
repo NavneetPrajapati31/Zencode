@@ -15,7 +15,7 @@ const languageBadge = (lang) => {
   if (!lang) return null;
   return (
     <span className="ml-4 px-3 py-1 rounded-full bg-popover text-sm text-muted-foreground font-medium theme-transition">
-      {lang}
+      {lang === "Cpp" ? "C++" : lang}
     </span>
   );
 };
@@ -80,7 +80,7 @@ export default function SubmissionList({ problemId, refreshKey }) {
             tabIndex={0}
           >
             <div
-              className="flex space-x-2 cursor-pointer"
+              className="flex space-x-1.5 cursor-pointer"
               onClick={() => {
                 setSelectedId(null);
               }}
@@ -141,7 +141,7 @@ export default function SubmissionList({ problemId, refreshKey }) {
             .map((sub, idx) => (
               <li
                 key={sub._id || idx}
-                className={`px-4 py-3 flex items-center justify-between bg-accent rounded-lg shadow-none border border-border theme-transition cursor-pointer ${selectedId === (sub._id || idx) ? "ring-0" : ""}`}
+                className={`px-4 py-3 flex items-center justify-between bg-accent/70 rounded-lg shadow-none border border-border theme-transition cursor-pointer ${selectedId === (sub._id || idx) ? "ring-0" : ""}`}
                 onClick={() => handleSelect(sub._id || idx)}
                 tabIndex={0}
                 aria-label="View submission code"

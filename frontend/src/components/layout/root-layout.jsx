@@ -4,6 +4,7 @@ import App from "@/App";
 import { NavigationLoadingProvider } from "@/components/shared/navigation-loading-context";
 import Navbar from "./navbar-v2";
 import Footer from "./footer";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const exceptionRoutes = [
   "/",
@@ -26,12 +27,14 @@ export const RootLayout = () => {
   );
 
   return (
-    <div className="font-inter min-h-screen !no-scrollbar bg-background text-foreground theme-transition">
-      <NavigationLoadingProvider>
-        {!hideNavFooter && <Navbar />}
-        <App />
-        {!hideNavFooter && <Footer />}
-      </NavigationLoadingProvider>
-    </div>
+    <TooltipProvider>
+      <div className="font-inter min-h-screen !no-scrollbar bg-background text-foreground theme-transition">
+        <NavigationLoadingProvider>
+          {!hideNavFooter && <Navbar />}
+          <App />
+          {!hideNavFooter && <Footer />}
+        </NavigationLoadingProvider>
+      </div>
+    </TooltipProvider>
   );
 };

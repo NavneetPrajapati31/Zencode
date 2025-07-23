@@ -99,16 +99,14 @@ export default function Navbar({ sticky = false }) {
                   toggleTheme();
                 }
               }}
-              className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer ${
-                theme === "dark"
-                  ? "bg-accent border border-border"
-                  : "bg-card border border-border"
-              } ${isTransitioning ? "opacity-75" : ""}`}
+              className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer border border-border ${
+                theme === "dark" ? "bg-accent" : "bg-card"
+              }`}
             >
               {theme === "dark" ? (
-                <Sun className="h-4 w-4 text-muted-foreground" />
+                <Sun className="h-4 w-4 text-muted-foreground theme-transition" />
               ) : (
-                <Moon className="h-4 w-4 text-muted-foreground" />
+                <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
               )}
             </button>
             {!isAuthenticated ? (
@@ -308,18 +306,15 @@ export default function Navbar({ sticky = false }) {
                       toggleTheme();
                     }
                   }}
-                  className={`p-2 rounded-full border border-border bg-card hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center w-fit ${
-                    isTransitioning ? "opacity-75" : ""
+                  className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer border border-border ${
+                    theme === "dark" ? "bg-accent" : "bg-card"
                   }`}
                 >
                   {theme === "dark" ? (
-                    <Sun className="h-5 w-5 text-primary" />
+                    <Sun className="h-4 w-4 text-muted-foreground theme-transition" />
                   ) : (
-                    <Moon className="h-5 w-5 text-muted-foreground" />
+                    <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
                   )}
-                  <span className="ml-2 text-sm">
-                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                  </span>
                 </button>
                 <Button
                   variant="ghost"
