@@ -61,7 +61,7 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
     )}
   >
     <Link to={`/profile/${user.handle}`}>
-      <td className="px-4 py-3 flex items-center gap-3 min-w-[220px] theme-transition">
+      <td className="pl-4 py-3 flex items-center gap-3 theme-transition">
         <Avatar className="h-10 w-10 theme-transition">
           <AvatarImage
             src={user?.avatar}
@@ -96,6 +96,9 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
         </div>
       </td>
     </Link>
+    <td className="px-4 py-3 text-center font-normal text-foreground theme-transition">
+      {user.totalSubmissions}
+    </td>
     <td className="px-4 py-3 text-center font-normal text-foreground theme-transition">
       {user.totalQuestions}
     </td>
@@ -187,7 +190,7 @@ const Leaderboard = () => {
       <h1 className="!text-2xl font-medium text-center mt-8 mb-2 text-foreground theme-transition font-sans px-2 sm:px-4">
         Leaderboard
       </h1>
-      <section className="w-full max-w-5xl mx-auto px-2 sm:px-4 py-8 theme-transition">
+      <section className="w-full max-w-6xl mx-auto px-6 sm:px-12 py-8 theme-transition">
         <div className="bg-background rounded-2xl shadow-none overflow-x-auto border border-border theme-transition">
           <table className="min-w-full text-left text-sm theme-transition">
             <thead className="h-16 theme-transition">
@@ -196,7 +199,10 @@ const Leaderboard = () => {
                   User Name
                 </th>
                 <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
-                  Total Questions
+                  Total Submissions
+                </th>
+                <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
+                  Total Problems
                 </th>
                 <th className="!px-5 py-3 font-semibold text-sm text-center theme-transition">
                   Rank

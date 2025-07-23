@@ -32,7 +32,10 @@ const getLeaderboard = async (req, res) => {
     const leaderboard = await Promise.all(
       users.map(async (user) => {
         let score = 0;
-        let totalSubmissions = 0;
+        // Count all submissions for this user (across all problems)
+        const totalSubmissions = await Submission.countDocuments({
+          user: user._id,
+        });
         // For each solved problem
         for (const problemId of user.solvedProblems) {
           // Get problem difficulty
@@ -46,7 +49,6 @@ const getLeaderboard = async (req, res) => {
             problem: problemId,
           });
           const submissionCount = submissions.length;
-          totalSubmissions += submissionCount;
           // Calculate penalty
           const penalty = Math.max(
             0,
