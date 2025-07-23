@@ -1,15 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import { submissionsAPI } from "@/utils/api";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-c";
-import "prismjs/components/prism-cpp";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-java";
-import "prismjs/themes/prism.css";
+import MonacoEditor from "@monaco-editor/react";
+import nightOwlTheme from "@/components/Night Owl.json";
 import { ChevronLeft } from "lucide-react";
+import { useTheme } from "@/components/theme-context-utils";
 
 const languageBadge = (lang) => {
   if (!lang) return null;
@@ -33,6 +27,7 @@ const formatDate = (dateStr) => {
 };
 
 export default function SubmissionList({ problemId, refreshKey }) {
+  const { theme } = useTheme();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
@@ -57,6 +52,14 @@ export default function SubmissionList({ problemId, refreshKey }) {
     if (problemId) fetchSubmissions();
     // eslint-disable-next-line
   }, [problemId, refreshKey]);
+
+  useEffect(() => {
+    if (window.monaco) {
+      window.monaco.editor.setTheme(
+        theme === "dark" ? "night-owl" : "night-owl-light"
+      );
+    }
+  }, [theme]);
 
   return (
     <div className="p-4">
@@ -102,14 +105,11 @@ export default function SubmissionList({ problemId, refreshKey }) {
               Submitted Code
             </span>
           </div>
-          <Editor
-            value={
-              submissions.find((s) => (s._id || s.idx) === selectedId)?.code ||
-              "No code available."
-            }
-            onValueChange={() => {}}
-            highlight={(code) => {
-              // Try to detect language from submission, fallback to cpp
+          <MonacoEditor
+            className="mt-2"
+            height="120vh"
+            width="100%"
+            language={(() => {
               const sub = submissions.find(
                 (s) => (s._id || s.idx) === selectedId
               );
@@ -119,18 +119,53 @@ export default function SubmissionList({ problemId, refreshKey }) {
                 sub?.codeLanguage ||
                 "cpp"
               ).toLowerCase();
-              return highlight(code, languages[lang] || languages.cpp);
+              // Monaco uses 'cpp' as 'cpp' or 'c++', 'python' as 'python', etc.
+              if (lang === "c++") return "cpp";
+              if (lang === "js") return "javascript";
+              if (lang === "py") return "python";
+              return lang;
+            })()}
+            value={
+              submissions.find((s) => (s._id || s.idx) === selectedId)?.code ||
+              "No code available."
+            }
+            theme={theme === "dark" ? "night-owl" : "night-owl-light"}
+            options={{
+              readOnly: true,
+              minimap: { enabled: false },
+              scrollBeyondLastLine: false,
+              wordWrap: "on",
+              fontFamily: "Fira Mono, Menlo, Monaco, Consolas, monospace",
+              fontSize: 16,
+              lineNumbers: "on",
+              automaticLayout: true,
+              tabSize: 2,
+              renderLineHighlight: "all",
+              scrollbar: { vertical: "auto", horizontal: "auto" },
+              fixedOverflowWidgets: true,
+              smoothScrolling: true,
+              cursorBlinking: "blink",
+              cursorSmoothCaretAnimation: true,
+              ariaLabel: "Submission code viewer",
+              overviewRulerLanes: 0,
+              folding: false,
+              contextmenu: false,
+              renderLineHighlightOnlyWhenFocus: true,
             }}
-            padding={12}
-            readOnly
-            textareaId="submissionCodeView"
-            textareaClassName="outline-none bg-transparent w-full h-full theme-transition cursor-default"
-            className="h-full overflow-auto no-scrollbar bg-background text-foreground font-mono text-xs rounded theme-transition outline-none border-none"
-            style={{
-              fontFamily: "monospace",
-              fontSize: 14,
-              background: "none",
-              padding: 12,
+            onMount={(editor) => {
+              try {
+                if (window.monaco) {
+                  window.monaco.editor.defineTheme("night-owl", nightOwlTheme);
+                  // If you have a light theme, define it here too
+                  // window.monaco.editor.defineTheme('night-owl-light', nightOwlLightTheme);
+                }
+              } catch (err) {
+                console.error(
+                  "[Monaco] Error registering theme night-owl:",
+                  err
+                );
+              }
+              editor.updateOptions({ readOnly: true });
             }}
           />
         </div>

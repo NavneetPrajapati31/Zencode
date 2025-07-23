@@ -7,15 +7,7 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-c";
-import "prismjs/components/prism-cpp";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-java";
-import "prismjs/themes/prism.css";
+import MonacoEditor from "@monaco-editor/react";
 import {
   Play,
   Send,
@@ -40,6 +32,8 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
+import nightOwlTheme from "./Night Owl.json";
+import { useTheme } from "@/components/theme-context-utils";
 
 const SUPPORTED_LANGUAGES = [
   {
@@ -149,10 +143,30 @@ const extractErrorMessage = (err) => {
   return "Unknown error";
 };
 
+const nightOwlLightTheme = {
+  ...nightOwlTheme,
+  base: "vs",
+  inherit: true,
+  rules: [{ background: "f9f9fa", token: "" }, ...nightOwlTheme.rules],
+  colors: {
+    ...nightOwlTheme.colors,
+    "editor.foreground": "#000000",
+    "editor.background": "#ffffff", // oklch(98.5% 0 0)
+    "editor.lineHighlightBackground": "#e5e7eb",
+    "editor.selectionBackground": "#e0e7ef",
+    "editorSuggestWidget.background": "#3b82f6",
+    "editorSuggestWidget.foreground": "#d6deeb",
+    "editorSuggestWidget.selectedBackground": "#050505",
+    "editorSuggestWidget.highlightForeground": "#f59e42",
+    "editorSuggestWidget.border": "#050505",
+  },
+};
+
 const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   { problem, onSubmissionCreated },
   ref
 ) {
+  const { theme } = useTheme();
   // --- State ---
   const [language, setLanguage] = useState(SUPPORTED_LANGUAGES[0].prism);
   const [code, setCode] = useState(SUPPORTED_LANGUAGES[0].defaultCode);
@@ -208,6 +222,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
     typeof str === "string" ? str.replace(/\\n/g, "\n") : str;
 
   // --- Boilerplate Handling ---
+  useEffect(() => {
+    setUserEdited(false);
+  }, [problem]);
   useEffect(() => {
     if (!userEdited) {
       if (problem && problem.boilerplate && problem.boilerplate[language]) {
@@ -542,6 +559,15 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
     getCode: () => code,
   }));
 
+  // Add useEffect to update Monaco theme on theme change
+  useEffect(() => {
+    if (window.monaco) {
+      window.monaco.editor.setTheme(
+        theme === "dark" ? "night-owl" : "night-owl-light"
+      );
+    }
+  }, [theme]);
+
   if (!problem) {
     return (
       <div className="p-4 text-muted-foreground">
@@ -582,51 +608,86 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
           </div>
         </div>
         {/* Editor */}
-        <div className="flex-1 flex flex-col theme-transition">
-          <div className="flex-1 relative bg-background border-none theme-transition">
-            <div className="absolute inset-0 flex h-full overflow-y-auto no-scrollbar">
-              <div className="flex w-full h-full">
-                {/* Line Numbers */}
-                <div className="w-auto px-2 h-full flex flex-col text-right text-sm text-muted-foreground py-[14px] select-none theme-transition">
-                  {Array.from({
-                    length: code.split("\n").length || 1,
-                  }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="h-6 flex items-center justify-end pr-3"
-                      style={{ lineHeight: "1.5rem" }}
-                    >
-                      {i + 1}
-                    </div>
-                  ))}
-                </div>
-                {/* Code Area */}
+        <div className="flex-1 flex flex-col theme-transition h-full">
+          <div className="flex-1 relative bg-background border-none theme-transition h-full">
+            <div className="absolute inset-0 flex h-full overflow-y-auto no-scrollbar theme-transition">
+              <div className="flex w-full h-full theme-transition">
+                {/* Monaco Editor Area (no custom line numbers) */}
                 <div className="flex-1 relative min-w-0 h-full theme-transition">
-                  <div className="p-1 font-mono text-md leading-6 min-h-full text-foreground theme-transition">
-                    <div
-                      ref={editorRootRef}
-                      className="h-full theme-transition"
-                    >
-                      <Editor
-                        value={code}
-                        onValueChange={(val) => {
-                          setCode(val);
-                          setUserEdited(true);
-                        }}
-                        highlight={(c) =>
-                          highlight(c, languages[language] || languages.clike)
+                  <div className="p-1 font-mono text-md leading-6 min-h-full text-foreground theme-transition h-full">
+                    <MonacoEditor
+                      className="bg-background theme-transition"
+                      wrapperProps={{
+                        className: "bg-background theme-transition",
+                      }}
+                      height="100%"
+                      width="100%"
+                      language={language === "cpp" ? "cpp" : language}
+                      value={code}
+                      theme={theme === "dark" ? "night-owl" : "night-owl-light"}
+                      options={{
+                        fontSize: 16,
+                        minimap: { enabled: false },
+                        scrollBeyondLastLine: false,
+                        wordWrap: "on",
+                        fontFamily:
+                          "Fira Mono, Menlo, Monaco, Consolas, monospace",
+                        lineNumbers: "on",
+                        automaticLayout: true,
+                        tabSize: 2,
+                        renderLineHighlight: "all",
+                        scrollbar: { vertical: "auto", horizontal: "auto" },
+                        fixedOverflowWidgets: true,
+                        smoothScrolling: true,
+                        cursorBlinking: "blink",
+                        cursorSmoothCaretAnimation: true,
+                        ariaLabel: "Code editor",
+                      }}
+                      onChange={(val) => {
+                        setCode(val || "");
+                        setUserEdited(true);
+                      }}
+                      onMount={(editor) => {
+                        try {
+                          // Debug: log the theme object
+                          console.log(
+                            "[Monaco] Registering theme night-owl:",
+                            nightOwlTheme
+                          );
+                          if (window.monaco) {
+                            window.monaco.editor.defineTheme(
+                              "night-owl",
+                              nightOwlTheme
+                            );
+                            window.monaco.editor.defineTheme(
+                              "night-owl-light",
+                              nightOwlLightTheme
+                            );
+                            // DO NOT call setTheme here!
+                            console.log(
+                              "[Monaco] Theme night-owl registered and set."
+                            );
+                          } else {
+                            console.warn(
+                              "[Monaco] window.monaco not available!"
+                            );
+                          }
+                        } catch (err) {
+                          console.error(
+                            "[Monaco] Error registering theme night-owl:",
+                            err
+                          );
                         }
-                        padding={10}
-                        textareaId="codeArea"
-                        textareaClassName="outline-none bg-transparent w-full h-full theme-transition"
-                        className="min-h-full bg-transparent text-foreground theme-transition"
-                        aria-label="Code editor"
-                        tabIndex={0}
-                        onClick={updateCursorPosition}
-                        onKeyUp={updateCursorPosition}
-                        onSelect={updateCursorPosition}
-                      />
-                    </div>
+                        editor.focus();
+                        editor.onDidChangeCursorPosition((e) => {
+                          const pos = e.position;
+                          setCursorPosition({
+                            line: pos.lineNumber,
+                            column: pos.column,
+                          });
+                        });
+                      }}
+                    />
                   </div>
                 </div>
               </div>

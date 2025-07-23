@@ -268,7 +268,7 @@ export default function ProblemDescription({ problem }) {
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4 theme-transition">
             <span
-              className={`text-sm font-light px-3 py-0.5 rounded-full theme-transition ${getDifficultyColor(problem.difficulty)}`}
+              className={`text-sm flex items-center font-light px-3 py-0.5 rounded-full theme-transition ${getDifficultyColor(problem.difficulty)}`}
             >
               {problem.difficulty || "Unknown"}
             </span>
