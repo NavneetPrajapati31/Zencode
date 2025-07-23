@@ -166,7 +166,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   { problem, onSubmissionCreated },
   ref
 ) {
-  const { theme } = useTheme();
+  const { theme, isInitialized } = useTheme();
   // --- State ---
   const [language, setLanguage] = useState(SUPPORTED_LANGUAGES[0].prism);
   const [code, setCode] = useState(SUPPORTED_LANGUAGES[0].defaultCode);
@@ -576,6 +576,12 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
     );
   }
 
+  if (!isInitialized) {
+    return null;
+    // Or, to show a spinner:
+    // return <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin" /></div>
+  }
+
   // --- UI ---
   return (
     <div className="flex flex-col h-full bg-background text-foreground rounded-none theme-transition">
@@ -624,6 +630,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                       width="100%"
                       language={language === "cpp" ? "cpp" : language}
                       value={code}
+                      key={theme}
                       theme={theme === "dark" ? "night-owl" : "night-owl-light"}
                       options={{
                         fontSize: 16,
@@ -663,9 +670,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                               "night-owl-light",
                               nightOwlLightTheme
                             );
-                            // DO NOT call setTheme here!
-                            console.log(
-                              "[Monaco] Theme night-owl registered and set."
+                            // Force set theme on mount
+                            window.monaco.editor.setTheme(
+                              theme === "dark" ? "night-owl" : "night-owl-light"
                             );
                           } else {
                             console.warn(

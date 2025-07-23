@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { Switch } from "../ui/switch";
 import { profileAPI } from "@/utils/api";
 import { uploadFiles } from "@/utils/uploadthing";
+import AvatarUploader from "../comp-554";
 
 const sidebarItems = [
   { key: "basic", label: "Basic Info", icon: <User className="w-5 h-5" /> },
@@ -246,48 +247,50 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                     Update your basic profile information.
                   </p>
                   <div className="flex items-center gap-4 mb-5">
-                    <Avatar className="h-15 w-15 theme-transition">
-                      <AvatarImage
-                        src={basicInfoForm?.avatar}
-                        alt={
-                          basicInfoForm?.name || basicInfoForm?.email || "User"
-                        }
-                      />
-                      <AvatarFallback className="text-lg border border-border text-muted-foreground theme-transition">
-                        {basicInfoForm?.name
-                          ? basicInfoForm.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()
-                          : "U"}
-                      </AvatarFallback>
-                    </Avatar>
                     <div>
                       <label className="block text-sm font-medium text-left text-muted-foreground mb-1">
                         Change Avatar
                       </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: "none" }}
-                        ref={fileInputRef}
-                        onChange={handleAvatarFileChange}
+                      <AvatarUploader
+                        value={basicInfoForm.avatar}
+                        loading={avatarLoading}
+                        error={avatarError}
+                        onChange={async (croppedBlob) => {
+                          if (!croppedBlob) {
+                            setBasicInfoForm((prev) => ({
+                              ...prev,
+                              avatar: "",
+                            }));
+                            return;
+                          }
+                          setAvatarLoading(true);
+                          setAvatarError("");
+                          try {
+                            const file = new File([croppedBlob], "avatar.jpg", {
+                              type: "image/jpeg",
+                            });
+                            const res = await uploadFiles("avatarUploader", {
+                              files: [file],
+                              headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                              },
+                            });
+                            if (res && res.length > 0) {
+                              setBasicInfoForm((prev) => ({
+                                ...prev,
+                                avatar: res[0].url,
+                              }));
+                              handleBasicInfoSave();
+                            }
+                          } catch (err) {
+                            setAvatarError(
+                              err.message || "Failed to upload avatar."
+                            );
+                          } finally {
+                            setAvatarLoading(false);
+                          }
+                        }}
                       />
-                      <button
-                        className="text-sm font-medium bg-primary text-primary-foreground rounded-lg px-4 py-1 cursor-pointer"
-                        onClick={() =>
-                          fileInputRef.current && fileInputRef.current.click()
-                        }
-                        disabled={avatarLoading}
-                      >
-                        {avatarLoading ? "Uploading..." : "Upload Avatar"}
-                      </button>
-                      {avatarError && (
-                        <div className="text-destructive text-sm mt-2">
-                          {avatarError}
-                        </div>
-                      )}
                     </div>
                   </div>
                   <div className="mb-3">
