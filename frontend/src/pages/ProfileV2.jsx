@@ -126,13 +126,8 @@ export default function Profile() {
   };
 
   const handleSocialButtonClick = (platform) => {
-    const profile = socialProfiles[platform];
-    if (profile) {
-      window.open(profile, "_blank");
-    } else {
-      setSelectedPlatform(platform);
-      setIsModalOpen(true);
-    }
+    setSelectedPlatform(platform);
+    setIsModalOpen(true);
   };
 
   const handleTogglePublicProfile = async () => {

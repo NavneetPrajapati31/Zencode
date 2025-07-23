@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BiSolidBarChartAlt2 } from "react-icons/bi";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { FiEdit2, FiExternalLink } from "react-icons/fi";
 import { TbFlameFilled } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import Heatmap from "@/components/profile/heatmap";
@@ -270,35 +271,134 @@ const ProfileView = ({
               <>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
-                  onClick={() => onSocialClick && onSocialClick("github")}
+                  className="flex justify-between!bg-accent text-muted-foreground text-sm !shadow-none theme-transition flex-row justify-between items-center group"
                 >
-                  <FaGithub className="h-6 w-6" />
-                  {socialProfiles.github && socialProfiles.github.trim() !== ""
-                    ? "GitHub"
-                    : "Add Github"}
+                  <span
+                    className="flex flex-row items-center flex-1 min-w-0"
+                    onClick={() => onSocialClick && onSocialClick("github")}
+                  >
+                    <FaGithub className="h-6 w-6" />
+                    <span className="ml-2 truncate">
+                      {socialProfiles.github &&
+                      socialProfiles.github.trim() !== ""
+                        ? "GitHub"
+                        : "Add Github"}
+                    </span>
+                  </span>
+                  {socialProfiles.github &&
+                    socialProfiles.github.trim() !== "" && (
+                      <span className="flex flex-row items-center ml-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSocialClick && onSocialClick("github");
+                          }}
+                          aria-label="Edit GitHub profile"
+                          tabIndex={0}
+                          className="p-1 rounded bg-transparent cursor-pointer focus:outline-none transition-colors"
+                        >
+                          <FiEdit2 className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-focus:text-foreground transition-colors" />
+                        </button>
+                        <a
+                          href={socialProfiles.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          tabIndex={0}
+                          aria-label="Open GitHub profile in new tab"
+                          className="ml-1 p-1 rounded bg-transparent cursor-pointer focus:outline-none text-muted-foreground group-hover:text-foreground focus:text-muted-foreground transition-colors"
+                        >
+                          <FiExternalLink className="h-4 w-4" />
+                        </a>
+                      </span>
+                    )}
                 </Button>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
+                  className="flex justify-between!bg-accent text-muted-foreground text-sm !shadow-none theme-transition flex-row justify-between items-center group"
                   onClick={() => onSocialClick && onSocialClick("linkedin")}
                 >
-                  <FaLinkedin className="h-6 w-6" />
+                  <span className="flex flex-row items-center flex-1 min-w-0">
+                    <FaLinkedin className="h-6 w-6" />
+                    <span className="ml-2 truncate">
+                      {socialProfiles.linkedin &&
+                      socialProfiles.linkedin.trim() !== ""
+                        ? "LinkedIn"
+                        : "Add LinkedIn"}
+                    </span>
+                  </span>
                   {socialProfiles.linkedin &&
-                  socialProfiles.linkedin.trim() !== ""
-                    ? "LinkedIn"
-                    : "Add LinkedIn"}
+                    socialProfiles.linkedin.trim() !== "" && (
+                      <span className="flex flex-row items-center ml-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSocialClick && onSocialClick("linkedin");
+                          }}
+                          aria-label="Edit LinkedIn profile"
+                          tabIndex={0}
+                          className="p-1 rounded bg-transparent cursor-pointer focus:outline-none transition-colors"
+                        >
+                          <FiEdit2 className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-focus:text-foreground transition-colors" />
+                        </button>
+                        <a
+                          href={socialProfiles.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          tabIndex={0}
+                          aria-label="Open LinkedIn profile in new tab"
+                          className="ml-1 p-1 rounded bg-transparent cursor-pointer focus:outline-none text-muted-foreground group-hover:text-foreground focus:text-muted-foreground transition-colors"
+                        >
+                          <FiExternalLink className="h-4 w-4" />
+                        </a>
+                      </span>
+                    )}
                 </Button>
                 <Button
                   variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm !shadow-none theme-transition"
+                  className="flex justify-between!bg-accent text-muted-foreground text-sm !shadow-none theme-transition flex-row justify-between items-center group"
                   onClick={() => onSocialClick && onSocialClick("twitter")}
                 >
-                  <FaXTwitter className="h-6 w-6" />
+                  <span className="flex flex-row items-center flex-1 min-w-0">
+                    <FaXTwitter className="h-6 w-6" />
+                    <span className="ml-2 truncate">
+                      {socialProfiles.twitter &&
+                      socialProfiles.twitter.trim() !== ""
+                        ? "Twitter"
+                        : "Add Twitter"}
+                    </span>
+                  </span>
                   {socialProfiles.twitter &&
-                  socialProfiles.twitter.trim() !== ""
-                    ? "Twitter"
-                    : "Add Twitter"}
+                    socialProfiles.twitter.trim() !== "" && (
+                      <span className="flex flex-row items-center ml-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSocialClick && onSocialClick("twitter");
+                          }}
+                          aria-label="Edit Twitter profile"
+                          tabIndex={0}
+                          className="p-1 rounded bg-transparent cursor-pointer focus:outline-none transition-colors"
+                        >
+                          <FiEdit2 className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-focus:text-foreground transition-colors" />
+                        </button>
+                        <a
+                          href={socialProfiles.twitter}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          tabIndex={0}
+                          aria-label="Open Twitter profile in new tab"
+                          className="ml-1 p-1 rounded bg-transparent cursor-pointer focus:outline-none text-muted-foreground group-hover:text-foreground focus:text-muted-foreground transition-colors"
+                        >
+                          <FiExternalLink className="h-4 w-4" />
+                        </a>
+                      </span>
+                    )}
                 </Button>
               </>
             )}
