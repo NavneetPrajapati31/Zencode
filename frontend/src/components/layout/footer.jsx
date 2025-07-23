@@ -77,7 +77,7 @@ export default function Footer() {
             Profile
           </a>
         </div>
-        <div className="space-y-4 flex flex-col items-start">
+        {/* <div className="space-y-4 flex flex-col items-start">
           <h3 className="text-sm font-medium text-foreground theme-transition">
             Resources
           </h3>
@@ -102,10 +102,10 @@ export default function Footer() {
           >
             Contact
           </a>
-        </div>
+        </div> */}
         <div className="space-y-4"></div>
       </div>
-      <div className="border-t border-border mt-0 w-full" />
+      <div className="border-t border-border mt-6 w-full" />
       <div className="max-w-full mx-auto flex flex-col md:flex-row justify-between items-start pt-6 px-0 text-xs text-muted-foreground theme-transition">
         <span className="mb-2 md:mb-0">
           &copy; {new Date().getFullYear()} Zencode. All rights reserved.

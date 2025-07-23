@@ -15,6 +15,7 @@ const getUserSubmissions = async (req, res) => {
       .populate("problem");
     const formatted = submissions.map((sub) => ({
       _id: sub._id,
+      problemId: sub.problem?._id,
       problemTitle: sub.problem?.name || sub.problem?.title || "-",
       createdAt: sub.createdAt,
       verdict: sub.verdict,

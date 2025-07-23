@@ -141,7 +141,8 @@ export default function TopNavbar({
         setAiReviewModalOpen(true);
         return;
       }
-      const res = await fetch("http://localhost:8000/ai-review", {
+      const compilerUrl = import.meta.env.VITE_COMPILER_URL;
+      const res = await fetch(`http://${compilerUrl}/ai-review`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code }),

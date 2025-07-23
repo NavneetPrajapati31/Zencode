@@ -174,7 +174,7 @@ function ProblemsGrid({ problems }) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (!authLoading) fetchProblemsAndTags();
+    if (!authLoading) setLoading(false);
   }, [authLoading]);
 
   // Debug: Log user and isAuthenticated before rendering admin controls
@@ -254,7 +254,7 @@ function ProblemsGrid({ problems }) {
     try {
       await problemsAPI.create(form);
       setShowModal(false);
-      fetchProblemsAndTags();
+      // fetchProblemsAndTags();
     } catch (err) {
       setError(err.message || "Failed to create problem.");
     } finally {
@@ -268,7 +268,7 @@ function ProblemsGrid({ problems }) {
       await problemsAPI.update(editProblem._id, form);
       setShowModal(false);
       setEditProblem(null);
-      fetchProblemsAndTags();
+      // fetchProblemsAndTags();
     } catch (err) {
       setError(err.message || "Failed to update problem.");
     } finally {
@@ -300,7 +300,7 @@ function ProblemsGrid({ problems }) {
     try {
       await problemsAPI.delete(deleteId);
       setDeleteId(null);
-      fetchProblemsAndTags();
+      // fetchProblemsAndTags();
     } finally {
       setDeleteLoading(false);
     }
@@ -327,6 +327,7 @@ function ProblemsGrid({ problems }) {
     user?.solvedProblems?.some(
       (sp) => sp._id === problem._id || sp === problem._id
     );
+
   return (
     <>
       <div className="w-full mt-2 theme-transition">

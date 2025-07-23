@@ -676,7 +676,7 @@
     "editorWhitespace.foreground": "#2e2040",
     "editorIndentGuide.background": "#5e81ce52",
     "editor.selectionHighlightBorder": "#122d42",
-    "editorSuggestWidget.background": "#3b82f6",
+    "editorSuggestWidget.background": "#000000",
     "editorSuggestWidget.foreground": "#d6deeb",
     "editorSuggestWidget.selectedBackground": "#050505",
     "editorSuggestWidget.highlightForeground": "#f59e42",

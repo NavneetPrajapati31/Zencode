@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,8 @@ export default function ForgotPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const cooldownRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,12 +31,31 @@ export default function ForgotPassword() {
     try {
       await authAPI.forgotPassword(email);
       setIsSubmitted(true);
+      setCooldown(60); // Start cooldown
     } catch (err) {
       setError(err.message || "Failed to send reset email. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Cooldown timer effect
+  useEffect(() => {
+    if (cooldown > 0) {
+      cooldownRef.current = setTimeout(() => {
+        setCooldown((prev) => prev - 1);
+      }, 1000);
+    } else if (cooldownRef.current) {
+      clearTimeout(cooldownRef.current);
+      cooldownRef.current = null;
+    }
+    return () => {
+      if (cooldownRef.current) {
+        clearTimeout(cooldownRef.current);
+        cooldownRef.current = null;
+      }
+    };
+  }, [cooldown]);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -58,15 +79,20 @@ export default function ForgotPassword() {
                 <span className="font-medium text-foreground">{email}</span>
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 mt-2">
               <div className="text-sm text-muted-foreground text-center">
                 <p>
                   Didn't receive the email? Check your spam folder or{" "}
                   <button
-                    onClick={() => setIsSubmitted(false)}
-                    className="text-primary hover:text-primary/80 underline"
+                    onClick={() => {
+                      if (cooldown === 0) setIsSubmitted(false);
+                    }}
+                    className={`text-primary hover:text-primary/80 underline disabled:cursor-not-allowed`}
+                    disabled={cooldown > 0}
+                    aria-disabled={cooldown > 0}
+                    tabIndex={cooldown > 0 ? -1 : 0}
                   >
-                    try again
+                    {cooldown > 0 ? `try again in ${cooldown}s` : "try again"}
                   </button>
                 </p>
               </div>
@@ -104,8 +130,8 @@ export default function ForgotPassword() {
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">
+              <div className="space-y-2 text-left">
+                <Label htmlFor="email" className="text-muted-foreground">
                   Email
                 </Label>
                 <Input

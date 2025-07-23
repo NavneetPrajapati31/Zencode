@@ -154,11 +154,11 @@ const nightOwlLightTheme = {
     "editor.background": "#ffffff", // oklch(98.5% 0 0)
     "editor.lineHighlightBackground": "#e5e7eb",
     "editor.selectionBackground": "#e0e7ef",
-    "editorSuggestWidget.background": "#3b82f6",
-    "editorSuggestWidget.foreground": "#d6deeb",
+    "editorSuggestWidget.background": "#ffffff",
+    "editorSuggestWidget.foreground": "#000000",
     "editorSuggestWidget.selectedBackground": "#050505",
     "editorSuggestWidget.highlightForeground": "#f59e42",
-    "editorSuggestWidget.border": "#050505",
+    "editorSuggestWidget.border": "#ffffff",
   },
 };
 
@@ -584,7 +584,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
 
   // --- UI ---
   return (
-    <div className="flex flex-col h-full bg-background text-foreground rounded-none theme-transition">
+    <div className="flex flex-col h-full overflow-hidden bg-background text-foreground rounded-none theme-transition">
       {/* Top Coding Panel: Header + Editor */}
       <div
         style={{ height: `${topPanelHeight}%`, minHeight: "120px" }}
@@ -742,7 +742,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
           </button>
         </div>
         {activeTab === "testcases" && (
-          <div className="px-4">
+          <div className="px-4 overflow-y-auto">
             {/* Testcase Tabs */}
             <div className="flex min-w-full overflow-y-auto items-center space-x-2 mb-4 theme-transition">
               {publicTestcases.map((tc, idx) => (
@@ -954,7 +954,7 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
           </div>
         )}
         {activeTab === "submit" && (
-          <div className="px-4 theme-transition">
+          <div className="px-4 overflow-y-auto theme-transition">
             <div className="overflow-x-auto">
               {submitResults.length > 0 && (
                 <div className="mb-4 text-md theme-transition text-left">

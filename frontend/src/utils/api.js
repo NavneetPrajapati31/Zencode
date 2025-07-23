@@ -1,6 +1,6 @@
 // API utility functions for your MERN backend
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // Generic API call function
 const apiCall = async (endpoint, options = {}) => {
@@ -194,7 +194,8 @@ export const profileAPI = {
 // Compiler API calls
 export const compilerAPI = {
   runCode: async ({ language, code }) => {
-    const response = await fetch("http://localhost:8000/compiler", {
+    const compilerUrl = import.meta.env.VITE_COMPILER_URL;
+    const response = await fetch(`http://${compilerUrl}/compiler`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ language, code }),

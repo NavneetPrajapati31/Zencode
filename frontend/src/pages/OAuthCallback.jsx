@@ -63,20 +63,18 @@ const OAuthCallback = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/auth/complete-profile`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            fullName: formData.fullName,
-            username: formData.username,
-          }),
-        }
-      );
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/api/auth/complete-profile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          username: formData.username,
+        }),
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Profile completion failed");
       await login(data.token);

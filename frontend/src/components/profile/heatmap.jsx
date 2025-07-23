@@ -269,38 +269,42 @@ const Heatmap = ({ data }) => {
         </div>
       </CardHeader>
       <div className="pt-6">
-        <div
-          ref={scrollContainerRef}
-          className="relative overflow-x-auto no-scrollbar h-full theme-transition"
-        >
-          {/* Month blocks with centered labels */}
-          <div className="flex">
-            {monthBlocks.map((block, blockIdx) => (
-              <div
-                key={`${block.name}-${block.year}`}
-                className={`flex flex-col items-center theme-transition ${blockIdx > 0 ? "ml-0" : ""}`}
-                style={{ minWidth: `${block.weekColumns.length * 16}px` }}
-              >
-                <div className="flex theme-transition">
-                  {block.weekColumns.map((column, weekIdx) => (
-                    <div
-                      key={weekIdx}
-                      className={`flex flex-col gap-0.5 theme-transition ${
-                        weekIdx > 0 ? "ml-0.5" : ""
-                      }`}
-                    >
-                      {column.days.map((day, dayIdx) => {
-                        if (!day) {
+        <TooltipProvider delayDuration={300}>
+          <div
+            ref={scrollContainerRef}
+            className="relative overflow-x-auto no-scrollbar h-full theme-transition"
+          >
+            {/* Month blocks with centered labels */}
+            <div className="flex">
+              {monthBlocks.map((block, blockIdx) => (
+                <div
+                  key={`${block.name}-${block.year}`}
+                  className={`flex flex-col items-center theme-transition ${blockIdx > 0 ? "ml-0" : ""}`}
+                  style={{ minWidth: `${block.weekColumns.length * 16}px` }}
+                >
+                  <div className="flex theme-transition">
+                    {block.weekColumns.map((column, weekIdx) => (
+                      <div
+                        key={weekIdx}
+                        className={`flex flex-col gap-0.5 theme-transition ${
+                          weekIdx > 0 ? "ml-0.5" : ""
+                        }`}
+                      >
+                        {column.days.map((day, dayIdx) => {
+                          if (!day) {
+                            return (
+                              <div
+                                key={`empty-${dayIdx}`}
+                                className="w-3 h-3"
+                              />
+                            );
+                          }
                           return (
-                            <div key={`empty-${dayIdx}`} className="w-3 h-3" />
-                          );
-                        }
-                        return (
-                          <TooltipProvider
-                            key={`${day.date.getTime()}-${dayIdx}`}
-                            className="theme-transition"
-                          >
-                            <Tooltip className="theme-transition">
+                            <Tooltip
+                              key={`${day.date.getTime()}-${dayIdx}`}
+                              className="theme-transition"
+                              delayDuration={200}
+                            >
                               <TooltipTrigger asChild>
                                 <div
                                   tabIndex={0}
@@ -316,19 +320,19 @@ const Heatmap = ({ data }) => {
                                 </span>
                               </TooltipContent>
                             </Tooltip>
-                          </TooltipProvider>
-                        );
-                      })}
-                    </div>
-                  ))}
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                  <span className="text-xs text-muted-foreground mt-4 theme-transition">
+                    {block.name}
+                  </span>
                 </div>
-                <span className="text-xs text-muted-foreground mt-4 theme-transition">
-                  {block.name}
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </TooltipProvider>
       </div>
     </Card>
   );

@@ -29,7 +29,7 @@ const runners = {
   js: executeJavascript,
 };
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
 
 app.post("/compiler", async (req, res) => {
   const {
@@ -41,6 +41,8 @@ app.post("/compiler", async (req, res) => {
   } = req.body;
 
   console.log("[Compiler] Received problemId:", problemId);
+  console.log("[Compiler] Received code:\n", code);
+  console.log("[Compiler] Received harness:\n", harness);
 
   if (code === undefined) {
     console.error("[Compiler] Error: Empty code body");
@@ -64,7 +66,50 @@ app.post("/compiler", async (req, res) => {
   // Use harness from frontend if provided
   if (harness && harness.trim()) {
     console.log("[Compiler] Using harness from frontend");
-    finalCode = harness.replace("// USER_CODE", code);
+    let userCodeWithBoilerplate = code;
+    if (language.toLowerCase() === "python" && problemId) {
+      try {
+        const resp = await fetch(`${BACKEND_URL}/api/problems/${problemId}`);
+        if (resp.ok) {
+          const problem = await resp.json();
+          if (problem.boilerplate && problem.boilerplate.python) {
+            const funcNameMatch =
+              problem.boilerplate.python.match(/def\s+(\w+)\s*\(/);
+            if (funcNameMatch) {
+              const funcName = funcNameMatch[1];
+              const userDefinesFunc = new RegExp(
+                `def\\s+${funcName}\\s*\\(`
+              ).test(code);
+              if (!userDefinesFunc) {
+                userCodeWithBoilerplate =
+                  problem.boilerplate.python + "\n" + code;
+              }
+            }
+          }
+        } else {
+          userCodeWithBoilerplate = code;
+        }
+      } catch (err) {
+        console.error(
+          "[Compiler] Error fetching problem for boilerplate:",
+          err
+        );
+        userCodeWithBoilerplate = code;
+      }
+    }
+    console.log(
+      "[Compiler] User code with boilerplate (before harness replace):\n",
+      userCodeWithBoilerplate
+    );
+    // Insert user code into harness, supporting both // USER_CODE and # USER_CODE
+    if (harness.includes("// USER_CODE")) {
+      finalCode = harness.replace("// USER_CODE", userCodeWithBoilerplate);
+    } else if (harness.includes("# USER_CODE")) {
+      finalCode = harness.replace("# USER_CODE", userCodeWithBoilerplate);
+    } else {
+      // fallback: prepend user code
+      finalCode = userCodeWithBoilerplate + "\n" + harness;
+    }
   } else if (problemId) {
     // Fallback to fetching from backend
     try {
@@ -72,8 +117,33 @@ app.post("/compiler", async (req, res) => {
       if (resp.ok) {
         const problem = await resp.json();
         console.log("[Compiler] Fetched problem:", problem);
+        let userCode = code;
+        if (
+          language.toLowerCase() === "python" &&
+          problem.boilerplate &&
+          problem.boilerplate.python
+        ) {
+          const funcNameMatch =
+            problem.boilerplate.python.match(/def\s+(\w+)\s*\(/);
+          if (funcNameMatch) {
+            const funcName = funcNameMatch[1];
+            const userDefinesFunc = new RegExp(
+              `def\\s+${funcName}\\s*\\(`
+            ).test(code);
+            if (!userDefinesFunc) {
+              userCode = problem.boilerplate.python + "\n" + code;
+            }
+          }
+        }
+        console.log(
+          "[Compiler] User code with boilerplate (before harness replace):\n",
+          userCode
+        );
         if (problem.harness && problem.harness[language]) {
-          finalCode = problem.harness[language].replace("// USER_CODE", code);
+          finalCode = problem.harness[language].replace(
+            "// USER_CODE",
+            userCode
+          );
         }
       } else {
         console.error(`[Compiler] Error fetching problem: HTTP ${resp.status}`);

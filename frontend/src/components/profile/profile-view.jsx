@@ -491,24 +491,29 @@ const ProfileView = ({
           <div className="flex flex-col w-full justify-center py-4 px-6 gap-2">
             {recentSubmissions && recentSubmissions.length > 0 ? (
               recentSubmissions.map((sub, idx) => (
-                <Button
-                  key={sub._id || idx}
-                  variant={"outline"}
-                  className="!bg-accent text-muted-foreground text-sm justify-between !shadow-none theme-transition"
-                >
-                  <span className="text-sm font-normal truncate">
-                    {sub.problemTitle || sub.problemName || sub.title || "-"}
-                  </span>
-                  <span className="text-sm font-normal">
-                    {sub.createdAt
-                      ? new Date(sub.createdAt).toLocaleDateString(undefined, {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })
-                      : "-"}
-                  </span>
-                </Button>
+                <Link to={`/problems/${sub.problemId}`} key={sub._id || idx}>
+                  <Button
+                    key={sub._id || idx}
+                    variant={"outline"}
+                    className="!bg-accent w-full text-muted-foreground text-sm justify-between !shadow-none theme-transition"
+                  >
+                    <span className="text-sm font-normal truncate">
+                      {sub.problemTitle || sub.problemName || sub.title || "-"}
+                    </span>
+                    <span className="text-sm font-normal">
+                      {sub.createdAt
+                        ? new Date(sub.createdAt).toLocaleDateString(
+                            undefined,
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )
+                        : "-"}
+                    </span>
+                  </Button>
+                </Link>
               ))
             ) : (
               <div className="flex flex-1 min-h-[120px] w-full items-center justify-center py-4 px-6 gap-2">

@@ -39,8 +39,8 @@ export default function ProfileCompletionCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <form className="space-y-4" onSubmit={onSubmit}>
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-foreground">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="fullName" className="text-muted-foreground">
               Full Name
             </Label>
             <Input
@@ -55,8 +55,8 @@ export default function ProfileCompletionCard({
               className="!bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="username" className="text-foreground">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="username" className="text-muted-foreground">
               Username
             </Label>
             <Input

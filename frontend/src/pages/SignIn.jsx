@@ -20,8 +20,10 @@ import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 
-const GITHUB_OAUTH_URL = `http://localhost:5000/api/auth/github`;
-const GOOGLE_OAUTH_URL = `http://localhost:5000/api/auth/google`;
+const apiUrl = import.meta.env.VITE_API_URL;
+
+const GITHUB_OAUTH_URL = `${apiUrl}/api/auth/github`;
+const GOOGLE_OAUTH_URL = `${apiUrl}/api/auth/google`;
 
 const handleGithubOAuth = () => {
   window.location.href = GITHUB_OAUTH_URL;
@@ -118,7 +120,7 @@ export default function SignIn() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="bg-card border-border text-foreground"
+                className="bg-card border-border text-muted-foreground"
                 onClick={handleGithubOAuth}
                 type="button"
               >
@@ -127,7 +129,7 @@ export default function SignIn() {
               </Button>
               <Button
                 variant="outline"
-                className="bg-card border-border text-foreground hover:bg-muted"
+                className="bg-card border-border text-muted-foreground hover:bg-muted"
                 onClick={handleGoogleOAuth}
                 type="button"
               >
@@ -149,8 +151,8 @@ export default function SignIn() {
 
             {/* Sign In Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">
+              <div className="space-y-2 text-left">
+                <Label htmlFor="email" className="text-muted-foreground">
                   Email
                 </Label>
                 <Input
@@ -165,8 +167,8 @@ export default function SignIn() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground">
+              <div className="space-y-2 text-left">
+                <Label htmlFor="password" className="text-muted-foreground">
                   Password
                 </Label>
                 <div className="relative">

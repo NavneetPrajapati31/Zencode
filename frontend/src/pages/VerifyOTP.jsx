@@ -197,8 +197,8 @@ export default function VerifyOTP() {
             </CardHeader>
             <CardContent className="space-y-3">
               <form onSubmit={handleSubmit} className="space-y-3 mb-6">
-                <div className="space-y-2">
-                  <Label htmlFor="otp" className="text-foreground">
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="otp" className="text-muted-foreground">
                     Verification Code
                   </Label>
                   <Input

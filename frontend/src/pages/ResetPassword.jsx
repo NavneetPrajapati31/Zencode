@@ -185,8 +185,8 @@ export default function ResetPassword() {
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground">
+              <div className="space-y-2 text-left">
+                <Label htmlFor="password" className="text-muted-foreground">
                   New password
                 </Label>
                 <div className="relative">
@@ -218,8 +218,11 @@ export default function ResetPassword() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-foreground">
+              <div className="space-y-2 text-left">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-muted-foreground"
+                >
                   Confirm new password
                 </Label>
                 <div className="relative">
