@@ -8,8 +8,9 @@ import CodeEditorPanel from "@/components/code-editor-panel";
 import { ProblemsSidebar } from "@/components/problems/problems-sidebar";
 import { ProblemsSidebarProvider } from "@/components/problems/problems-sidebar-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileText, History, RefreshCw } from "lucide-react";
+import { FileText, History, RefreshCw, ArrowLeft } from "lucide-react";
 import SubmissionList from "@/components/problems/submission-list";
+import { Button } from "@/components/ui/button";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -24,6 +25,9 @@ export default function ProblemDetailPage() {
   const [activeTab, setActiveTab] = useState("description");
   const [submissionsRefreshKey, setSubmissionsRefreshKey] = useState(0);
   const codeEditorRef = useRef();
+  const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage
+  const [isDragging, setIsDragging] = useState(false);
+  const dividerRef = useRef(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -106,6 +110,46 @@ export default function ProblemDetailPage() {
   const canGoNext =
     currentProblemIndex >= 0 && currentProblemIndex < allProblems.length - 1;
 
+  // Handle divider drag
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+
+    const container = e.currentTarget;
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = (x / rect.width) * 100;
+
+    // Limit the divider position between 20% and 80%
+    const clampedPercentage = Math.max(20, Math.min(80, percentage));
+    setLeftPanelWidth(clampedPercentage);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+  };
+
+  // Add global mouse event listeners
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      };
+    }
+  }, [isDragging]);
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground theme-transition">
@@ -160,9 +204,15 @@ export default function ProblemDetailPage() {
           canGoPrevious={canGoPrevious}
           canGoNext={canGoNext}
         />
-        <div className="flex flex-1 overflow-hidden flex-col lg:flex-row theme-transition">
+        <div
+          className="flex h-[calc(100vh-4rem)] theme-transition relative"
+          onMouseMove={handleMouseMove}
+        >
           {/* Left Panel: Problem Description with Tabs */}
-          <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar lg:border-r border-border bg-background theme-transition flex flex-col">
+          <div
+            className="overflow-y-auto no-scrollbar bg-background theme-transition flex flex-col"
+            style={{ width: `${leftPanelWidth}%` }}
+          >
             <Tabs
               defaultValue="description"
               value={activeTab}
@@ -210,8 +260,22 @@ export default function ProblemDetailPage() {
               </TabsContent>
             </Tabs>
           </div>
+
+          {/* Resizable Divider */}
+          <div
+            ref={dividerRef}
+            className={`bg-border cursor-col-resize relative theme-transition transition-all duration-200 ${isDragging ? "w-[4px]" : "w-[1px]"} hover:w-[4px]`}
+            onMouseDown={handleMouseDown}
+            style={{ cursor: isDragging ? "col-resize" : "col-resize" }}
+          >
+            <div className="absolute inset-y-0 -left-1 -right-1 bg-transparent" />
+          </div>
+
           {/* Right Panel: Code Editor and Test Cases */}
-          <div className="w-full lg:w-1/2 overflow-y-auto no-scrollbar bg-card theme-transition">
+          <div
+            className="overflow-y-auto no-scrollbar bg-card theme-transition"
+            style={{ width: `${100 - leftPanelWidth}%` }}
+          >
             <CodeEditorPanel
               ref={codeEditorRef}
               problem={combinedProblem}

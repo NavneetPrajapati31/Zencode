@@ -171,6 +171,29 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
   // Removed isDropdownOpen, now handled by Shadcn Select
   const editorRootRef = useRef(null);
+  // --- Vertical Resizer State/Logic ---
+  const [topPanelHeight, setTopPanelHeight] = useState(50); // percent
+  const [isVResizing, setIsVResizing] = useState(false);
+  const vDividerRef = useRef(null);
+  useEffect(() => {
+    if (!isVResizing) return;
+    const handleMouseMove = (e) => {
+      const container = vDividerRef.current?.parentElement;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const y = e.clientY - rect.top;
+      const percent = (y / rect.height) * 100;
+      const clamped = Math.max(20, Math.min(80, percent));
+      setTopPanelHeight(clamped);
+    };
+    const handleMouseUp = () => setIsVResizing(false);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isVResizing]);
 
   // --- Helpers ---
   const langObj = SUPPORTED_LANGUAGES.find((l) => l.prism === language);
@@ -530,39 +553,44 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
   // --- UI ---
   return (
     <div className="flex flex-col h-full bg-background text-foreground rounded-none theme-transition">
-      {/* Header */}
-      <div className="flex items-center justify-between pl-4 pr-2 py-2 border-b border-border theme-transition">
-        <div className="flex items-center space-x-2 theme-transition">
-          {getFileIcon(language)}
-          <span className="font-medium text-muted-foreground text-sm theme-transition">
-            {problem.title || "Code"}
-          </span>
+      {/* Top Coding Panel: Header + Editor */}
+      <div
+        style={{ height: `${topPanelHeight}%`, minHeight: "120px" }}
+        className="flex flex-col"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between pl-4 pr-2 py-2 border-b border-border theme-transition space-x-3">
+          <div className="flex-1 min-w-0 flex items-center space-x-2 theme-transition">
+            {getFileIcon(language)}
+            <span className="font-medium truncate text-muted-foreground text-sm theme-transition">
+              {problem.title || "Code"}
+            </span>
+          </div>
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            <Select value={language} onValueChange={handleLanguageChange}>
+              <SelectTrigger className="w-auto" aria-label="Select language">
+                <SelectValue>{langObj.name}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <SelectItem key={lang.prism} value={lang.prism}>
+                    {lang.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Select value={language} onValueChange={handleLanguageChange}>
-            <SelectTrigger className="w-auto" aria-label="Select language">
-              <SelectValue>{langObj.name}</SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {SUPPORTED_LANGUAGES.map((lang) => (
-                <SelectItem key={lang.prism} value={lang.prism}>
-                  {lang.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {/* Editor */}
-      <div className="flex-1 flex flex-col min-h-0 theme-transition">
-        <div className="flex-1 relative bg-background border-none theme-transition">
-          <div className="absolute inset-0 flex h-full overflow-y-auto no-scrollbar">
-            <div className="flex w-full h-full">
-              {/* Line Numbers */}
-              <div className="w-auto px-2 h-full flex flex-col text-right text-sm text-muted-foreground py-[14px] select-none theme-transition">
-                {Array.from({ length: code.split("\n").length || 1 }).map(
-                  (_, i) => (
+        {/* Editor */}
+        <div className="flex-1 flex flex-col theme-transition">
+          <div className="flex-1 relative bg-background border-none theme-transition">
+            <div className="absolute inset-0 flex h-full overflow-y-auto no-scrollbar">
+              <div className="flex w-full h-full">
+                {/* Line Numbers */}
+                <div className="w-auto px-2 h-full flex flex-col text-right text-sm text-muted-foreground py-[14px] select-none theme-transition">
+                  {Array.from({
+                    length: code.split("\n").length || 1,
+                  }).map((_, i) => (
                     <div
                       key={i}
                       className="h-6 flex items-center justify-end pr-3"
@@ -570,48 +598,62 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                     >
                       {i + 1}
                     </div>
-                  )
-                )}
-              </div>
-              {/* Code Area */}
-              <div className="flex-1 relative min-w-0 h-full theme-transition">
-                <div className="p-1 font-mono text-md leading-6 min-h-full text-foreground theme-transition">
-                  <div ref={editorRootRef} className="h-full theme-transition">
-                    <Editor
-                      value={code}
-                      onValueChange={(val) => {
-                        setCode(val);
-                        setUserEdited(true);
-                      }}
-                      highlight={(c) =>
-                        highlight(c, languages[language] || languages.clike)
-                      }
-                      padding={10}
-                      textareaId="codeArea"
-                      textareaClassName="outline-none bg-transparent w-full h-full theme-transition"
-                      className="min-h-full bg-transparent text-foreground theme-transition"
-                      aria-label="Code editor"
-                      tabIndex={0}
-                      onClick={updateCursorPosition}
-                      onKeyUp={updateCursorPosition}
-                      onSelect={updateCursorPosition}
-                    />
+                  ))}
+                </div>
+                {/* Code Area */}
+                <div className="flex-1 relative min-w-0 h-full theme-transition">
+                  <div className="p-1 font-mono text-md leading-6 min-h-full text-foreground theme-transition">
+                    <div
+                      ref={editorRootRef}
+                      className="h-full theme-transition"
+                    >
+                      <Editor
+                        value={code}
+                        onValueChange={(val) => {
+                          setCode(val);
+                          setUserEdited(true);
+                        }}
+                        highlight={(c) =>
+                          highlight(c, languages[language] || languages.clike)
+                        }
+                        padding={10}
+                        textareaId="codeArea"
+                        textareaClassName="outline-none bg-transparent w-full h-full theme-transition"
+                        className="min-h-full bg-transparent text-foreground theme-transition"
+                        aria-label="Code editor"
+                        tabIndex={0}
+                        onClick={updateCursorPosition}
+                        onKeyUp={updateCursorPosition}
+                        onSelect={updateCursorPosition}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        {/* Status Bar */}
-        <div className="h-8 flex items-center justify-end px-4 text-xs text-muted-foreground theme-transition">
-          <span className="theme-transition">
-            Ln {cursorPosition.line}, Col {cursorPosition.column}
-          </span>
+          {/* Status Bar */}
+          <div className="h-8 flex items-center justify-end px-4 text-xs text-muted-foreground theme-transition">
+            <span className="theme-transition">
+              Ln {cursorPosition.line}, Col {cursorPosition.column}
+            </span>
+          </div>
         </div>
       </div>
-
-      {/* Tab Content */}
-      <div className="bg-background border-t border-border px-0 pb-4 h-1/2 overflow-y-auto no-scrollbar theme-transition">
+      {/* Vertical Resizer Divider */}
+      <div
+        ref={vDividerRef}
+        className={`bg-border cursor-row-resize relative theme-transition transition-all duration-200 ${isVResizing ? "h-[4px]" : "h-[1px]"} hover:h-[4px] w-full`}
+        onMouseDown={() => setIsVResizing(true)}
+        style={{ cursor: isVResizing ? "row-resize" : "row-resize" }}
+      >
+        <div className="absolute inset-x-0 -top-1 -bottom-1 bg-transparent" />
+      </div>
+      {/* Tab Content Panel */}
+      <div
+        style={{ height: `${100 - topPanelHeight}%`, minHeight: "120px" }}
+        className="flex-1 flex flex-col"
+      >
         {/* Tab Triggers for Custom and Output */}
         <div className="h-10 flex items-center w-full border-b-2 border-border space-x-0 mb-4 theme-transition">
           <button
@@ -634,11 +676,11 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
         {activeTab === "testcases" && (
           <div className="px-4">
             {/* Testcase Tabs */}
-            <div className="flex items-center space-x-2 mb-4 theme-transition">
+            <div className="flex min-w-full overflow-y-auto items-center space-x-2 mb-4 theme-transition">
               {publicTestcases.map((tc, idx) => (
                 <button
                   key={idx}
-                  className={`text-sm px-5 py-1 rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-accent text-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}
+                  className={`text-sm px-5 py-1 min-w-[100px] rounded font-medium transition-colors duration-150 focus:outline-none hover:cursor-pointer theme-transition ${activeTestcaseType === "public" && activeTestcaseIdx === idx ? "bg-accent text-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}
                   onClick={() => {
                     setActiveTestcaseType("public");
                     setActiveTestcaseIdx(idx);
@@ -712,11 +754,11 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                   </div>
                 </div>
                 {/* {publicTestcases[activeTestcaseIdx].explanation && (
-                  <div className="text-xs text-muted-foreground">
-                    <span className="font-semibold">Explanation:</span>{" "}
-                    {publicTestcases[activeTestcaseIdx].explanation}
-                  </div>
-                )} */}
+                        <div className="text-xs text-muted-foreground">
+                          <span className="font-semibold">Explanation:</span>{" "}
+                          {publicTestcases[activeTestcaseIdx].explanation}
+                        </div>
+                      )} */}
                 {/* Show run result for this testcase if available */}
                 {runResults[activeTestcaseIdx] && (
                   <div className="space-y-1 theme-transition">
