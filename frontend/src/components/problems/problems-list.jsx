@@ -163,7 +163,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
 }
 
 function ProblemsList({ problems }) {
-  console.log("ProblemsList problems:", problems);
+  // console.log("ProblemsList problems:", problems);
   const { user, loading: authLoading, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -179,19 +179,19 @@ function ProblemsList({ problems }) {
 
   // Debug: Log user and isAuthenticated before rendering admin controls
   useEffect(() => {
-    console.log("[ProblemsList] user:", user);
-    console.log("[ProblemsList] isAuthenticated:", isAuthenticated);
+    // console.log("[ProblemsList] user:", user);
+    // console.log("[ProblemsList] isAuthenticated:", isAuthenticated);
     const token =
       localStorage.getItem("token") || localStorage.getItem("tempToken");
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
-        console.log("[ProblemsList] Decoded JWT payload:", payload);
-      } catch (e) {
-        console.log("[ProblemsList] Could not decode JWT:", e);
+        // console.log("[ProblemsList] Decoded JWT payload:", payload);
+      } catch {
+        // console.log("[ProblemsList] Could not decode JWT:", e);
       }
     } else {
-      console.log("[ProblemsList] No token found in localStorage");
+      // console.log("[ProblemsList] No token found in localStorage");
     }
   }, [user, isAuthenticated]);
 

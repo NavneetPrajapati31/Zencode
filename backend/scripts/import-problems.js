@@ -15,7 +15,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("✅ Connected to MongoDB");
+    // console.log("✅ Connected to MongoDB");
   } catch (error) {
     console.error("❌ MongoDB connection failed:", error.message);
     process.exit(1);
@@ -90,10 +90,10 @@ const importProblems = async () => {
     const jsonPath = path.join(__dirname, "../../online-judge.problems.json");
     const problemsData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 
-    console.log(`📁 Found ${problemsData.length} problems to import`);
+    // console.log(`📁 Found ${problemsData.length} problems to import`);
 
     // Clear existing data (optional - comment out if you want to keep existing data)
-    console.log("🗑️ Clearing existing problems and test cases...");
+    // console.log("🗑️ Clearing existing problems and test cases...");
     await Problem.deleteMany({});
     await TestCase.deleteMany({});
 
@@ -108,7 +108,7 @@ const importProblems = async () => {
         const problem = new Problem(problemData);
         const savedProblem = await problem.save();
 
-        console.log(`✅ Imported problem: ${problemData.name}`);
+        // console.log(`✅ Imported problem: ${problemData.name}`);
         importedProblems++;
 
         // Transform and create test cases
@@ -116,7 +116,7 @@ const importProblems = async () => {
         if (testCasesData.length > 0) {
           await TestCase.insertMany(testCasesData);
           importedTestCases += testCasesData.length;
-          console.log(`   📝 Added ${testCasesData.length} test cases`);
+          // console.log(`   📝 Added ${testCasesData.length} test cases`);
         }
       } catch (error) {
         console.error(
@@ -126,22 +126,22 @@ const importProblems = async () => {
       }
     }
 
-    console.log("\n🎉 Import completed!");
-    console.log(`📊 Statistics:`);
-    console.log(`   - Problems imported: ${importedProblems}`);
-    console.log(`   - Test cases imported: ${importedTestCases}`);
+    // console.log("\n🎉 Import completed!");
+    // console.log(`📊 Statistics:`);
+    // console.log(`   - Problems imported: ${importedProblems}`);
+    // console.log(`   - Test cases imported: ${importedTestCases}`);
 
     // Display some sample data
     const sampleProblems = await Problem.find().limit(3);
-    console.log("\n📋 Sample imported problems:");
+    // console.log("\n📋 Sample imported problems:");
     sampleProblems.forEach((problem, index) => {
-      console.log(`   ${index + 1}. ${problem.name} (${problem.difficulty})`);
+      // console.log(`   ${index + 1}. ${problem.name} (${problem.difficulty})`);
     });
   } catch (error) {
     console.error("❌ Import failed:", error.message);
   } finally {
     await mongoose.connection.close();
-    console.log("🔌 Database connection closed");
+    // console.log("🔌 Database connection closed");
   }
 };
 

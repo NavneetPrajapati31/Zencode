@@ -19,23 +19,23 @@ export function AuthProvider({ children }) {
 
   const fetchUserProfile = async () => {
     try {
-      console.log("[Auth] fetchUserProfile called");
+      // console.log("[Auth] fetchUserProfile called");
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token");
 
-      console.log("[Auth] Token found, decoding...");
+      // console.log("[Auth] Token found, decoding...");
       const decoded = jwtDecode(token);
-      console.log("[Auth] Decoded token:", decoded);
+      // console.log("[Auth] Decoded token:", decoded);
 
       const username = decoded.username;
       if (!username) throw new Error("No username in token");
 
-      console.log(
+      /*   console.log(
         "[Auth] Calling profileAPI.getProfile for username:",
         username
-      );
+      ); */
       const userData = await profileAPI.getProfile(username);
-      console.log("[Auth] Profile API response:", userData);
+      // console.log("[Auth] Profile API response:", userData);
 
       let user = userData || null;
       if (user && !user.role && decoded.role) {
@@ -47,15 +47,15 @@ export function AuthProvider({ children }) {
         user = { ...user, avatar: "" };
       }
 
-      console.log("[Auth] Setting user state:", user);
+      // console.log("[Auth] Setting user state:", user);
       setUser(user);
-      console.log("[Auth] User loaded from backend:", user);
+      // console.log("[Auth] User loaded from backend:", user);
     } catch (error) {
       console.error("[Auth] Error in fetchUserProfile:", error);
       localStorage.removeItem("token");
       setUser(null);
     } finally {
-      console.log("[Auth] Setting loading to false");
+      // console.log("[Auth] Setting loading to false");
       setLoading(false);
     }
   };
@@ -65,9 +65,9 @@ export function AuthProvider({ children }) {
     // Debug: decode and log user from token
     try {
       const decoded = jwtDecode(token);
-      console.log("[Auth] Decoded user from JWT:", decoded);
+      // console.log("[Auth] Decoded user from JWT:", decoded);
     } catch {
-      console.log("[Auth] Could not decode JWT");
+      // console.log("[Auth] Could not decode JWT");
     }
     await fetchUserProfile();
   };

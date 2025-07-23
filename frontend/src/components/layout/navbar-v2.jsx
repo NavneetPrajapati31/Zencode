@@ -35,7 +35,7 @@ export default function Navbar({ sticky = false }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  console.log("Navbar user:", user); // Log user object
+  // console.log("Navbar user:", user); // Log user object
 
   const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
   const handleCloseSettingsModal = () => setIsSettingsModalOpen(false);

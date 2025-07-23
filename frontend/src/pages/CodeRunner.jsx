@@ -65,7 +65,7 @@ const getFileIcon = (lang) => {
 };
 
 const extractErrorMessage = (err) => {
-  console.log("Error for extractErrorMessage:", err); // Debug log
+  // console.log("Error for extractErrorMessage:", err); // Debug log
   if (!err) return "Unknown error";
   // Handle Error objects
   if (err instanceof Error) {
@@ -203,7 +203,7 @@ export default function CodeRunner() {
         )
       );
     } catch (err) {
-      console.log("Caught error:", err); // Debug log
+      // console.log("Caught error:", err); // Debug log
       const errorMsg = extractErrorMessage(err);
       setError(errorMsg);
       setFiles((prev) =>

@@ -18,11 +18,11 @@ const axios = require("axios");
 const leaderboardRoutes = require("./routes/leaderboard");
 const { uploadRouter } = require("./routes/uploadthing.js");
 
-console.log("TEST_ENV:", process.env.TEST_ENV);
-console.log("TEST_ENV:", process.env.JWT_SECRET); // Debug: should print 'hello' if .env is loaded
-console.log("TEST_ENV:", process.env.TEST_ENV); // Add this for testing
-console.log("[DEBUG] GITHUB_CLIENT_ID:", process.env.GITHUB_CLIENT_ID);
-console.log("[DEBUG] GITHUB_CALLBACK_URL:", process.env.GITHUB_CALLBACK_URL);
+// console.log("TEST_ENV:", process.env.TEST_ENV);
+// console.log("TEST_ENV:", process.env.JWT_SECRET); // Debug: should print 'hello' if .env is loaded
+// console.log("TEST_ENV:", process.env.TEST_ENV); // Add this for testing
+// console.log("[DEBUG] GITHUB_CLIENT_ID:", process.env.GITHUB_CLIENT_ID);
+// console.log("[DEBUG] GITHUB_CALLBACK_URL:", process.env.GITHUB_CALLBACK_URL);
 
 const app = express();
 
@@ -187,7 +187,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("TEST_ENV:", process.env.TEST_ENV);
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(
-    `📊 Health check available at http://localhost:${PORT}/api/health`
-  );
 });

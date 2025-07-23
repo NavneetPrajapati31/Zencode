@@ -657,10 +657,10 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
                       onMount={(editor) => {
                         try {
                           // Debug: log the theme object
-                          console.log(
+                          /* console.log(
                             "[Monaco] Registering theme night-owl:",
                             nightOwlTheme
-                          );
+                          ); */
                           if (window.monaco) {
                             window.monaco.editor.defineTheme(
                               "night-owl",

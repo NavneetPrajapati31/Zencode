@@ -60,16 +60,16 @@ const ProfileView = ({
   if (!user) return null;
 
   // Debug logs for props
-  console.log("ProfileView props:", {
+  /* console.log("ProfileView props:", {
     user,
     leaderboardRank,
     progressStats,
     totalProblems,
-    recentSubmissions,
+    recentSubmissions,  
     socialProfiles,
     heatmapData,
     isPublicView,
-  });
+  }); */
 
   // Calculate current streak from heatmapData
   const currentStreak = getCurrentStreakFromHeatmapData(heatmapData);

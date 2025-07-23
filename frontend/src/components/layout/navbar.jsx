@@ -37,7 +37,7 @@ export default function Navbar({ sticky = false }) {
 
   const navigate = useNavigate();
 
-  console.log("Navbar user:", user); // Log user object
+  // console.log("Navbar user:", user); // Log user object
 
   return (
     <>

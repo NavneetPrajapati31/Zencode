@@ -19,9 +19,9 @@ router.get("/", async (req, res) => {
   try {
     const submissions = await require("../models/Submission").find();
     submissions.forEach((sub, idx) => {
-      console.log(
+      /* console.log(
         `[AllSubs] Submission ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}, user=${sub.user}`
-      );
+      );*/
     });
     res.json(submissions);
   } catch (err) {

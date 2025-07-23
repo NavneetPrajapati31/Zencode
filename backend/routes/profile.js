@@ -37,13 +37,13 @@ router.get("/:username/progress", async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.params.username });
     if (user && user.isPublicProfile) {
-      console.log(`[PUBLIC PROGRESS] for ${user.username}`);
+      // console.log(`[PUBLIC PROGRESS] for ${user.username}`);
       return getUserProgress(req, res, next);
     }
   } catch (e) {
-    console.log("Error in public progress wrapper", e);
+    // console.log("Error in public progress wrapper", e);
   }
-  console.log(`[PRIVATE PROGRESS] for ${req.params.username}`);
+  // console.log(`[PRIVATE PROGRESS] for ${req.params.username}`);
   authenticateJWT(req, res, () =>
     requireProfileComplete(req, res, () => getUserProgress(req, res, next))
   );
@@ -56,14 +56,14 @@ router.get(
     try {
       const user = await User.findOne({ username: req.params.username });
       if (user && user.isPublicProfile) {
-        console.log(`[PUBLIC HEATMAP] for ${user.username}`);
+        // console.log(`[PUBLIC HEATMAP] for ${user.username}`);
         req.user = user; // for downstream logic
         return next();
       }
     } catch (e) {
-      console.log("Error in public heatmap wrapper", e);
+      // console.log("Error in public heatmap wrapper", e);
     }
-    console.log(`[PRIVATE HEATMAP] for ${req.params.username}`);
+    // console.log(`[PRIVATE HEATMAP] for ${req.params.username}`);
     authenticateJWT(req, res, () =>
       requireProfileComplete(req, res, () => next())
     );
@@ -75,34 +75,34 @@ router.get(
       if (!user) return res.status(404).json({ error: "User not found" });
       const today = dayjs().endOf("day");
       const startDate = today.subtract(364, "day").startOf("day");
-      console.log(
+      /* console.log(
         `[Heatmap] Date range: ${startDate.toDate()} to ${today.toDate()}`
-      );
+      );*/
       // Get all submissions for this user in the last 365 days
       const submissions = await Submission.find({
         user: user._id,
         createdAt: { $gte: startDate.toDate(), $lte: today.toDate() },
       });
-      console.log(
+      /* console.log(
         `[Heatmap] User: ${username}, Submissions found: ${submissions.length}`
-      );
+      );*/
       submissions.forEach((sub, idx) => {
-        console.log(
+        /* console.log(
           `[Heatmap] Submission ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}`
-        );
+        );*/
       });
       // Print all submissions for the user regardless of date
       const allUserSubs = await Submission.find({ user: user._id });
       allUserSubs.forEach((sub, idx) => {
-        console.log(
+        /* console.log(
           `[Heatmap][AllUserSubs] ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}`
-        );
+        );*/
       });
       // Print which ones are included in the heatmap
       submissions.forEach((sub, idx) => {
-        console.log(
+        /* console.log(
           `[Heatmap][InRange] ${idx + 1}: verdict=${sub.verdict}, createdAt=${sub.createdAt}`
-        );
+        );*/
       });
       // Aggregate by date
       const dateMap = {};

@@ -31,7 +31,7 @@ const log = (message, type = "INFO") => {
         ? "\x1b[32m"
         : "\x1b[36m";
   const reset = "\x1b[0m";
-  console.log(`${color}[${timestamp}] ${type}:${reset} ${message}`);
+  // console.log(`${color}[${timestamp}] ${type}:${reset} ${message}`);
 };
 
 const makeRequest = async (method, endpoint, data = null, token = null) => {

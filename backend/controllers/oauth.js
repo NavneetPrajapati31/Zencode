@@ -41,7 +41,7 @@ const generateRandomUsername = async (email) => {
 // Passport callback for OAuth
 const oauthCallback = async (req, res) => {
   // LOGGING: Print the user object received from Passport/Google
-  console.log("OAuth callback req.user:", req.user);
+  // console.log("OAuth callback req.user:", req.user);
 
   if (!req.user) {
     return res.redirect(`${FRONTEND_URL}/signin?error=oauth_failed`);

@@ -30,7 +30,7 @@ export const ourFileRouter = {
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
       // Log all incoming headers for debugging
-      console.log("[UploadThing] Middleware Headers:", req.headers);
+      // console.log("[UploadThing] Middleware Headers:", req.headers);
 
       // Manually extract JWT from Authorization header
       const authHeader =
@@ -46,8 +46,8 @@ export const ourFileRouter = {
       }
       let user;
       try {
-        console.log("[JWT VERIFY] JWT_SECRET in use:", process.env.JWT_SECRET);
-        console.log("[JWT VERIFY] Token being verified:", token);
+        // console.log("[JWT VERIFY] JWT_SECRET in use:", process.env.JWT_SECRET);
+        // console.log("[JWT VERIFY] Token being verified:", token);
         user = jwt.verify(token, process.env.JWT_SECRET);
       } catch (e) {
         console.error("[UploadThing] JWT verification failed:", e.message);
@@ -59,9 +59,9 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
+      // console.log("Upload complete for userId:", metadata.userId);
 
-      console.log("file url", file.url);
+      // console.log("file url", file.url);
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { uploadedBy: metadata.userId, url: file.url };

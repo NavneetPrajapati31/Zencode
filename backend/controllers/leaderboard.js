@@ -79,11 +79,11 @@ const getLeaderboard = async (req, res) => {
     const paginatedData = leaderboard.slice(skip, skip + limit);
 
     // Debug logs for pagination
-    console.log("Leaderboard total users:", leaderboard.length);
-    console.log("Requested page:", page, "Limit:", limit, "Skip:", skip);
-    console.log("Paginated data length:", paginatedData.length);
+    // console.log("Leaderboard total users:", leaderboard.length);
+    // console.log("Requested page:", page, "Limit:", limit, "Skip:", skip);
+    // console.log("Paginated data length:", paginatedData.length);
     if (paginatedData.length > 0) {
-      console.log("First user on this page:", paginatedData[0]);
+      // console.log("First user on this page:", paginatedData[0]);
     }
 
     res.json({

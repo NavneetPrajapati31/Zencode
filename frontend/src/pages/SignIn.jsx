@@ -54,19 +54,19 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    console.log("Signin form submitted:", { email: formData.email });
+    // console.log("Signin form submitted:", { email: formData.email });
 
     try {
-      console.log("Calling authAPI.signin...");
+      // console.log("Calling authAPI.signin...");
       const result = await authAPI.signin({
         email: formData.email,
         password: formData.password,
       });
-      console.log("Signin API response:", result);
+      // console.log("Signin API response:", result);
 
-      console.log("Calling login function...");
+      // console.log("Calling login function...");
       await login(result.token);
-      console.log("Login successful, navigating to profile");
+      // console.log("Login successful, navigating to profile");
 
       // Decode the token to get user ID for navigation
       const decoded = jwtDecode(result.token);

@@ -85,7 +85,7 @@ export default function TopNavbar({
       if (user?.username) {
         try {
           const heatmapData = await profileAPI.getHeatmap(user.username);
-          console.log("Fetched heatmapData for streak:", heatmapData);
+          // console.log("Fetched heatmapData for streak:", heatmapData);
           const streak = getCurrentStreakFromHeatmapData(heatmapData.heatmap);
           setCurrentStreak(streak);
         } catch (error) {

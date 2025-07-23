@@ -41,9 +41,9 @@ const PublicProfile = () => {
         }
         // Fetch progress stats
         try {
-          console.log("Calling progressAPI.getUserProgress()");
+          // console.log("Calling progressAPI.getUserProgress()");
           const progressRes = await progressAPI.getUserProgress(username);
-          console.log("PROGRESS RESPONSE", progressRes);
+          // console.log("PROGRESS RESPONSE", progressRes);
           setProgressStats(
             progressRes.stats || { easy: 0, medium: 0, hard: 0 }
           );
@@ -52,18 +52,18 @@ const PublicProfile = () => {
         }
         // Fetch total problem count
         try {
-          console.log("Calling problemsAPI.getTotalCount()");
+          // console.log("Calling problemsAPI.getTotalCount()");
           const countRes = await problemsAPI.getTotalCount();
-          console.log("PROBLEMS COUNT RESPONSE", countRes);
+          // console.log("PROBLEMS COUNT RESPONSE", countRes);
           setTotalProblems(countRes.count || 0);
         } catch {
           setTotalProblems(0);
         }
         // Fetch leaderboard rank and score
         try {
-          console.log("Calling leaderboardAPI.getRank()");
+          // console.log("Calling leaderboardAPI.getRank()");
           const leaderboardRes = await leaderboardAPI.getRank(username);
-          console.log("LEADERBOARD RESPONSE", leaderboardRes);
+          // console.log("LEADERBOARD RESPONSE", leaderboardRes);
           setLeaderboardRank(leaderboardRes.rank || null);
           setUserScore(leaderboardRes.score || 0);
         } catch {
@@ -71,10 +71,10 @@ const PublicProfile = () => {
         }
         // Fetch recent submissions
         try {
-          console.log("Calling submissionAPI.getUserSubmissions()");
+          // console.log("Calling submissionAPI.getUserSubmissions()");
           const submissionsRes =
             await submissionAPI.getUserSubmissions(username);
-          console.log("SUBMISSIONS RESPONSE", submissionsRes);
+          // console.log("SUBMISSIONS RESPONSE", submissionsRes);
           setRecentSubmissions(submissionsRes.submissions?.slice(0, 3) || []);
         } catch {
           setRecentSubmissions([]);

@@ -42,7 +42,7 @@ const generateAiResponse = async (code) => {
   `,
   });
   const formatted = formatAsMarkdown(response.text);
-  console.log(formatted);
+  // console.log(formatted);
   return formatted;
 
   //   const response = await ai.models.generateContent({
