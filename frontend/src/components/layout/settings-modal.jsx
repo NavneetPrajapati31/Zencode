@@ -7,6 +7,8 @@ import { Switch } from "../ui/switch";
 import { profileAPI } from "@/utils/api";
 import { uploadFiles } from "@/utils/uploadthing";
 import AvatarUploader from "../comp-554";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/components/auth/use-auth";
 
 const sidebarItems = [
   { key: "basic", label: "Basic Info", icon: <User className="w-5 h-5" /> },
@@ -24,6 +26,8 @@ const sidebarItems = [
 ];
 
 const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [settingsSection, setSettingsSection] = useState("basic");
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -57,19 +61,32 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [avatarError, setAvatarError] = useState("");
   const [publicProfile, setPublicProfile] = useState(user?.isPublicProfile);
+  const [prevUsername, setPrevUsername] = useState(user?.username || "");
 
   useEffect(() => {
-    setBasicInfoForm({
-      avatar: user?.avatar || "",
-      name: user?.name || "",
-      username: user?.username || "",
-      email: user?.email || "",
-    });
-    setSocialsForm(
-      user?.socialProfiles || { github: "", linkedin: "", twitter: "" }
-    );
-    setPublicProfile(user?.isPublicProfile);
-  }, [user]);
+    if (isOpen) {
+      setBasicInfoForm({
+        avatar: user?.avatar || "",
+        name: user?.name || "",
+        username: user?.username || "",
+        email: user?.email || "",
+      });
+      setSocialsForm(
+        user?.socialProfiles || { github: "", linkedin: "", twitter: "" }
+      );
+      setPublicProfile(user?.isPublicProfile);
+      setPrevUsername(user?.username || "");
+    }
+    // Only run on modal open
+  }, [
+    isOpen,
+    user?.avatar,
+    user?.name,
+    user?.username,
+    user?.email,
+    user?.socialProfiles,
+    user?.isPublicProfile,
+  ]);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -122,12 +139,31 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
       const payload = {
         name: basicInfoForm.name,
         username: basicInfoForm.username,
-        avatar: basicInfoForm.avatar,
+        avatar: basicInfoForm.avatar, // always include, even if ""
       };
       const res = await profileAPI.updateBasicInfo(payload);
       setBasicInfoSuccess("Profile updated successfully.");
       if (res && res.user) {
-        setUser(res.user); // Update main user state with new avatar/profile
+        setUser(res.user); // Update main user state
+        setBasicInfoForm({
+          avatar: res.user.avatar || "",
+          name: res.user.name || "",
+          username: res.user.username || "",
+          email: res.user.email || "",
+        }); // Sync form with backend
+        // If a new token is returned, update localStorage and re-authenticate
+        if (res.token) {
+          localStorage.setItem("token", res.token);
+          if (login) await login(res.token);
+        }
+        // Redirect if username changed
+        if (
+          prevUsername &&
+          res.user.username &&
+          prevUsername !== res.user.username
+        ) {
+          navigate(`/profile/${res.user.username}`);
+        }
       }
     } catch (err) {
       setBasicInfoError(err.message || "Failed to update profile.");
@@ -236,11 +272,15 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                         loading={avatarLoading}
                         error={avatarError}
                         onChange={async (croppedBlob) => {
-                          if (!croppedBlob) {
+                          if (croppedBlob === null) {
                             setBasicInfoForm((prev) => ({
                               ...prev,
                               avatar: "",
                             }));
+                            return;
+                          }
+                          if (!croppedBlob) {
+                            // Do not clear avatar if user cancels/crops nothing
                             return;
                           }
                           setAvatarLoading(true);
@@ -256,11 +296,14 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               },
                             });
                             if (res && res.length > 0) {
-                              setBasicInfoForm((prev) => ({
-                                ...prev,
-                                avatar: res[0].url,
-                              }));
-                              handleBasicInfoSave();
+                              const avatarUrl = res[0].ufsUrl || res[0].url;
+                              if (avatarUrl) {
+                                setBasicInfoForm((prev) => ({
+                                  ...prev,
+                                  avatar: avatarUrl,
+                                }));
+                                // Do NOT call handleBasicInfoSave here
+                              }
                             }
                           } catch (err) {
                             setAvatarError(

@@ -7,6 +7,11 @@ const User = require("../models/User");
 const { getUserProgress } = require("../controllers/profile-progress");
 const Submission = require("../models/Submission");
 const dayjs = require("dayjs");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  "935dacfee06f8c8bcf458d9fcab55704d0ceaa6a94e05d68796f9905855282e305b2b970baebaa4507d4837157f2829c737547a779c4558e9de3c5";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 
 const router = express.Router();
 
@@ -165,13 +170,15 @@ router.patch("/basic", authenticateJWT, async (req, res) => {
   try {
     const userId = req.user.id;
     const { name, username, avatar } = req.body;
+    console.log("[DEBUG] PATCH /api/profile/basic userId:", userId);
+    console.log("[DEBUG] PATCH /api/profile/basic body:", req.body);
     if (!name && !username && !avatar) {
       return res.status(400).json({ message: "No fields to update." });
     }
     const update = {};
-    if (name !== undefined) update.name = name;
+    if (name !== undefined && name !== "") update.name = name;
     if (avatar !== undefined) update.avatar = avatar;
-    if (username !== undefined) {
+    if (username !== undefined && username !== "") {
       // Check if username is unique
       const existing = await User.findOne({ username });
       if (existing && existing._id.toString() !== userId) {
@@ -179,12 +186,29 @@ router.patch("/basic", authenticateJWT, async (req, res) => {
       }
       update.username = username;
     }
+    console.log("[DEBUG] PATCH /api/profile/basic update object:", update);
     const user = await User.findByIdAndUpdate(userId, update, { new: true });
+    console.log("[DEBUG] PATCH /api/profile/basic updated user:", user);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json({ message: "Profile updated successfully.", user });
+    let token;
+    if (username && username !== req.user.username) {
+      token = jwt.sign(
+        {
+          id: user._id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          profileComplete: user.profileComplete,
+        },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
+      );
+    }
+    res.json({ message: "Profile updated successfully.", user, token });
   } catch (err) {
+    console.error("[DEBUG] PATCH /api/profile/basic error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
