@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { User, Bell, Lock, Settings, Eye } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "../ui/input";
@@ -62,6 +62,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
   const [avatarError, setAvatarError] = useState("");
   const [publicProfile, setPublicProfile] = useState(user?.isPublicProfile);
   const [prevUsername, setPrevUsername] = useState(user?.username || "");
+  const avatarRef = useRef(user?.avatar || "");
 
   useEffect(() => {
     if (isOpen) {
@@ -71,6 +72,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
         username: user?.username || "",
         email: user?.email || "",
       });
+      avatarRef.current = user?.avatar || "";
       setSocialsForm(
         user?.socialProfiles || { github: "", linkedin: "", twitter: "" }
       );
@@ -139,7 +141,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
       const payload = {
         name: basicInfoForm.name,
         username: basicInfoForm.username,
-        avatar: basicInfoForm.avatar, // always include, even if ""
+        avatar: avatarRef.current, // Always use the latest avatar
       };
       const res = await profileAPI.updateBasicInfo(payload);
       setBasicInfoSuccess("Profile updated successfully.");
@@ -151,6 +153,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
           username: res.user.username || "",
           email: res.user.email || "",
         }); // Sync form with backend
+        avatarRef.current = res.user.avatar || "";
         // If a new token is returned, update localStorage and re-authenticate
         if (res.token) {
           localStorage.setItem("token", res.token);
@@ -302,7 +305,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                                   ...prev,
                                   avatar: avatarUrl,
                                 }));
-                                // Do NOT call handleBasicInfoSave here
+                                avatarRef.current = avatarUrl; // Always update the ref
                               }
                             }
                           } catch (err) {
