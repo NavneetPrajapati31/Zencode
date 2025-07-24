@@ -134,10 +134,6 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
     setBasicInfoForm((prev) => ({ ...prev, [name]: value }));
   };
   const handleBasicInfoSave = async () => {
-    console.log("Saving profile with:", {
-      ...basicInfoForm,
-      avatarRef: avatarRef.current,
-    });
     setBasicInfoLoading(true);
     setBasicInfoError("");
     setBasicInfoSuccess("");
@@ -285,12 +281,9 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               avatar: "",
                             }));
                             avatarRef.current = "";
-                            console.log("Avatar removed");
                             return;
                           }
-                          if (!croppedBlob) {
-                            return;
-                          }
+                          if (!croppedBlob) return;
                           setAvatarLoading(true);
                           setAvatarError("");
                           try {
@@ -303,23 +296,18 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                               },
                             });
-                            console.log("UploadThing response:", res);
-                            if (res && res.length > 0) {
-                              const avatarUrl = res[0].ufsUrl || res[0].url;
-                              console.log("Avatar uploaded:", avatarUrl);
-                              if (avatarUrl) {
-                                setBasicInfoForm((prev) => ({
-                                  ...prev,
-                                  avatar: avatarUrl,
-                                }));
-                                avatarRef.current = avatarUrl;
-                              }
+                            const avatarUrl = res?.[0]?.ufsUrl || res?.[0]?.url;
+                            if (avatarUrl) {
+                              setBasicInfoForm((prev) => ({
+                                ...prev,
+                                avatar: avatarUrl,
+                              }));
+                              avatarRef.current = avatarUrl;
                             }
                           } catch (err) {
                             setAvatarError(
                               err.message || "Failed to upload avatar."
                             );
-                            console.error("Avatar upload error:", err);
                           } finally {
                             setAvatarLoading(false);
                           }
