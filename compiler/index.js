@@ -183,7 +183,9 @@ app.post("/ai-review", async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log("Server is running on port 8000");
   console.log(process.env.TEST_ENV);
   console.log(process.env.BACKEND_URL);

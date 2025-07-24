@@ -22,8 +22,8 @@ import { jwtDecode } from "jwt-decode";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const GITHUB_OAUTH_URL = `${apiUrl}/api/auth/github`;
-const GOOGLE_OAUTH_URL = `${apiUrl}/api/auth/google`;
+const GITHUB_OAUTH_URL = `${apiUrl}/auth/github`;
+const GOOGLE_OAUTH_URL = `${apiUrl}/auth/google`;
 
 const handleGithubOAuth = () => {
   window.location.href = GITHUB_OAUTH_URL;

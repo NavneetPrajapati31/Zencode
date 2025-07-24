@@ -142,7 +142,7 @@ export default function TopNavbar({
         return;
       }
       const compilerUrl = import.meta.env.VITE_COMPILER_URL;
-      const res = await fetch(`http://${compilerUrl}/ai-review`, {
+      const res = await fetch(`${compilerUrl}/ai-review`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code }),

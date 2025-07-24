@@ -90,7 +90,10 @@ const getFileIcon = (lang) => {
 
 const compilerAPI = {
   runCode: async ({ language, code, input, problemId, harness }) => {
-    const res = await fetch("/compiler", {
+    // In your browser console or add to a component temporarily:
+    console.log("VITE_COMPILER_URL:", import.meta.env.VITE_COMPILER_URL);
+    const compilerUrl = import.meta.env.VITE_COMPILER_URL || "/compiler";
+    const res = await fetch(`${compilerUrl}/compiler`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ language, code, input, problemId, harness }),

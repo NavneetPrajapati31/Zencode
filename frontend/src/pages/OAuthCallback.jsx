@@ -64,7 +64,7 @@ const OAuthCallback = () => {
     setLoading(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      const res = await fetch(`${apiUrl}/api/auth/complete-profile`, {
+      const res = await fetch(`${apiUrl}/auth/complete-profile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

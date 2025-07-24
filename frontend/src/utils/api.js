@@ -195,7 +195,7 @@ export const profileAPI = {
 export const compilerAPI = {
   runCode: async ({ language, code }) => {
     const compilerUrl = import.meta.env.VITE_COMPILER_URL;
-    const response = await fetch(`http://${compilerUrl}/compiler`, {
+    const response = await fetch(`${compilerUrl}/compiler`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ language, code }),
