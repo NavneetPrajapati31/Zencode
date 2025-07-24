@@ -303,6 +303,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                               },
                             });
+                            console.log("UploadThing response:", res);
                             if (res && res.length > 0) {
                               const avatarUrl = res[0].ufsUrl || res[0].url;
                               console.log("Avatar uploaded:", avatarUrl);
@@ -318,6 +319,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                             setAvatarError(
                               err.message || "Failed to upload avatar."
                             );
+                            console.error("Avatar upload error:", err);
                           } finally {
                             setAvatarLoading(false);
                           }
