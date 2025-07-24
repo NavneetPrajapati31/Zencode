@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Bell, Lock, Settings, Eye } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "../ui/input";
@@ -56,7 +56,6 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
   const [visibilitySuccess, setVisibilitySuccess] = useState("");
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [avatarError, setAvatarError] = useState("");
-  const fileInputRef = useRef(null);
   const [publicProfile, setPublicProfile] = useState(user?.isPublicProfile);
 
   useEffect(() => {
@@ -125,8 +124,11 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
         username: basicInfoForm.username,
         avatar: basicInfoForm.avatar,
       };
-      await profileAPI.updateBasicInfo(payload);
+      const res = await profileAPI.updateBasicInfo(payload);
       setBasicInfoSuccess("Profile updated successfully.");
+      if (res && res.user) {
+        setUser(res.user); // Update main user state with new avatar/profile
+      }
     } catch (err) {
       setBasicInfoError(err.message || "Failed to update profile.");
     } finally {
@@ -163,28 +165,6 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
       setVisibilityError(err.message || "Failed to update visibility.");
     } finally {
       setVisibilityLoading(false);
-    }
-  };
-  const handleAvatarFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setAvatarLoading(true);
-    setAvatarError("");
-    try {
-      const res = await uploadFiles("avatarUploader", {
-        files: [file],
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      if (res && res.length > 0) {
-        setBasicInfoForm((prev) => ({ ...prev, avatar: res[0].url }));
-        handleBasicInfoSave();
-      }
-    } catch (err) {
-      setAvatarError(err.message || "Failed to upload avatar.");
-    } finally {
-      setAvatarLoading(false);
     }
   };
 
