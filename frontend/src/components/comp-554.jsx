@@ -125,12 +125,21 @@ export function AvatarUploader({ value, onChange, loading, error }) {
     previousFileIdRef.current = fileId;
   }, [fileId]);
 
+  // Add a log at the top of the onChange handler
+  const wrappedOnChange = (...args) => {
+    console.log("AvatarUploader onChange triggered", ...args);
+    onChange && onChange(...args);
+  };
+
   return (
     <div className="flex flex-col items-start mt-2 gap-0">
       <div className="relative inline-flex">
         <button
           className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 focus-visible:border-ring focus-visible:ring-ring/50 relative flex size-16 items-center justify-center overflow-hidden rounded-full border border-dashed transition-colors outline-none focus-visible:ring-[3px] has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none cursor-pointer"
-          onClick={openFileDialog}
+          onClick={(e) => {
+            console.log("AvatarUploader button clicked");
+            openFileDialog(e);
+          }}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
@@ -171,6 +180,7 @@ export function AvatarUploader({ value, onChange, loading, error }) {
           className="sr-only"
           aria-label="Upload image file"
           tabIndex={-1}
+          onChange={wrappedOnChange}
         />
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
