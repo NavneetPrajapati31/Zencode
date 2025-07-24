@@ -134,6 +134,10 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
     setBasicInfoForm((prev) => ({ ...prev, [name]: value }));
   };
   const handleBasicInfoSave = async () => {
+    console.log("Saving profile with:", {
+      ...basicInfoForm,
+      avatarRef: avatarRef.current,
+    });
     setBasicInfoLoading(true);
     setBasicInfoError("");
     setBasicInfoSuccess("");
@@ -280,10 +284,11 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               ...prev,
                               avatar: "",
                             }));
+                            avatarRef.current = "";
+                            console.log("Avatar removed");
                             return;
                           }
                           if (!croppedBlob) {
-                            // Do not clear avatar if user cancels/crops nothing
                             return;
                           }
                           setAvatarLoading(true);
@@ -300,12 +305,13 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                             });
                             if (res && res.length > 0) {
                               const avatarUrl = res[0].ufsUrl || res[0].url;
+                              console.log("Avatar uploaded:", avatarUrl);
                               if (avatarUrl) {
                                 setBasicInfoForm((prev) => ({
                                   ...prev,
                                   avatar: avatarUrl,
                                 }));
-                                avatarRef.current = avatarUrl; // Always update the ref
+                                avatarRef.current = avatarUrl;
                               }
                             }
                           } catch (err) {
