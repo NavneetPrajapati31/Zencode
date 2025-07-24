@@ -228,8 +228,9 @@ const Leaderboard = () => {
     setLoading(true);
     setError("");
     try {
+      const apiUrl = import.meta.env.VITE_API_URL;
       const res = await fetch(
-        `/api/leaderboard?page=${pageNum}&limit=${PAGE_SIZE}`
+        `${apiUrl}/leaderboard?page=${pageNum}&limit=${PAGE_SIZE}`
       );
       if (!res.ok) throw new Error("Failed to fetch leaderboard");
       const json = await res.json();
