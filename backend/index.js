@@ -40,6 +40,7 @@ const corsOptions = {
     "Origin",
     "Access-Control-Request-Method",
     "Access-Control-Request-Headers",
+    // UploadThing custom headers
     "x-uploadthing-package",
     "x-uploadthing-version",
     "x-uploadthing-token",
@@ -53,8 +54,8 @@ const corsOptions = {
     "x-uploadthing-file-url",
     "x-uploadthing-file-id",
     "x-uploadthing-file-key",
-    "x-uploadthing-file-type",
-    "x-uploadthing-file-size",
+    // Tracing headers (Vercel, Sentry, etc)
+    "traceparent",
   ],
 };
 
