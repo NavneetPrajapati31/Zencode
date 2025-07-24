@@ -125,12 +125,6 @@ export function AvatarUploader({ value, onChange, loading, error }) {
     previousFileIdRef.current = fileId;
   }, [fileId]);
 
-  // Add a log at the top of the onChange handler
-  const wrappedOnChange = (...args) => {
-    console.log("AvatarUploader onChange triggered", ...args);
-    onChange && onChange(...args);
-  };
-
   return (
     <div className="flex flex-col items-start mt-2 gap-0">
       <div className="relative inline-flex">
@@ -180,7 +174,6 @@ export function AvatarUploader({ value, onChange, loading, error }) {
           className="sr-only"
           aria-label="Upload image file"
           tabIndex={-1}
-          onChange={wrappedOnChange}
         />
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
