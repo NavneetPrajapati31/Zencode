@@ -31,32 +31,6 @@ const corsOptions = {
   origin: process.env.FRONTEND_URL || "http://localhost:5173",
   optionsSuccessStatus: 200,
   credentials: true,
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "X-Content-Type-Options",
-    "Accept",
-    "X-Requested-With",
-    "Origin",
-    "Access-Control-Request-Method",
-    "Access-Control-Request-Headers",
-    // UploadThing custom headers
-    "x-uploadthing-package",
-    "x-uploadthing-version",
-    "x-uploadthing-token",
-    "x-uploadthing-signature",
-    "x-uploadthing-timestamp",
-    "x-uploadthing-nonce",
-    "x-uploadthing-file-name",
-    "x-uploadthing-file-size",
-    "x-uploadthing-file-type",
-    "x-uploadthing-file-path",
-    "x-uploadthing-file-url",
-    "x-uploadthing-file-id",
-    "x-uploadthing-file-key",
-    // Tracing headers (Vercel, Sentry, etc)
-    "traceparent",
-  ],
 };
 
 app.use(cors(corsOptions));
