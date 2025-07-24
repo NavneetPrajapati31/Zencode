@@ -11,7 +11,12 @@ const dotenv = require("dotenv");
 const generateAiResponse = require("./generateAiResponse");
 dotenv.config();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
