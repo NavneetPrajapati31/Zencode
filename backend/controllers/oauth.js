@@ -104,8 +104,9 @@ const oauthCallback = async (req, res) => {
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
+      // Add token to the redirect URL for frontend to complete login
       return res.redirect(
-        `${FRONTEND_URL}/oauth/callback?profileComplete=${user.profileComplete}`
+        `${FRONTEND_URL}/oauth/callback?token=${token}&profileComplete=${user.profileComplete}`
       );
     } else {
       // In dev: pass token in query param for easier debugging
