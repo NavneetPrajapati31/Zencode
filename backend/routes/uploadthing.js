@@ -6,5 +6,6 @@ export const uploadRouter = createRouteHandler({
   config: {
     uploadthingId: process.env.UPLOADTHING_APP_ID,
     uploadthingSecret: process.env.UPLOADTHING_SECRET,
+    uploadthingToken: process.env.UPLOADTHING_TOKEN,
   },
 });
