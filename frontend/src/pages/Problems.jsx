@@ -187,7 +187,7 @@ function ProblemFormModal({ open, onClose, onSubmit, initialData, loading }) {
 
 export default function ProblemsPage() {
   const { isAuthenticated, user, loading: authLoading } = useAuth();
-  const username = user?.username;
+  // const username = user?.username;
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -301,65 +301,91 @@ export default function ProblemsPage() {
     <div className="min-h-screen bg-background text-foreground theme-transition">
       <div className="max-w-full mx-auto rounded-lg shadow-none px-6 sm:px-12 mb-8 theme-transition">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-4 space-y-4 sm:space-y-0 sm:space-x-3 theme-transition">
-          <Link to={`/profile/${username}`}>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between flex-wrap mb-4 space-y-4 md:space-y-0 md:space-x-3 theme-transition">
+          {/* <Link to={`/profile/${username}`}>
             <Button
               className="bg-card rounded-lg text-muted-foreground border border-border hover:bg-card font-medium flex items-center gap-2 !shadow-none theme-transition"
               aria-label="back to dashboard"
             >
-              <ChevronLeft className="w-4 h-4" /> Back to Profile
+              <ChevronLeft className="w-4 h-4" />
+              <span className="hidden md:block">Back to Profile</span>
             </Button>
-          </Link>
-          <div className="relative flex-grow w-full sm:w-auto theme-transition">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground theme-transition" />
-            <Input
-              type="text"
-              placeholder="Search problems"
-              className="pl-10 pr-4 py-2 rounded-lg !bg-card placeholder:text-muted-foreground border border-border !focus:ring-0 focus:border-transparent w-full !shadow-none theme-transition"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              aria-label="Search problems"
-            />
-          </div>
-          {/* Sort by Difficulty Filter */}
-          <div className="flex items-center gap-2">
-            <Select
-              value={difficultyFilter}
-              onValueChange={setDifficultyFilter}
-            >
-              <SelectTrigger
-                id="difficulty-select"
-                className="w-[120px] shadow-none"
-              >
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  value="all"
-                  className="text-muted-foreground  focus:text-foreground"
+          </Link> */}
+          {/* Search, Filter, and Tabs Row */}
+          <div className="flex flex-col md:flex-row w-full gap-2">
+            <div className="flex flex-row w-full gap-2">
+              <div className="relative flex-grow w-full sm:w-auto theme-transition">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground theme-transition" />
+                <Input
+                  type="text"
+                  placeholder="Search problems"
+                  className="pl-10 pr-4 py-2 rounded-lg !bg-card
+                  placeholder:text-sm placeholder:text-muted-foreground border border-border !focus:ring-0 focus:border-transparent w-full !shadow-none theme-transition"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  aria-label="Search problems"
+                />
+              </div>
+              <div className="flex items-center">
+                <Select
+                  value={difficultyFilter}
+                  onValueChange={setDifficultyFilter}
                 >
-                  All
-                </SelectItem>
-                <SelectItem
-                  value="Easy"
-                  className="text-green-500  focus:text-green-500"
-                >
-                  Easy
-                </SelectItem>
-                <SelectItem
-                  value="Medium"
-                  className="text-primary focus:text-primary"
-                >
-                  Medium
-                </SelectItem>
-                <SelectItem
-                  value="Hard"
-                  className="text-destructive focus:text-destructive"
-                >
-                  Hard
-                </SelectItem>
-              </SelectContent>
-            </Select>
+                  <SelectTrigger
+                    id="difficulty-select"
+                    className="w-[120px] shadow-none"
+                  >
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem
+                      value="all"
+                      className="text-muted-foreground  focus:text-foreground"
+                    >
+                      All
+                    </SelectItem>
+                    <SelectItem
+                      value="Easy"
+                      className="text-green-500  focus:text-green-500"
+                    >
+                      Easy
+                    </SelectItem>
+                    <SelectItem
+                      value="Medium"
+                      className="text-primary focus:text-primary"
+                    >
+                      Medium
+                    </SelectItem>
+                    <SelectItem
+                      value="Hard"
+                      className="text-destructive focus:text-destructive"
+                    >
+                      Hard
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="w-full md:w-auto mt-0 md:mt-0">
+              <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+                <TabsList className="w-full md:w-auto flex">
+                  <TabsTrigger
+                    value="grid-view"
+                    className="rounded-lg px-4 cursor-pointer w-1/2 md:w-auto"
+                  >
+                    <RiLayoutGridLine className="h-3 w-3" />
+                    Grid View
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="list-view"
+                    className="rounded-lg px-4 cursor-pointer w-1/2 md:w-auto"
+                  >
+                    <RiListCheck className="h-3 w-3" />
+                    List View
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </div>
           {isAuthenticated && user?.role === "admin" && (
             <>
@@ -382,25 +408,6 @@ export default function ProblemsPage() {
               </Button>
             </>
           )}
-          {/* Tab Triggers */}
-          <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-            <TabsList>
-              <TabsTrigger
-                value="grid-view"
-                className="rounded-lg px-4 cursor-pointer"
-              >
-                <RiLayoutGridLine className="h-3 w-3" />
-                Grid View
-              </TabsTrigger>
-              <TabsTrigger
-                value="list-view"
-                className="rounded-lg px-4 cursor-pointer"
-              >
-                <RiListCheck className="h-3 w-3" />
-                List View
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
         </div>
 
         {/* Render selected tab content OUTSIDE */}

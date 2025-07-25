@@ -248,19 +248,21 @@ const Heatmap = ({ data }) => {
 
   return (
     <Card className="w-full max-w-full px-6 bg-card rounded-xl gap-0 border-none shadow-none theme-transition">
-      <CardHeader className="flex flex-row items-center justify-between p-0">
+      <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between p-0">
         <div className="flex items-center gap-2 text-sm text-muted-foreground theme-transition">
-          <span className="font-semibold text-sm">{totalSubmissions}</span>{" "}
+          <span className="font-semibold text-sm truncate">
+            {totalSubmissions}
+          </span>{" "}
           submissions in the past one year
         </div>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground theme-transition">
+        <div className="flex items-center justify-between gap-4 text-sm text-muted-foreground theme-transition truncate">
           <span>
             Total active days:{" "}
-            <span className="font-semibold text-gh-text-light">
+            <span className="font-semibold text-gh-text-light ">
               {totalActiveDays}
             </span>
           </span>
-          <span>
+          <span className="truncate">
             Max streak:{" "}
             <span className="font-semibold text-gh-text-light">
               {maxStreak}
