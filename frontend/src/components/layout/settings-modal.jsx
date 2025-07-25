@@ -9,6 +9,9 @@ import AvatarUploader from "../comp-554";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/use-auth";
 
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
 const sidebarItems = [
   { key: "basic", label: "Basic Info", icon: <User className="w-5 h-5" /> },
   { key: "socials", label: "Socials", icon: <Bell className="w-5 h-5" /> },
@@ -274,107 +277,45 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                         loading={avatarLoading}
                         error={avatarError}
                         onChange={async (croppedBlob) => {
-                          console.log(
-                            "[AvatarUploader] onChange called with:",
-                            croppedBlob
-                          );
                           if (croppedBlob === null) {
                             setBasicInfoForm((prev) => ({
                               ...prev,
                               avatar: "",
                             }));
-                            console.log(
-                              "[AvatarUploader] Avatar cleared (null)"
-                            );
-                            alert("Avatar cleared (null)");
                             return;
                           }
-                          if (!croppedBlob) {
-                            console.log(
-                              "[AvatarUploader] No croppedBlob, returning early"
-                            );
-                            alert("No croppedBlob, returning early");
-                            return;
-                          }
+                          if (!croppedBlob) return;
                           setAvatarLoading(true);
                           setAvatarError("");
                           try {
-                            const file = new File([croppedBlob], "avatar.jpg", {
-                              type: "image/jpeg",
-                            });
-                            console.log(
-                              "[AvatarUploader] Uploading file (manual fetch):",
-                              file
-                            );
-                            alert(
-                              "Uploading file to UploadThing (manual fetch)..."
-                            );
                             const formData = new FormData();
-                            formData.append("files", file);
-                            const response = await fetch(
-                              "https://api.zencode.space/api/uploadthing?actionType=upload&slug=avatarUploader",
+                            formData.append("file", croppedBlob);
+                            formData.append(
+                              "upload_preset",
+                              CLOUDINARY_UPLOAD_PRESET
+                            );
+                            const res = await fetch(
+                              `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
                               {
                                 method: "POST",
-                                headers: {
-                                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                                },
                                 body: formData,
                               }
                             );
-                            const data = await response.json();
-                            console.log(
-                              "[AvatarUploader] Manual fetch upload response:",
-                              data
-                            );
-                            alert(
-                              "Manual fetch upload response: " +
-                                JSON.stringify(data)
-                            );
-                            const avatarUrl =
-                              Array.isArray(data) && data[0]?.url;
-                            console.log(
-                              "[AvatarUploader] Avatar URL to set (manual fetch):",
-                              avatarUrl
-                            );
-                            alert(
-                              "Avatar URL to set (manual fetch): " + avatarUrl
-                            );
-                            if (avatarUrl) {
-                              setBasicInfoForm((prev) => {
-                                const updated = { ...prev, avatar: avatarUrl };
-                                console.log(
-                                  "[AvatarUploader] Updated basicInfoForm.avatar (manual fetch):",
-                                  updated.avatar
-                                );
-                                alert(
-                                  "Avatar URL set in state (manual fetch): " +
-                                    updated.avatar
-                                );
-                                return updated;
-                              });
+                            const data = await res.json();
+                            if (data.secure_url) {
+                              setBasicInfoForm((prev) => ({
+                                ...prev,
+                                avatar: data.secure_url,
+                              }));
                             } else {
-                              alert(
-                                "No avatarUrl found in manual fetch response! " +
-                                  JSON.stringify(data)
-                              );
+                              setAvatarError("Cloudinary upload failed");
                             }
                           } catch (err) {
                             setAvatarError(
                               err.message || "Failed to upload avatar."
                             );
-                            console.error(
-                              "[AvatarUploader] Avatar upload error (manual fetch):",
-                              err
-                            );
-                            alert(
-                              "Avatar upload error (manual fetch): " +
-                                (err.message || err)
-                            );
                           } finally {
                             setAvatarLoading(false);
-                            alert(
-                              "AvatarUploader finally block reached (manual fetch)"
-                            );
                           }
                         }}
                       />
