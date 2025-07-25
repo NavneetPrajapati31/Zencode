@@ -29,7 +29,7 @@ export default function Navbar({ sticky = false }) {
 
   const { user, setUser, isAuthenticated, logout } = useAuth();
   const { theme, toggleTheme, isTransitioning } = useTheme();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null); // 'mobile' | 'desktop' | null
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
@@ -111,14 +111,6 @@ export default function Navbar({ sticky = false }) {
             </button>
             {!isAuthenticated ? (
               <>
-                {/* <Link to={"signin"}>
-                <Button
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  Login
-                </Button>
-              </Link> */}
                 <Link to={"signup"}>
                   <button
                     className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
@@ -132,12 +124,20 @@ export default function Navbar({ sticky = false }) {
                 </Link>
               </>
             ) : (
-              <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+              <DropdownMenu
+                open={openDropdown === "desktop"}
+                onOpenChange={(val) => setOpenDropdown(val ? "desktop" : null)}
+              >
                 <DropdownMenuTrigger asChild>
                   <button
                     className="focus:outline-none focus-visible:ring-0 rounded-full hover:cursor-pointer"
                     tabIndex={0}
                     aria-label="User menu"
+                    onClick={() =>
+                      setOpenDropdown(
+                        openDropdown === "desktop" ? null : "desktop"
+                      )
+                    }
                   >
                     <Avatar className="h-8.5 w-8.5 theme-transition">
                       <AvatarImage
@@ -157,7 +157,7 @@ export default function Navbar({ sticky = false }) {
                   </button>
                 </DropdownMenuTrigger>
                 <AnimatePresence>
-                  {dropdownOpen && (
+                  {openDropdown === "desktop" && (
                     <DropdownMenuContent
                       align="end"
                       className="min-w-56 mt-2 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
@@ -201,45 +201,10 @@ export default function Navbar({ sticky = false }) {
                           </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator className="theme-transition" />
-                        {/* <DropdownMenuItem
-                          onClick={toggleTheme}
-                          className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground theme-transition"
-                          aria-label={
-                            theme === "dark"
-                              ? "Switch to light mode"
-                              : "Switch to dark mode"
-                          }
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              toggleTheme();
-                            }
-                          }}
-                        >
-                          {theme === "dark" ? (
-                            <Sun className="h-4 w-4 text-primary theme-transition" />
-                          ) : (
-                            <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
-                          )}
-                          <span className="text-sm theme-transition">
-                            {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                          </span>
-                        </DropdownMenuItem> */}
-                        {/* {user && user.role === "admin" && (
-                          <DropdownMenuItem
-                            onClick={() => {
-                              navigate("/dashboard");
-                            }}
-                            className="text-muted-foreground cursor-pointer theme-transition"
-                            aria-label="admin dashboard"
-                          >
-                            Admin Dashboard
-                          </DropdownMenuItem>
-                        )} */}
                         <DropdownMenuItem
                           onClick={() => {
                             navigate("/profile");
+                            setOpenDropdown(null);
                           }}
                           className="text-muted-foreground cursor-pointer theme-transition"
                           aria-label="profile"
@@ -247,14 +212,20 @@ export default function Navbar({ sticky = false }) {
                           My Profile
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={handleOpenSettingsModal}
+                          onClick={() => {
+                            handleOpenSettingsModal();
+                            setOpenDropdown(null);
+                          }}
                           className="text-muted-foreground cursor-pointer theme-transition"
                           aria-label="Logout"
                         >
                           Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={logout}
+                          onClick={() => {
+                            logout();
+                            setOpenDropdown(null);
+                          }}
                           className="text-destructive focus:text-destructive cursor-pointer theme-transition"
                           aria-label="Logout"
                         >
@@ -269,63 +240,134 @@ export default function Navbar({ sticky = false }) {
           </div>
 
           {/* Mobile Navigation */}
-          <Sheet>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className="theme-transition">
-                <Menu className="h-6 w-6 text-foreground" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="p-6 bg-background border-border text-foreground theme-transition"
-            >
-              <div className="flex flex-col justify-center items-start gap-2 py-0">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    className="text-sm font-medium text-foreground hover:text-primary theme-transition"
-                  >
-                    {link.name}
-                  </a>
-                ))}
-                {/* Theme Toggler Mobile */}
-                {/* <button
-                  onClick={toggleTheme}
-                  disabled={isTransitioning}
-                  aria-label={
+          <div className="md:hidden">
+            {!isAuthenticated ? (
+              <Link to={"signup"}>
+                <button
+                  className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
                     theme === "dark"
-                      ? "Switch to light mode"
-                      : "Switch to dark mode"
-                  }
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggleTheme();
-                    }
-                  }}
-                  className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer border border-border ${
-                    theme === "dark" ? "bg-accent" : "bg-card"
+                      ? "bg-accent border border-border"
+                      : "bg-card border border-border"
                   }`}
                 >
-                  {theme === "dark" ? (
-                    <Sun className="h-4 w-4 text-muted-foreground theme-transition" />
-                  ) : (
-                    <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
-                  )}
-                </button> */}
-                <button
-                  variant="ghost"
-                  size={"sm"}
-                  className="!py-0 text-sm font-medium text-primary justify-start theme-transition"
-                >
-                  Login
+                  Sign Up
                 </button>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </Link>
+            ) : (
+              <DropdownMenu
+                open={openDropdown === "mobile"}
+                onOpenChange={(val) => setOpenDropdown(val ? "mobile" : null)}
+              >
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="focus:outline-none focus-visible:ring-0 rounded-full hover:cursor-pointer"
+                    tabIndex={0}
+                    aria-label="User menu"
+                    onClick={() =>
+                      setOpenDropdown(
+                        openDropdown === "mobile" ? null : "mobile"
+                      )
+                    }
+                  >
+                    <Avatar className="h-8.5 w-8.5 theme-transition">
+                      <AvatarImage
+                        src={user?.avatar}
+                        alt={user?.name || user?.email || "User"}
+                      />
+                      <AvatarFallback className="text-sm border border-border text-muted-foreground theme-transition">
+                        {user?.name
+                          ? user.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .toUpperCase()
+                          : "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <AnimatePresence>
+                  {openDropdown === "mobile" && (
+                    <DropdownMenuContent
+                      align="end"
+                      className="min-w-56 mt-2 shadow-none border border-border outline-none ring-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                      asChild
+                      forceMount
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.92 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.92 }}
+                        transition={{
+                          duration: 0.32,
+                          ease: [0.4, 0, 0.2, 1],
+                        }}
+                      >
+                        <DropdownMenuLabel className="theme-transition">
+                          <div className="flex items-center text-lg gap-2 theme-transition">
+                            <Avatar className="h-10 w-10 theme-transition">
+                              <AvatarImage
+                                src={user?.avatar}
+                                alt={user?.name || user?.email || "User"}
+                              />
+                              <AvatarFallback className="text-sm border border-border theme-transition">
+                                {user?.name
+                                  ? user.name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")
+                                      .toUpperCase()
+                                  : "U"}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col theme-transition">
+                              <span className="font-medium text-sm theme-transition">
+                                {user?.name || "User"}
+                              </span>
+                              <span className="text-xs text-muted-foreground theme-transition">
+                                {user?.email}
+                              </span>
+                            </div>
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator className="theme-transition" />
+                        <DropdownMenuItem
+                          onClick={() => {
+                            navigate("/profile");
+                            setOpenDropdown(null);
+                          }}
+                          className="text-muted-foreground cursor-pointer theme-transition"
+                          aria-label="profile"
+                        >
+                          My Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            handleOpenSettingsModal();
+                            setOpenDropdown(null);
+                          }}
+                          className="text-muted-foreground cursor-pointer theme-transition"
+                          aria-label="Logout"
+                        >
+                          Settings
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            logout();
+                            setOpenDropdown(null);
+                          }}
+                          className="text-destructive focus:text-destructive cursor-pointer theme-transition"
+                          aria-label="Logout"
+                        >
+                          Log out
+                        </DropdownMenuItem>
+                      </motion.div>
+                    </DropdownMenuContent>
+                  )}
+                </AnimatePresence>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
       </header>
       {/* Settings Modal - Only for the highlighted button */}
