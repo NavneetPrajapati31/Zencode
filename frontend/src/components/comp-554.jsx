@@ -140,14 +140,20 @@ export function AvatarUploader({ value, onChange, loading, error }) {
           disabled={loading}
         >
           {value ? (
-            <img
-              className="size-full object-cover"
-              src={value}
-              alt="User avatar"
-              width={64}
-              height={64}
-              style={{ objectFit: "cover" }}
-            />
+            ((() => {
+              console.log("AvatarUploader value prop:", value);
+            })(),
+            (
+              <img
+                key={value}
+                className="size-full object-cover"
+                src={value}
+                alt="User avatar"
+                width={64}
+                height={64}
+                style={{ objectFit: "cover" }}
+              />
+            ))
           ) : (
             <div aria-hidden="true">
               <CircleUserRoundIcon className="size-4 opacity-60" />

@@ -298,10 +298,14 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                             });
                             const avatarUrl = res?.[0]?.ufsUrl || res?.[0]?.url;
                             if (avatarUrl) {
-                              setBasicInfoForm((prev) => ({
-                                ...prev,
-                                avatar: avatarUrl,
-                              }));
+                              setBasicInfoForm((prev) => {
+                                const updated = { ...prev, avatar: avatarUrl };
+                                console.log(
+                                  "Updated basicInfoForm.avatar:",
+                                  updated.avatar
+                                );
+                                return updated;
+                              });
                               avatarRef.current = avatarUrl;
                             }
                           } catch (err) {
