@@ -71,6 +71,7 @@ async function getCroppedImg(
 }
 
 export function AvatarUploader({ value, onChange, loading, error }) {
+  console.log("Rendering AvatarUploader, value prop:", value);
   const [
     { files, isDragging },
     {

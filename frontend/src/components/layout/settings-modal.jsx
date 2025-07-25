@@ -64,6 +64,8 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
   const [prevUsername, setPrevUsername] = useState(user?.username || "");
   const avatarRef = useRef(user?.avatar || "");
 
+  console.log("Rendering SettingsModal, avatar:", basicInfoForm?.avatar);
+
   useEffect(() => {
     if (isOpen) {
       setBasicInfoForm({
