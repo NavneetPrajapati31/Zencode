@@ -273,7 +273,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                         Change Avatar
                       </label>
                       <AvatarUploader
-                        value={basicInfoForm.avatar}
+                        value={avatarRef.current}
                         loading={avatarLoading}
                         error={avatarError}
                         onChange={async (croppedBlob) => {
@@ -304,6 +304,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                             });
                             const avatarUrl = res?.[0]?.ufsUrl || res?.[0]?.url;
                             if (avatarUrl) {
+                              avatarRef.current = avatarUrl;
                               setBasicInfoForm((prev) => {
                                 const updated = { ...prev, avatar: avatarUrl };
                                 console.log(
@@ -312,7 +313,6 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                                 );
                                 return updated;
                               });
-                              avatarRef.current = avatarUrl;
                             }
                           } catch (err) {
                             setAvatarError(
