@@ -5,7 +5,6 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Switch } from "../ui/switch";
 import { profileAPI } from "@/utils/api";
-import { uploadFiles } from "@/utils/uploadthing";
 import AvatarUploader from "../comp-554";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/use-auth";
@@ -304,50 +303,59 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               type: "image/jpeg",
                             });
                             console.log(
-                              "[AvatarUploader] Uploading file:",
+                              "[AvatarUploader] Uploading file (manual fetch):",
                               file
                             );
-                            alert("Uploading file to UploadThing...");
-                            const res = await uploadFiles("avatarUploader", {
-                              files: [file],
-                              headers: {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                              },
-                            });
+                            alert(
+                              "Uploading file to UploadThing (manual fetch)..."
+                            );
+                            const formData = new FormData();
+                            formData.append("files", file);
+                            const response = await fetch(
+                              "https://api.zencode.space/api/uploadthing?actionType=upload&slug=avatarUploader",
+                              {
+                                method: "POST",
+                                headers: {
+                                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                },
+                                body: formData,
+                              }
+                            );
+                            const data = await response.json();
                             console.log(
-                              "[AvatarUploader] uploadFiles raw result:",
-                              res,
-                              Array.isArray(res)
+                              "[AvatarUploader] Manual fetch upload response:",
+                              data
                             );
                             alert(
-                              "uploadFiles raw result: " +
-                                JSON.stringify(res) +
-                                " | isArray: " +
-                                Array.isArray(res)
+                              "Manual fetch upload response: " +
+                                JSON.stringify(data)
                             );
                             const avatarUrl =
-                              res && Array.isArray(res) && res[0]?.url;
+                              Array.isArray(data) && data[0]?.url;
                             console.log(
-                              "[AvatarUploader] Avatar URL to set:",
+                              "[AvatarUploader] Avatar URL to set (manual fetch):",
                               avatarUrl
                             );
-                            alert("Avatar URL to set: " + avatarUrl);
+                            alert(
+                              "Avatar URL to set (manual fetch): " + avatarUrl
+                            );
                             if (avatarUrl) {
                               setBasicInfoForm((prev) => {
                                 const updated = { ...prev, avatar: avatarUrl };
                                 console.log(
-                                  "[AvatarUploader] Updated basicInfoForm.avatar:",
+                                  "[AvatarUploader] Updated basicInfoForm.avatar (manual fetch):",
                                   updated.avatar
                                 );
                                 alert(
-                                  "Avatar URL set in state: " + updated.avatar
+                                  "Avatar URL set in state (manual fetch): " +
+                                    updated.avatar
                                 );
                                 return updated;
                               });
                             } else {
                               alert(
-                                "No avatarUrl found in UploadThing response! " +
-                                  JSON.stringify(res)
+                                "No avatarUrl found in manual fetch response! " +
+                                  JSON.stringify(data)
                               );
                             }
                           } catch (err) {
@@ -355,15 +363,18 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               err.message || "Failed to upload avatar."
                             );
                             console.error(
-                              "[AvatarUploader] Avatar upload error:",
+                              "[AvatarUploader] Avatar upload error (manual fetch):",
                               err
                             );
                             alert(
-                              "Avatar upload error: " + (err.message || err)
+                              "Avatar upload error (manual fetch): " +
+                                (err.message || err)
                             );
                           } finally {
                             setAvatarLoading(false);
-                            alert("AvatarUploader finally block reached");
+                            alert(
+                              "AvatarUploader finally block reached (manual fetch)"
+                            );
                           }
                         }}
                       />
