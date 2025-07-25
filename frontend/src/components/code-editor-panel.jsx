@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/tooltip";
 import nightOwlTheme from "./Night Owl.json";
 import { useTheme } from "@/components/theme-context-utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const SUPPORTED_LANGUAGES = [
   {
@@ -211,6 +212,8 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isVResizing]);
+
+  const isMobile = useIsMobile();
 
   // --- Helpers ---
   const langObj = SUPPORTED_LANGUAGES.find((l) => l.prism === language);
@@ -590,8 +593,11 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
     <div className="flex flex-col h-full overflow-hidden bg-background text-foreground rounded-none theme-transition">
       {/* Top Coding Panel: Header + Editor */}
       <div
-        style={{ height: `${topPanelHeight}%`, minHeight: "120px" }}
-        className="flex flex-col"
+        style={{
+          height: isMobile ? "100%" : `${topPanelHeight}%`,
+          minHeight: isMobile ? "100%" : "120px",
+        }}
+        className="flex flex-col h-full"
       >
         {/* Header */}
         <div className="flex items-center justify-between pl-4 pr-2 py-2 border-b border-border theme-transition space-x-3">
@@ -617,7 +623,9 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
           </div>
         </div>
         {/* Editor */}
-        <div className="flex-1 flex flex-col theme-transition h-full">
+        <div
+          className={`flex-1 flex flex-col theme-transition h-full ${isMobile ? "min-h-[50vh]" : ""}`}
+        >
           <div className="flex-1 relative bg-background border-none theme-transition h-full">
             <div className="absolute inset-0 flex h-full overflow-y-auto no-scrollbar theme-transition">
               <div className="flex w-full h-full theme-transition">
@@ -722,8 +730,11 @@ const CodeEditorPanel = forwardRef(function CodeEditorPanel(
       </div>
       {/* Tab Content Panel */}
       <div
-        style={{ height: `${100 - topPanelHeight}%`, minHeight: "120px" }}
-        className="flex-1 flex flex-col"
+        style={{
+          height: isMobile ? "100%" : `${100 - topPanelHeight}%`,
+          minHeight: isMobile ? "50vh" : "120px",
+        }}
+        className="flex-1 flex flex-col h-full"
       >
         {/* Tab Triggers for Custom and Output */}
         <div className="h-10 flex items-center w-full border-b-2 border-border space-x-0 mb-4 theme-transition">

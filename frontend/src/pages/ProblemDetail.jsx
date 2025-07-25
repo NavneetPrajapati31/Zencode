@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, History, RefreshCw, ArrowLeft } from "lucide-react";
 import SubmissionList from "@/components/problems/submission-list";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -28,6 +29,7 @@ export default function ProblemDetailPage() {
   const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage
   const [isDragging, setIsDragging] = useState(false);
   const dividerRef = useRef(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -194,7 +196,9 @@ export default function ProblemDetailPage() {
   return (
     <ProblemsSidebarProvider>
       <ProblemsSidebar />
-      <div className="h-screen bg-background text-foreground flex flex-col theme-transition no-scrollbar">
+      <div
+        className={`${isMobile ? "min-h-screen" : "h-screen"} overflow-y-auto bg-background text-foreground flex flex-col theme-transition no-scrollbar`}
+      >
         <TopNavbar
           onRun={() => codeEditorRef.current?.run()}
           onSubmit={() => codeEditorRef.current?.submit()}
@@ -205,13 +209,13 @@ export default function ProblemDetailPage() {
           canGoNext={canGoNext}
         />
         <div
-          className="flex h-[calc(100vh-4rem)] theme-transition relative"
+          className="flex flex-col md:flex-row h-full overflow-y-auto theme-transition relative"
           onMouseMove={handleMouseMove}
         >
           {/* Left Panel: Problem Description with Tabs */}
           <div
-            className="overflow-y-auto no-scrollbar bg-background theme-transition flex flex-col"
-            style={{ width: `${leftPanelWidth}%` }}
+            className={`no-scrollbar bg-background theme-transition flex flex-col ${isMobile ? " h-full" : "overflow-y-auto "}`}
+            style={{ width: isMobile ? "100%" : `${leftPanelWidth}%` }}
           >
             <Tabs
               defaultValue="description"
@@ -264,7 +268,7 @@ export default function ProblemDetailPage() {
           {/* Resizable Divider */}
           <div
             ref={dividerRef}
-            className={`bg-border cursor-col-resize relative theme-transition transition-all duration-200 ${isDragging ? "w-[4px]" : "w-[1px]"} hover:w-[4px]`}
+            className={`hidden sm:block bg-border cursor-col-resize relative theme-transition transition-all duration-200 ${isDragging ? "w-[4px]" : "w-[1px]"} hover:w-[4px]`}
             onMouseDown={handleMouseDown}
             style={{ cursor: isDragging ? "col-resize" : "col-resize" }}
           >
@@ -274,7 +278,7 @@ export default function ProblemDetailPage() {
           {/* Right Panel: Code Editor and Test Cases */}
           <div
             className="overflow-y-auto no-scrollbar bg-card theme-transition"
-            style={{ width: `${100 - leftPanelWidth}%` }}
+            style={{ width: isMobile ? "100%" : `${100 - leftPanelWidth}%` }}
           >
             <CodeEditorPanel
               ref={codeEditorRef}

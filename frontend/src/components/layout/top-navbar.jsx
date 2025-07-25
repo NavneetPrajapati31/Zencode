@@ -173,8 +173,8 @@ export default function TopNavbar({
 
   return (
     <nav className="flex items-center justify-between p-4 border-b border-border bg-background theme-transition">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
+      <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-2">
           <Link to={"/"}>
             <button
               size="icon"
@@ -341,9 +341,9 @@ export default function TopNavbar({
         setUser={setUser}
       />
 
-      <div className="flex justify-center items-center gap-2">
+      <div className="flex flex-row justify-center items-center gap-2">
         {/* Theme Toggler */}
-        <button className="text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-full flex flex-row justify-center items-center border border-primary/10">
+        <button className="hidden md:flex text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-full flex-row justify-center items-center border border-primary/10">
           <TbFlameFilled className="mr-0.5 h-4 w-4" />
           {currentStreak}
         </button>
@@ -360,7 +360,7 @@ export default function TopNavbar({
               toggleTheme();
             }
           }}
-          className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer border border-border ${
+          className={`hidden md:flex p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition items-center justify-center hover:cursor-pointer border border-border ${
             theme === "dark" ? "bg-accent" : "bg-card"
           }`}
         >
