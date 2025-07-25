@@ -315,23 +315,23 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               },
                             });
                             console.log(
-                              "[AvatarUploader] UploadThing response:",
-                              res
+                              "[AvatarUploader] uploadFiles raw result:",
+                              res,
+                              Array.isArray(res)
                             );
                             alert(
-                              "UploadThing response: " + JSON.stringify(res)
+                              "uploadFiles raw result: " +
+                                JSON.stringify(res) +
+                                " | isArray: " +
+                                Array.isArray(res)
                             );
-                            const avatarUrl = res?.[0]?.ufsUrl || res?.[0]?.url;
+                            const avatarUrl =
+                              res && Array.isArray(res) && res[0]?.url;
                             console.log(
                               "[AvatarUploader] Avatar URL to set:",
                               avatarUrl
                             );
-                            if (!avatarUrl) {
-                              alert(
-                                "No avatarUrl found in UploadThing response! " +
-                                  JSON.stringify(res)
-                              );
-                            }
+                            alert("Avatar URL to set: " + avatarUrl);
                             if (avatarUrl) {
                               setBasicInfoForm((prev) => {
                                 const updated = { ...prev, avatar: avatarUrl };
@@ -345,8 +345,9 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                                 return updated;
                               });
                             } else {
-                              console.log(
-                                "[AvatarUploader] No avatarUrl found in response"
+                              alert(
+                                "No avatarUrl found in UploadThing response! " +
+                                  JSON.stringify(res)
                               );
                             }
                           } catch (err) {
@@ -362,6 +363,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                             );
                           } finally {
                             setAvatarLoading(false);
+                            alert("AvatarUploader finally block reached");
                           }
                         }}
                       />
