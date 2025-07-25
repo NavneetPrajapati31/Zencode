@@ -277,6 +277,10 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                         loading={avatarLoading}
                         error={avatarError}
                         onChange={async (croppedBlob) => {
+                          console.log(
+                            "AvatarUploader onChange called with:",
+                            croppedBlob
+                          );
                           if (croppedBlob === null) {
                             setBasicInfoForm((prev) => ({
                               ...prev,
