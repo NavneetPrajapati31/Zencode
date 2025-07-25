@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/use-auth";
 import { problemsAPI, problemDetailsAPI, testCasesAPI } from "@/utils/api";
@@ -152,6 +152,28 @@ export default function ProblemDetailPage() {
     }
   }, [isDragging]);
 
+  // Combine problem and details for the components
+  const combinedProblem = useMemo(() => {
+    if (!problem) return null;
+    return {
+      ...problem,
+      // Map the new field names to what the components expect
+      title: problem.name,
+      description: problem.statement,
+      // Add testcases
+      testcases: testcases,
+      hiddenTestcases: [], // For now, treat all testcases as public
+      // Add details if available
+      ...(problemDetails && {
+        tags: problemDetails.tags,
+        constraints: problemDetails.constraints,
+        examples: problemDetails.examples,
+        boilerplate: problemDetails.boilerplate,
+        harness: problemDetails.harness,
+      }),
+    };
+  }, [problem, problemDetails, testcases]);
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground theme-transition">
@@ -173,25 +195,6 @@ export default function ProblemDetailPage() {
       </div>
     );
   }
-
-  // Combine problem and details for the components
-  const combinedProblem = {
-    ...problem,
-    // Map the new field names to what the components expect
-    title: problem.name,
-    description: problem.statement,
-    // Add testcases
-    testcases: testcases,
-    hiddenTestcases: [], // For now, treat all testcases as public
-    // Add details if available
-    ...(problemDetails && {
-      tags: problemDetails.tags,
-      constraints: problemDetails.constraints,
-      examples: problemDetails.examples,
-      boilerplate: problemDetails.boilerplate,
-      harness: problemDetails.harness,
-    }),
-  };
 
   return (
     <ProblemsSidebarProvider>
