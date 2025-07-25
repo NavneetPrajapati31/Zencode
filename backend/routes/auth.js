@@ -51,24 +51,62 @@ router.get(
   "/github",
   passport.authenticate("github", { scope: ["user:email"] })
 );
-router.get(
-  "/github/callback",
-  passport.authenticate("github", {
-    failureRedirect: FRONTEND_URL + "/signin",
-  }),
-  oauthCallback
-);
+router.get("/github/callback", (req, res, next) => {
+  passport.authenticate("github", (err, user, info) => {
+    if (err) {
+      const timestamp = new Date().toISOString();
+      console.error(`[${timestamp}] Passport GitHub error:`, err);
+      if (err && err.message) console.error("Error message:", err.message);
+      if (err && err.stack) console.error("Error stack:", err.stack);
+      if (err && err.oauthError) {
+        console.error("OAuth error:", err.oauthError);
+        if (err.oauthError.data) {
+          console.error("OAuth error data:", err.oauthError.data);
+        }
+      }
+      return res.redirect(
+        `${FRONTEND_URL || "http://localhost:5173"}/signin?error=oauth_error`
+      );
+    }
+    if (!user) {
+      return res.redirect(
+        `${FRONTEND_URL || "http://localhost:5173"}/signin?error=oauth_failed`
+      );
+    }
+    req.user = user;
+    return oauthCallback(req, res);
+  })(req, res, next);
+});
 // Google
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: FRONTEND_URL + "/signin",
-  }),
-  oauthCallback
-);
+router.get("/google/callback", (req, res, next) => {
+  passport.authenticate("google", (err, user, info) => {
+    if (err) {
+      const timestamp = new Date().toISOString();
+      console.error(`[${timestamp}] Passport Google error:`, err);
+      if (err && err.message) console.error("Error message:", err.message);
+      if (err && err.stack) console.error("Error stack:", err.stack);
+      if (err && err.oauthError) {
+        console.error("OAuth error:", err.oauthError);
+        if (err.oauthError.data) {
+          console.error("OAuth error data:", err.oauthError.data);
+        }
+      }
+      return res.redirect(
+        `${FRONTEND_URL || "http://localhost:5173"}/signin?error=oauth_error`
+      );
+    }
+    if (!user) {
+      return res.redirect(
+        `${FRONTEND_URL || "http://localhost:5173"}/signin?error=oauth_failed`
+      );
+    }
+    req.user = user;
+    return oauthCallback(req, res);
+  })(req, res, next);
+});
 
 module.exports = router;
