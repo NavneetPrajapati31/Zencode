@@ -287,12 +287,14 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                             console.log(
                               "[AvatarUploader] Avatar cleared (null)"
                             );
+                            alert("Avatar cleared (null)");
                             return;
                           }
                           if (!croppedBlob) {
                             console.log(
                               "[AvatarUploader] No croppedBlob, returning early"
                             );
+                            alert("No croppedBlob, returning early");
                             return;
                           }
                           setAvatarLoading(true);
@@ -305,6 +307,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               "[AvatarUploader] Uploading file:",
                               file
                             );
+                            alert("Uploading file to UploadThing...");
                             const res = await uploadFiles("avatarUploader", {
                               files: [file],
                               headers: {
@@ -315,17 +318,29 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               "[AvatarUploader] UploadThing response:",
                               res
                             );
+                            alert(
+                              "UploadThing response: " + JSON.stringify(res)
+                            );
                             const avatarUrl = res?.[0]?.ufsUrl || res?.[0]?.url;
                             console.log(
                               "[AvatarUploader] Avatar URL to set:",
                               avatarUrl
                             );
+                            if (!avatarUrl) {
+                              alert(
+                                "No avatarUrl found in UploadThing response! " +
+                                  JSON.stringify(res)
+                              );
+                            }
                             if (avatarUrl) {
                               setBasicInfoForm((prev) => {
                                 const updated = { ...prev, avatar: avatarUrl };
                                 console.log(
                                   "[AvatarUploader] Updated basicInfoForm.avatar:",
                                   updated.avatar
+                                );
+                                alert(
+                                  "Avatar URL set in state: " + updated.avatar
                                 );
                                 return updated;
                               });
@@ -341,6 +356,9 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                             console.error(
                               "[AvatarUploader] Avatar upload error:",
                               err
+                            );
+                            alert(
+                              "Avatar upload error: " + (err.message || err)
                             );
                           } finally {
                             setAvatarLoading(false);
