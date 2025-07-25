@@ -49,10 +49,10 @@ export default function Navbar({ sticky = false }) {
           <div className="flex-1 flex items-center">
             <Link
               to={"/"}
-              className="flex items-center gap-2 text-xl font-bold text-primary theme-transition"
+              className="flex items-center gap-2 font-bold text-primary theme-transition"
             >
-              <RiFocus2Line className="h-8 w-8" />
-              Zencode
+              <RiFocus2Line className="h-6 w-6 sm:h-8 sm:w-8" />
+              <span className="text-md sm:text-xl">Zencode</span>
             </Link>
           </div>
 
@@ -278,20 +278,20 @@ export default function Navbar({ sticky = false }) {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="bg-background border-border text-foreground theme-transition"
+              className="p-6 bg-background border-border text-foreground theme-transition"
             >
-              <div className="flex flex-col gap-4 py-6">
+              <div className="flex flex-col justify-center items-start gap-2 py-0">
                 {navLinks.map((link) => (
                   <a
                     key={link.name}
                     href={link.href}
-                    className="text-lg font-medium text-foreground hover:text-primary theme-transition"
+                    className="text-sm font-medium text-foreground hover:text-primary theme-transition"
                   >
                     {link.name}
                   </a>
                 ))}
                 {/* Theme Toggler Mobile */}
-                <button
+                {/* <button
                   onClick={toggleTheme}
                   disabled={isTransitioning}
                   aria-label={
@@ -315,16 +315,14 @@ export default function Navbar({ sticky = false }) {
                   ) : (
                     <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
                   )}
-                </button>
-                <Button
+                </button> */}
+                <button
                   variant="ghost"
-                  className="text-lg font-medium text-foreground hover:text-primary justify-start theme-transition"
+                  size={"sm"}
+                  className="!py-0 text-sm font-medium text-primary justify-start theme-transition"
                 >
                   Login
-                </Button>
-                <Button className="bg-primary hover:bg-primary/80 text-primary-foreground font-semibold text-lg justify-start theme-transition">
-                  Sign Up
-                </Button>
+                </button>
               </div>
             </SheetContent>
           </Sheet>

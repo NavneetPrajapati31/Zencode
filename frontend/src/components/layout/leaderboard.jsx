@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { Card } from "../ui/card";
 import Noise from "@/blocks/Animations/Noise/Noise";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const medalIcons = [
   {
@@ -85,7 +86,7 @@ const LeaderboardRow = ({ user, rank, isTop3 }) => (
             <div
               className={
                 rank != null && rank >= 0 && rank < 3
-                  ? `${medalIcons[rank].classname} text-xs px-3 py-0.5 rounded-3xl font-normal`
+                  ? `hidden lg:block ${medalIcons[rank].classname} text-xs px-3 py-0.5 rounded-3xl font-normal`
                   : "text-xs px-2 py-0.5 rounded-3xl"
               }
             >
@@ -264,10 +265,33 @@ const Leaderboard = () => {
           Zen Legends
         </h1>
       </div>
-      <div className="flex flex-col xl:flex-row gap-0 w-full max-w-7xl mx-auto px-6 sm:px-12 py-5 overflow-x-auto theme-transition items-stretch">
-        {legends.map((user, idx) => (
-          <LegendCard key={user.handle} user={user} rank={idx} />
-        ))}
+      <div className="flex flex-col xl:flex-row gap-0 w-full max-w-7xl mx-auto px-6 sm:px-8 py-5 overflow-x-auto theme-transition items-stretch">
+        {loading
+          ? Array.from({ length: 3 }).map((_, idx) => (
+              <Card
+                key={idx}
+                className={`flex flex-1 w-full flex-col justify-between h-full p-5 py-4 rounded-2xl bg-background border-border shadow-none theme-transition cursor-pointer scale-95 transition-all ease-in-out duration-400 text-left gap-0`}
+              >
+                <div className="flex flex-row gap-3 w-full">
+                  <Skeleton className="h-13 w-13 rounded-full bg-border" />
+                  <div className="flex flex-col gap-0.5 justify-center">
+                    <Skeleton className="h-3 w-30 mb-1 bg-border" />
+                    <Skeleton className="h-3 w-30 bg-border" />
+                  </div>
+                </div>
+                <div className="flex flex-row justify-center items-center mt-4 mb-2 w-full">
+                  <div className="w-full">
+                    <Skeleton className="h-4 w-1/2 mb-1.5 bg-border" />
+                    <Skeleton className="h-4 w-full mb-1.5 bg-border" />
+                    <Skeleton className="h-4 w-full mb-1.5 bg-border" />
+                    <Skeleton className="h-4 w-full bg-border" />
+                  </div>
+                </div>
+              </Card>
+            ))
+          : legends.map((user, idx) => (
+              <LegendCard key={user.handle} user={user} rank={idx} />
+            ))}
       </div>
       {/* leaderboard table section */}
       <div className="flex flex-col justify-center items-start max-w-7xl px-6 sm:px-12 mx-auto">
@@ -302,14 +326,29 @@ const Leaderboard = () => {
             </thead>
             <tbody className="theme-transition">
               {loading ? (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="text-center py-12 text-muted-foreground"
-                  >
-                    Loading leaderboard...
-                  </td>
-                </tr>
+                Array.from({ length: 10 }).map((_, idx) => (
+                  <tr key={idx} className="theme-transition">
+                    <td className="pl-4 py-3 flex items-center gap-3">
+                      <Skeleton className="h-10 w-10 rounded-full bg-border" />
+                      <div className="flex flex-col gap-0.5 w-32">
+                        <Skeleton className="h-3 w-24 mb-1 bg-border" />
+                        <Skeleton className="h-3 w-16 bg-border" />
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Skeleton className="h-3 w-12 mx-auto bg-border" />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Skeleton className="h-3 w-12 mx-auto bg-border" />
+                    </td>
+                    <td className="px-4 py-3 text-center min-w-[100px]">
+                      <Skeleton className="h-3 w-10 mx-auto bg-border" />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Skeleton className="h-3 w-16 mx-auto bg-border" />
+                    </td>
+                  </tr>
+                ))
               ) : error ? (
                 <tr>
                   <td
