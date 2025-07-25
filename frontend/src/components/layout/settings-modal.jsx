@@ -216,7 +216,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
       onClick={onClose}
     >
       <div
-        className="flex flex-col !bg-card border border-border text-foreground rounded-xl shadow-lg max-w-3xl h-9/12 w-full p-0 relative"
+        className="flex flex-col !bg-card border border-border text-foreground rounded-xl shadow-lg max-w-lg sm:max-w-xl md:max-w-3xl h-9/12 w-full p-0 relative"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -242,18 +242,21 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
             />
           </div>
         </div>
-        <div className="flex flex-row w-full h-full overflow-y-auto no-scrollbar">
+        <div className="flex flex-col md:flex-row w-full h-full overflow-y-auto no-scrollbar">
           {/* Sidebar */}
-          <div className="w-64 min-w-56 h-full flex flex-col border-r border-border px-4 py-6">
-            <nav className="flex-1 flex flex-col gap-1">
+          <div className="w-full md:w-64 md:min-w-56 h-auto md:h-full flex flex-row md:flex-col border-b md:border-b-0 md:border-r border-border px-2 md:px-4 py-2 md:py-6 bg-card z-10">
+            <nav className="flex-1 flex flex-row md:flex-col gap-1 w-full">
               {sidebarItems.map((item) => (
                 <button
                   key={item.key}
-                  className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${settingsSection === item.key ? "bg-primary/5 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}
+                  className={`flex items-center gap-2 md:gap-3 px-2 md:px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer w-full md:w-auto justify-center md:justify-start ${settingsSection === item.key ? "bg-primary/5 text-primary" : "text-muted-foreground hover:bg-muted/50"}`}
                   onClick={() => setSettingsSection(item.key)}
+                  tabIndex={0}
+                  aria-label={item.label}
                 >
-                  {item.icon}
-                  {item.label}
+                  <span className="hidden md:block">{item.icon}</span>
+                  <span className="hidden md:inline">{item.label}</span>
+                  <span className="block md:hidden">{item.icon}</span>
                 </button>
               ))}
             </nav>
@@ -511,7 +514,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                 <div className="mb-8">
                   <h3 className="text-md font-medium mb-2">Update Password</h3>
                   <div className="flex flex-col gap-4 max-w-lg">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-0">
                       <span className="w-36 text-sm text-muted-foreground">
                         Original Password:
                       </span>
@@ -535,7 +538,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                         </button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-0">
                       <span className="w-36 text-sm  text-muted-foreground">
                         New Password:
                       </span>
@@ -559,7 +562,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                         </button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-0">
                       <span className="w-36 text-sm text-muted-foreground">
                         Confirm Password:
                       </span>
