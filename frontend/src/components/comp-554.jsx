@@ -130,10 +130,7 @@ export function AvatarUploader({ value, onChange, loading, error }) {
       <div className="relative inline-flex">
         <button
           className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 focus-visible:border-ring focus-visible:ring-ring/50 relative flex size-16 items-center justify-center overflow-hidden rounded-full border border-dashed transition-colors outline-none focus-visible:ring-[3px] has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none cursor-pointer"
-          onClick={(e) => {
-            console.log("AvatarUploader button clicked");
-            openFileDialog(e);
-          }}
+          onClick={openFileDialog}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
