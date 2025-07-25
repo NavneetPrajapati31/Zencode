@@ -57,7 +57,7 @@ export default function Navbar({ sticky = false }) {
           </div>
 
           {/* Center: Nav Links */}
-          <nav className="hidden md:flex items-center gap-6 justify-center flex-none">
+          <nav className="hidden lg:flex items-center gap-6 justify-center flex-none">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -70,7 +70,7 @@ export default function Navbar({ sticky = false }) {
           </nav>
 
           {/* Right: Theme Toggler and Auth */}
-          <div className="flex-1 items-center justify-end gap-2 hidden md:flex">
+          <div className="flex-1 items-center justify-end gap-2 hidden lg:flex">
             <Link to={"/problems"}>
               <button
                 className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
@@ -240,19 +240,47 @@ export default function Navbar({ sticky = false }) {
           </div>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             {!isAuthenticated ? (
-              <Link to={"signup"}>
+              <div className="flex flex-row items-center gap-2">
+                <Link to={"signup"}>
+                  <button
+                    className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
+                      theme === "dark"
+                        ? "bg-accent border border-border"
+                        : "bg-card border border-border"
+                    }`}
+                  >
+                    Sign Up
+                  </button>
+                </Link>
+                {/* Theme Toggler */}
                 <button
-                  className={`flex flex-row justify-center items-center bg-accent text-muted-foreground font-semibold !py-2 px-4 rounded-full text-xs shadow-none theme-transition group hover:cursor-pointer ${
+                  onClick={toggleTheme}
+                  disabled={isTransitioning}
+                  aria-label={
                     theme === "dark"
-                      ? "bg-accent border border-border"
-                      : "bg-card border border-border"
+                      ? "Switch to light mode"
+                      : "Switch to dark mode"
+                  }
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleTheme();
+                    }
+                  }}
+                  className={`p-2 rounded-full shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary theme-transition flex items-center justify-center hover:cursor-pointer border border-border ${
+                    theme === "dark" ? "bg-accent" : "bg-card"
                   }`}
                 >
-                  Sign Up
+                  {theme === "dark" ? (
+                    <Sun className="h-4 w-4 text-muted-foreground theme-transition" />
+                  ) : (
+                    <Moon className="h-4 w-4 text-muted-foreground theme-transition" />
+                  )}
                 </button>
-              </Link>
+              </div>
             ) : (
               <DropdownMenu
                 open={openDropdown === "mobile"}
@@ -332,6 +360,35 @@ export default function Navbar({ sticky = false }) {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator className="theme-transition" />
                         <DropdownMenuItem
+                          onClick={toggleTheme}
+                          disabled={isTransitioning}
+                          aria-label={
+                            theme === "dark"
+                              ? "Switch to light mode"
+                              : "Switch to dark mode"
+                          }
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              toggleTheme();
+                            }
+                          }}
+                          className="text-muted-foreground cursor-pointer theme-transition"
+                        >
+                          {theme === "dark" ? (
+                            <>
+                              <Sun className="h-4 w-4 text-muted-foreground theme-transition" />{" "}
+                              <span>Change theme</span>
+                            </>
+                          ) : (
+                            <>
+                              <Moon className="h-4 w-4 text-muted-foreground theme-transition" />{" "}
+                              <span>Change theme</span>
+                            </>
+                          )}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           onClick={() => {
                             navigate("/profile");
                             setOpenDropdown(null);
@@ -341,6 +398,7 @@ export default function Navbar({ sticky = false }) {
                         >
                           My Profile
                         </DropdownMenuItem>
+
                         <DropdownMenuItem
                           onClick={() => {
                             handleOpenSettingsModal();
@@ -351,6 +409,7 @@ export default function Navbar({ sticky = false }) {
                         >
                           Settings
                         </DropdownMenuItem>
+
                         <DropdownMenuItem
                           onClick={() => {
                             logout();

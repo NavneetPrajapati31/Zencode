@@ -459,6 +459,35 @@ export default function TopNavbar({
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="theme-transition" />
+                  <DropdownMenuItem
+                    onClick={toggleTheme}
+                    disabled={isTransitioning}
+                    aria-label={
+                      theme === "dark"
+                        ? "Switch to light mode"
+                        : "Switch to dark mode"
+                    }
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleTheme();
+                      }
+                    }}
+                    className="text-muted-foreground cursor-pointer theme-transition"
+                  >
+                    {theme === "dark" ? (
+                      <>
+                        <Sun className="h-4 w-4 text-muted-foreground theme-transition" />{" "}
+                        <span>Change theme</span>
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="h-4 w-4 text-muted-foreground theme-transition" />{" "}
+                        <span>Change theme</span>
+                      </>
+                    )}
+                  </DropdownMenuItem>
                   {/* <DropdownMenuItem
                         onClick={toggleTheme}
                         className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground theme-transition"
