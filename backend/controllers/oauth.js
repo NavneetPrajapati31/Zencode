@@ -115,7 +115,16 @@ const oauthCallback = async (req, res) => {
       );
     }
   } catch (err) {
-    console.error("OAuth callback error:", err);
+    // Detailed error logging for OAuth failures
+    const timestamp = new Date().toISOString();
+    console.error(`[${timestamp}] OAuth callback error:`);
+    console.error("Error object:", err);
+    if (err && err.message) console.error("Error message:", err.message);
+    if (err && err.stack) console.error("Error stack:", err.stack);
+    if (err && err.response) {
+      console.error("Error response status:", err.response.status);
+      console.error("Error response data:", err.response.data);
+    }
     const safeMsg = isProd ? "oauth_error" : encodeURIComponent(err.message);
     return res.redirect(
       `${FRONTEND_URL || "http://localhost:5173"}/signin?error=${safeMsg}`
