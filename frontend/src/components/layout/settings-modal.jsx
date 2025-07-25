@@ -143,7 +143,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
         username: basicInfoForm.username,
         avatar: basicInfoForm.avatar, // Use state directly
       };
-      console.log("PATCH payload:", payload);
+      console.log("[SettingsModal] PATCH payload:", payload);
       const res = await profileAPI.updateBasicInfo(payload);
       setBasicInfoSuccess("Profile updated successfully.");
       if (res && res.user) {
@@ -276,7 +276,7 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                         error={avatarError}
                         onChange={async (croppedBlob) => {
                           console.log(
-                            "AvatarUploader onChange called with:",
+                            "[AvatarUploader] onChange called with:",
                             croppedBlob
                           );
                           if (croppedBlob === null) {
@@ -284,35 +284,63 @@ const SettingsModal = ({ isOpen, onClose, user, setUser }) => {
                               ...prev,
                               avatar: "",
                             }));
+                            console.log(
+                              "[AvatarUploader] Avatar cleared (null)"
+                            );
                             return;
                           }
-                          if (!croppedBlob) return;
+                          if (!croppedBlob) {
+                            console.log(
+                              "[AvatarUploader] No croppedBlob, returning early"
+                            );
+                            return;
+                          }
                           setAvatarLoading(true);
                           setAvatarError("");
                           try {
                             const file = new File([croppedBlob], "avatar.jpg", {
                               type: "image/jpeg",
                             });
+                            console.log(
+                              "[AvatarUploader] Uploading file:",
+                              file
+                            );
                             const res = await uploadFiles("avatarUploader", {
                               files: [file],
                               headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                               },
                             });
+                            console.log(
+                              "[AvatarUploader] UploadThing response:",
+                              res
+                            );
                             const avatarUrl = res?.[0]?.ufsUrl || res?.[0]?.url;
+                            console.log(
+                              "[AvatarUploader] Avatar URL to set:",
+                              avatarUrl
+                            );
                             if (avatarUrl) {
                               setBasicInfoForm((prev) => {
                                 const updated = { ...prev, avatar: avatarUrl };
                                 console.log(
-                                  "Updated basicInfoForm.avatar:",
+                                  "[AvatarUploader] Updated basicInfoForm.avatar:",
                                   updated.avatar
                                 );
                                 return updated;
                               });
+                            } else {
+                              console.log(
+                                "[AvatarUploader] No avatarUrl found in response"
+                              );
                             }
                           } catch (err) {
                             setAvatarError(
                               err.message || "Failed to upload avatar."
+                            );
+                            console.error(
+                              "[AvatarUploader] Avatar upload error:",
+                              err
                             );
                           } finally {
                             setAvatarLoading(false);
