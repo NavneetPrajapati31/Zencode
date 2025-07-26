@@ -488,6 +488,15 @@ export default function TopNavbar({
                       </>
                     )}
                   </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigate("/leaderboard");
+                    }}
+                    className="text-muted-foreground cursor-pointer theme-transition"
+                    aria-label="profile"
+                  >
+                    Leaderboard
+                  </DropdownMenuItem>
                   {/* <DropdownMenuItem
                         onClick={toggleTheme}
                         className="flex items-center gap-2 cursor-pointer focus:bg-accent focus:text-accent-foreground theme-transition"
