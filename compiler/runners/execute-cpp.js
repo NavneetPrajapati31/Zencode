@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
-const { spawn } = require("child_process");
+const { executeWithLimits } = require("../utils/resource-limits");
 
 const outputPath = path.join(__dirname, "../outputs");
 
@@ -52,42 +52,20 @@ const executeCpp = async (filePath, input = "") => {
         return;
       }
 
-      console.log("[C++ Runner] Executable found, running with input:", input);
+      console.log(
+        "[C++ Runner] Executable found, running with resource limits"
+      );
 
-      // Run the executable with full path
-      const child = spawn(outPath, [], {
-        cwd: process.cwd(), // Use current working directory
-      });
-
-      let stdout = "";
-      let stderr = "";
-
-      child.stdin.write(input);
-      child.stdin.end();
-
-      child.stdout.on("data", (data) => {
-        console.log("[C++ Runner] Stdout data:", data.toString());
-        stdout += data;
-      });
-
-      child.stderr.on("data", (data) => {
-        console.log("[C++ Runner] Stderr data:", data.toString());
-        stderr += data;
-      });
-
-      child.on("close", (code) => {
-        console.log("[C++ Runner] Process closed with code:", code);
-        if (code !== 0) {
-          reject({ error: `Process exited with code ${code}`, stderr });
-        } else {
-          resolve({ stdout, stderr });
-        }
-      });
-
-      child.on("error", (err) => {
-        console.log("[C++ Runner] Process error:", err);
-        reject({ error: err, stderr });
-      });
+      // Run the executable with resource limits
+      executeWithLimits(outPath, [], { cwd: process.cwd() }, input)
+        .then((result) => {
+          console.log("[C++ Runner] Execution completed successfully");
+          resolve(result);
+        })
+        .catch((error) => {
+          console.log("[C++ Runner] Execution failed:", error);
+          reject(error);
+        });
     });
   });
 };

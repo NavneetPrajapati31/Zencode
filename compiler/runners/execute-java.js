@@ -1,5 +1,6 @@
 const { spawn } = require("child_process");
 const path = require("path");
+const { executeWithLimits } = require("../utils/resource-limits");
 
 const executeJava = (filePath, input = "") => {
   // Extract the directory path and the filename (without extension)
@@ -25,35 +26,16 @@ const executeJava = (filePath, input = "") => {
         return;
       }
 
-      // 2. If compilation is successful, run the compiled .class file.
+      // 2. If compilation is successful, run the compiled .class file with resource limits.
       // We know the main class is named "Main" from our harness.
       // The -cp flag sets the classpath to the directory containing our .class files.
-      const runner = spawn("java", ["-cp", dirPath, "Main"]);
-      let stdout = "";
-      let stderr = "";
-
-      // Provide input to the running program
-      runner.stdin.write(input);
-      runner.stdin.end();
-
-      runner.stdout.on("data", (data) => {
-        stdout += data;
-      });
-
-      runner.stderr.on("data", (data) => {
-        stderr += data;
-      });
-
-      runner.on("close", (code) => {
-        if (code !== 0) {
-          reject({ error: `Process exited with code ${code}`, stderr });
-        } else {
-          resolve({ stdout, stderr });
-        }
-      });
-      runner.on("error", (err) => {
-        reject({ error: err, stderr });
-      });
+      executeWithLimits("java", ["-cp", dirPath, "Main"], {}, input)
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
     compiler.on("error", (err) => {
       reject({ error: err, stderr: compileStderr });

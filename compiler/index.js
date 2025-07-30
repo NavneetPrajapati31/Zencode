@@ -7,6 +7,7 @@ const { executeCpp } = require("./runners/execute-cpp");
 const { executeJava } = require("./runners/execute-java");
 const { executePython } = require("./runners/execute-python");
 const { executeJavascript } = require("./runners/execute-javascript");
+const { checkResourceLimits } = require("./utils/check-limits");
 const dotenv = require("dotenv");
 const generateAiResponse = require("./generateAiResponse");
 dotenv.config();
@@ -166,7 +167,29 @@ app.post("/compiler", async (req, res) => {
     res.json({ filePath, output });
   } catch (error) {
     console.error("[Compiler] Compilation/Execution error:", error);
-    res.status(500).json({ success: false, error });
+
+    // Handle different types of errors with appropriate status codes
+    let statusCode = 500;
+    let errorMessage = error.error || error.message || "Unknown error";
+
+    if (error.type === "TIME_LIMIT_EXCEEDED") {
+      statusCode = 408; // Request Timeout
+      errorMessage = `Time limit exceeded (5 seconds)`;
+    } else if (error.type === "MEMORY_LIMIT_EXCEEDED") {
+      statusCode = 413; // Payload Too Large
+      errorMessage = `Memory limit exceeded (256 MB)`;
+    } else if (error.type === "RUNTIME_ERROR") {
+      statusCode = 500; // Internal Server Error
+    } else if (error.type === "PROCESS_ERROR") {
+      statusCode = 500; // Internal Server Error
+    }
+
+    res.status(statusCode).json({
+      success: false,
+      error: errorMessage,
+      stderr: error.stderr || "",
+      type: error.type || "UNKNOWN_ERROR",
+    });
   }
 });
 
@@ -195,4 +218,9 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(process.env.TEST_ENV);
   console.log(process.env.BACKEND_URL);
   console.log(process.env.MONGODB_URI);
+
+  // Display resource limits configuration on startup
+  console.log("\n" + "=".repeat(50));
+  checkResourceLimits();
+  console.log("=".repeat(50) + "\n");
 });
