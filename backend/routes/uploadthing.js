@@ -1,7 +1,7 @@
-import { createRouteHandler } from "uploadthing/express";
-import { ourFileRouter } from "../core.js";
+const { createRouteHandler } = require("uploadthing/express");
+const { ourFileRouter } = require("../core.js");
 
-export const uploadRouter = createRouteHandler({
+const uploadRouter = createRouteHandler({
   router: ourFileRouter,
   config: {
     uploadthingId: process.env.UPLOADTHING_APP_ID,
@@ -9,3 +9,5 @@ export const uploadRouter = createRouteHandler({
     uploadthingToken: process.env.UPLOADTHING_TOKEN,
   },
 });
+
+module.exports = { uploadRouter };

@@ -1,11 +1,11 @@
-import { createUploadthing } from "uploadthing/express";
-import { authenticateJWT } from "./middleware/auth.js";
-import dotenv from "dotenv";
-import {
+const { createUploadthing } = require("uploadthing/express");
+const { authenticateJWT } = require("./middleware/auth.js");
+const dotenv = require("dotenv");
+const {
   generateUploadButton,
   generateUploadDropzone,
-} from "@uploadthing/react";
-import jwt from "jsonwebtoken";
+} = require("@uploadthing/react");
+const jwt = require("jsonwebtoken");
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ const handleAuth = (req, res, next) => {
   }
 };
 
-export const ourFileRouter = {
+const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   avatarUploader: f({ image: { maxFileSize: "8MB" } })
     // Set permissions and file types for this FileRoute
@@ -68,5 +68,7 @@ export const ourFileRouter = {
     }),
 };
 
-export const UploadButton = generateUploadButton();
-export const UploadDropzone = generateUploadDropzone();
+const UploadButton = generateUploadButton();
+const UploadDropzone = generateUploadDropzone();
+
+module.exports = { ourFileRouter, UploadButton, UploadDropzone };
