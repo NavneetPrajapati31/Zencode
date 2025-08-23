@@ -16,7 +16,18 @@ const GitHubStrategy = require("passport-github2").Strategy;
 const User = require("../models/User");
 const axios = require("axios");
 const leaderboardRoutes = require("../routes/leaderboard");
-const { uploadRouter } = require("../routes/uploadthing.js");
+
+// Dynamic import for uploadthing to avoid ES6 module issues
+let uploadRouter;
+try {
+  const uploadthingModule = require("../routes/uploadthing.js");
+  uploadRouter = uploadthingModule.uploadRouter;
+  console.log("✅ UploadThing loaded successfully");
+} catch (error) {
+  console.warn("⚠️ UploadThing not available:", error.message);
+  console.warn("📝 This is expected if there are ES6 module conflicts");
+  uploadRouter = null;
+}
 
 const app = express();
 
@@ -67,7 +78,14 @@ app.get("/api/test", (req, res) => {
 
 // API Routes (without session/passport middleware)
 app.use("/api/profile", profileRoutes);
-app.use("/api/uploadthing", uploadRouter);
+
+// Conditionally use uploadthing route if available
+if (uploadRouter) {
+  app.use("/api/uploadthing", uploadRouter);
+} else {
+  console.warn("UploadThing route not available");
+}
+
 app.use("/api/problems", problemRoutes);
 app.use("/api/submission", submissionRoutes);
 app.use("/api/testcases", testcaseRoutes);
