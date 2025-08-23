@@ -52,7 +52,9 @@ app.get("/api/health", async (req, res) => {
   try {
     // Only connect if not already connected
     if (!databaseManager.isReady()) {
+      console.log("🔄 Connecting to database...");
       await databaseManager.connect();
+      console.log("✅ Database connected successfully");
     }
 
     const dbStatus = databaseManager.getStatus();
@@ -62,7 +64,7 @@ app.get("/api/health", async (req, res) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Health check error:", error);
+    console.error("❌ Health check error:", error);
     res.json({
       status: "error",
       database: { isConnected: false, error: error.message },

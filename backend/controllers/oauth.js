@@ -67,6 +67,15 @@ const oauthCallback = async (req, res) => {
         `${FRONTEND_URL || "http://localhost:5173"}/signin?error=oauth_failed`
       );
     }
+
+    // Check database connection before proceeding
+    const databaseManager = require("../config/database");
+    if (!databaseManager.isReady()) {
+      console.log("🔄 Connecting to database for OAuth...");
+      await databaseManager.connect();
+      console.log("✅ Database connected for OAuth");
+    }
+
     // Find or create user
     let user = await User.findOne({ email: req.user.email });
     if (!user) {
