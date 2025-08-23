@@ -1,11 +1,13 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "api/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "build": "echo 'Build completed'",
+    "vercel-build": "echo 'Vercel build completed'",
     "check-mongodb": "node scripts/check-mongodb.js",
     "import-problems": "node scripts/import-problems.js",
     "import-problems-advanced": "node scripts/import-problems-advanced.js",

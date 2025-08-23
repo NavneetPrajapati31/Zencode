@@ -73,6 +73,61 @@ npm install nodemailer
 
 ## Running the Server
 
+### Local Development
+
 ```bash
 npm start
+```
+
+### Production Deployment
+
+#### Option 1: Vercel (Recommended)
+
+1. **Quick Deploy**: Run the deployment script
+
+   ```bash
+   # Windows
+   deploy.bat
+
+   # Linux/Mac
+   ./deploy.sh
+   ```
+
+2. **Manual Deploy**: Follow the [Vercel Deployment Guide](VERCEL_DEPLOYMENT.md)
+
+3. **Environment Variables**: Use `env.template` as a reference for required variables
+
+#### Option 2: Traditional Hosting
+
+```bash
+npm run build
+npm start
+```
+
+## Deployment Files
+
+- `vercel.json` - Vercel configuration
+- `.vercelignore` - Files to exclude from deployment
+- `api/index.js` - Serverless entry point for Vercel
+- `VERCEL_DEPLOYMENT.md` - Comprehensive deployment guide
+- `env.template` - Environment variables template
+- `deploy.bat` / `deploy.sh` - Automated deployment scripts
+
+## Project Structure
+
+```
+backend/
+├── api/
+│   └── index.js          # Main serverless entry point
+├── config/               # Database configuration
+├── controllers/          # API controllers
+├── middleware/           # Authentication middleware
+├── models/              # MongoDB models
+├── routes/              # API routes
+├── vercel.json          # Vercel configuration
+├── .vercelignore        # Files to exclude from deployment
+├── env.template         # Environment variables template
+├── deploy.bat           # Windows deployment script
+├── deploy.sh            # Linux/Mac deployment script
+└── package.json         # Dependencies and scripts
 ```
