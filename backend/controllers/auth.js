@@ -44,81 +44,141 @@ if (isProduction) {
 
 const JWT_EXPIRES_IN = "7d";
 
-// Email configuration with OAuth2
+// Email configuration with OAuth2 and fallback options
 const createTransporter = async () => {
   try {
-    if (!GoogleAuth) {
-      throw new Error("Google auth library not properly imported");
-    }
-    const { OAuth2Client } = require("google-auth-library");
+    // Check if we have the required OAuth credentials
     const clientId = process.env.GOOGLE_EMAIL_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_EMAIL_CLIENT_SECRET;
     const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
     const user = process.env.EMAIL_USER;
+    const appPassword = process.env.GMAIL_APP_PASSWORD; // Fallback option
+
+    console.log("[EMAIL] Environment variables check:");
+    console.log(`[EMAIL] EMAIL_USER: ${user ? "SET" : "NOT SET"}`);
+    console.log(
+      `[EMAIL] GOOGLE_EMAIL_CLIENT_ID: ${clientId ? "SET" : "NOT SET"}`
+    );
+    console.log(
+      `[EMAIL] GOOGLE_EMAIL_CLIENT_SECRET: ${clientSecret ? "SET" : "NOT SET"}`
+    );
+    console.log(
+      `[EMAIL] GOOGLE_REFRESH_TOKEN: ${refreshToken ? "SET" : "NOT SET"}`
+    );
+    console.log(
+      `[EMAIL] GMAIL_APP_PASSWORD: ${appPassword ? "SET" : "NOT SET"}`
+    );
 
     if (isProduction) {
-      if (!clientId || !clientSecret || !refreshToken || !user) {
-        throw new Error("Missing email credentials for production");
+      if (!user) {
+        throw new Error("EMAIL_USER is required for production");
       }
     } else {
-      if (!clientId || !clientSecret || !refreshToken || !user) {
+      if (!user) {
         console.warn(
-          "[DEV WARNING] Email credentials missing. Emails will not be sent."
+          "[DEV WARNING] EMAIL_USER not set. Emails will not be sent."
         );
-        throw new Error(
-          "Email credentials missing in development. Email sending is disabled."
-        );
+        throw new Error("EMAIL_USER is required for email functionality");
       }
     }
 
-    // Create OAuth2Client without hardcoded redirect URI
-    const oauth2Client = new OAuth2Client(clientId, clientSecret);
-
-    // Set credentials with refresh token
-    oauth2Client.setCredentials({
-      refresh_token: refreshToken,
-    });
-
-    try {
-      // Get access token
-      const accessToken = await oauth2Client.getAccessToken();
-
-      // Create transporter
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          type: "OAuth2",
-          user: user,
-          clientId: clientId,
-          clientSecret: clientSecret,
-          refreshToken: refreshToken,
-          accessToken: accessToken.token, // Access the token property
-        },
-      });
-
-      // Verify transporter configuration
-      await transporter.verify();
-
-      return transporter;
-    } catch (oauthError) {
-      console.error("OAuth token refresh failed:", oauthError);
-
-      // Provide more specific error messages
-      if (
-        oauthError.code === 400 &&
-        oauthError.response?.data?.error === "invalid_grant"
-      ) {
-        throw new Error(
-          "OAuth refresh token is invalid or expired. Please regenerate your OAuth credentials and refresh token."
+    // Try OAuth2 first if credentials are available
+    if (clientId && clientSecret && refreshToken) {
+      try {
+        console.log("[EMAIL] Attempting OAuth2 authentication...");
+        console.log(`[EMAIL] Using email: ${user}`);
+        console.log(`[EMAIL] Client ID: ${clientId.substring(0, 10)}...`);
+        console.log(
+          `[EMAIL] Refresh token: ${refreshToken.substring(0, 20)}...`
         );
-      }
 
-      throw new Error(`OAuth authentication failed: ${oauthError.message}`);
+        const { OAuth2Client } = require("google-auth-library");
+        const oauth2Client = new OAuth2Client(clientId, clientSecret);
+
+        // Set credentials with refresh token
+        oauth2Client.setCredentials({
+          refresh_token: refreshToken,
+        });
+
+        // Get access token
+        console.log("[EMAIL] Requesting access token...");
+        const accessToken = await oauth2Client.getAccessToken();
+        console.log("[EMAIL] OAuth2 access token obtained successfully");
+        console.log(
+          `[EMAIL] Access token: ${accessToken.token.substring(0, 20)}...`
+        );
+
+        // Create OAuth2 transporter
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            type: "OAuth2",
+            user: user,
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            accessToken: accessToken.token,
+          },
+        });
+
+        // Verify transporter configuration
+        console.log("[EMAIL] Verifying OAuth2 transporter...");
+        await transporter.verify();
+        console.log("[EMAIL] OAuth2 transporter verified successfully");
+
+        return transporter;
+      } catch (oauthError) {
+        console.error(
+          "[EMAIL] OAuth2 authentication failed:",
+          oauthError.message
+        );
+        console.error("[EMAIL] OAuth2 error details:", {
+          code: oauthError.code,
+          response: oauthError.response,
+          responseCode: oauthError.responseCode,
+          command: oauthError.command,
+        });
+
+        // If OAuth2 fails, try app password fallback
+        if (appPassword) {
+          console.log("[EMAIL] Falling back to app password authentication...");
+          return createAppPasswordTransporter(user, appPassword);
+        }
+
+        // If no fallback available, throw the OAuth error
+        throw new Error(`OAuth2 authentication failed: ${oauthError.message}`);
+      }
+    } else if (appPassword) {
+      // Use app password if OAuth credentials are not available
+      console.log("[EMAIL] Using app password authentication...");
+      return createAppPasswordTransporter(user, appPassword);
+    } else {
+      // No authentication method available
+      throw new Error(
+        "No email authentication method available. Please set either OAuth2 credentials or GMAIL_APP_PASSWORD."
+      );
     }
   } catch (error) {
-    console.error("Error creating transporter:", error);
+    console.error("[EMAIL] Error creating transporter:", error);
     throw error;
   }
+};
+
+// Fallback transporter using app password
+const createAppPasswordTransporter = (user, appPassword) => {
+  console.log("[EMAIL] Creating app password transporter...");
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: user,
+      pass: appPassword,
+    },
+    secure: true,
+    port: 465,
+  });
+
+  return transporter;
 };
 
 // Helper: Generate JWT
