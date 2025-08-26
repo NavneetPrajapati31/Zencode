@@ -52,9 +52,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="space-y-4 flex flex-col items-start">
-          <h3 className="text-sm font-medium text-foreground theme-transition">
-            Product
-          </h3>
+          <h3 className="text-sm font-medium text-foreground theme-transition"></h3>
           <a
             href={user ? "/problems" : "/signup"}
             className="text-muted-foreground hover:text-primary transition-colors duration-200 text-sm mb-1"

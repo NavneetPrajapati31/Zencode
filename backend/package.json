@@ -5,8 +5,8 @@
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js",
     "build": "echo 'Build completed'",
     "vercel-build": "echo 'Vercel build completed'",
     "check-mongodb": "node scripts/check-mongodb.js",
@@ -20,6 +20,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@uploadthing/react": "^7.3.3",
     "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
@@ -35,8 +36,7 @@
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
-    "uploadthing": "^7.7.3",
-    "@uploadthing/react": "^7.3.2"
+    "uploadthing": "^7.7.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
