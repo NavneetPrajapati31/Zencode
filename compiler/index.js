@@ -162,9 +162,17 @@ app.post("/compiler", async (req, res) => {
   console.log("[Compiler] Final code to compile:\n", finalCode);
 
   try {
-    const filePath = generateFile(language, finalCode);
-    const output = await runner(filePath, input);
-    res.json({ filePath, output });
+    const fileObj = generateFile(language, finalCode);
+    const output = await runner(fileObj, input);
+
+    // Handle both virtual and real file paths in response
+    const responseData = {
+      filePath: fileObj.isVirtual ? fileObj.filePath : fileObj.filePath,
+      output,
+      isVirtual: fileObj.isVirtual || false,
+    };
+
+    res.json(responseData);
   } catch (error) {
     console.error("[Compiler] Compilation/Execution error:", error);
 
@@ -182,6 +190,13 @@ app.post("/compiler", async (req, res) => {
       statusCode = 500; // Internal Server Error
     } else if (error.type === "PROCESS_ERROR") {
       statusCode = 500; // Internal Server Error
+    } else if (error.type === "COMPILER_NOT_AVAILABLE") {
+      statusCode = 503; // Service Unavailable
+      errorMessage =
+        error.error.message || "Compiler not available in this environment";
+    } else if (error.type === "COMPILATION_ERROR") {
+      statusCode = 400; // Bad Request
+      errorMessage = `Compilation failed: ${error.stderr || errorMessage}`;
     }
 
     res.status(statusCode).json({
@@ -189,6 +204,10 @@ app.post("/compiler", async (req, res) => {
       error: errorMessage,
       stderr: error.stderr || "",
       type: error.type || "UNKNOWN_ERROR",
+      suggestion:
+        error.type === "COMPILER_NOT_AVAILABLE"
+          ? "Try using Python or JavaScript instead, which are available in serverless environments."
+          : undefined,
     });
   }
 });
