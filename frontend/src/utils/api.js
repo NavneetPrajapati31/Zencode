@@ -2,11 +2,48 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+// Token refresh function
+const refreshTokenIfNeeded = async (token) => {
+  try {
+    // Import jwtDecode dynamically to avoid issues
+    const { jwtDecode } = await import("jwt-decode");
+    const decoded = jwtDecode(token);
+    const timeUntilExpiry = decoded.exp * 1000 - Date.now();
+
+    // If token expires in less than 1 hour, refresh it
+    if (timeUntilExpiry < 60 * 60 * 1000) {
+      const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const { token: newToken } = await response.json();
+        localStorage.setItem("token", newToken);
+        return newToken;
+      }
+    }
+
+    return token;
+  } catch (error) {
+    console.error("Token refresh failed:", error);
+    return token;
+  }
+};
+
 // Generic API call function
 const apiCall = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
-  const token =
+  let token =
     localStorage.getItem("token") || localStorage.getItem("tempToken");
+
+  // Check if token needs refresh
+  if (token) {
+    token = await refreshTokenIfNeeded(token);
+  }
 
   const config = {
     headers: {
@@ -19,6 +56,16 @@ const apiCall = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(url, config);
+
+    // Handle 401 responses (token expired/invalid)
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("tempToken");
+      // Redirect to login
+      window.location.href = "/signin";
+      return;
+    }
+
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || "API call failed");
@@ -71,6 +118,9 @@ export const authAPI = {
       method: "POST",
       body: JSON.stringify(profileData),
     }),
+  // Add token verification and refresh endpoints
+  verifyToken: () => apiCall("/auth/verify-token", { method: "POST" }),
+  refreshToken: () => apiCall("/auth/refresh-token", { method: "POST" }),
 };
 
 // Problems API calls

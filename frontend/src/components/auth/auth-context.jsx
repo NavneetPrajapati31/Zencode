@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { profileAPI } from "@/utils/api";
+import { profileAPI, authAPI } from "@/utils/api";
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
@@ -11,32 +11,49 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
+      // Check if token is expired
+      if (isTokenExpired(token)) {
+        localStorage.removeItem("token");
+        setLoading(false);
+        return;
+      }
       fetchUserProfile();
     } else {
       setLoading(false);
     }
   }, []);
 
+  const isTokenExpired = (token) => {
+    try {
+      const decoded = jwtDecode(token);
+      return Date.now() > decoded.exp * 1000;
+    } catch {
+      return true;
+    }
+  };
+
   const fetchUserProfile = async () => {
     try {
-      // console.log("[Auth] fetchUserProfile called");
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token");
 
-      // console.log("[Auth] Token found, decoding...");
-      const decoded = jwtDecode(token);
-      // console.log("[Auth] Decoded token:", decoded);
+      // Verify token is still valid
+      try {
+        await authAPI.verifyToken();
+      } catch (error) {
+        if (error.message && error.message.includes("401")) {
+          localStorage.removeItem("token");
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+      }
 
+      const decoded = jwtDecode(token);
       const username = decoded.username;
       if (!username) throw new Error("No username in token");
 
-      /*   console.log(
-        "[Auth] Calling profileAPI.getProfile for username:",
-        username
-      ); */
       const userData = await profileAPI.getProfile(username);
-      // console.log("[Auth] Profile API response:", userData);
-
       let user = userData || null;
       if (user && !user.role && decoded.role) {
         user = { ...user, role: decoded.role };
@@ -47,33 +64,29 @@ export function AuthProvider({ children }) {
         user = { ...user, avatar: "" };
       }
 
-      // console.log("[Auth] Setting user state:", user);
       setUser(user);
-      // console.log("[Auth] User loaded from backend:", user);
     } catch (error) {
       console.error("[Auth] Error in fetchUserProfile:", error);
       localStorage.removeItem("token");
       setUser(null);
     } finally {
-      // console.log("[Auth] Setting loading to false");
       setLoading(false);
     }
   };
 
   const login = async (token) => {
-    localStorage.setItem("token", token);
-    // Debug: decode and log user from token
-    try {
-      const decoded = jwtDecode(token);
-      // console.log("[Auth] Decoded user from JWT:", decoded);
-    } catch {
-      // console.log("[Auth] Could not decode JWT");
+    // Check if token is expired before storing
+    if (isTokenExpired(token)) {
+      throw new Error("Token is expired");
     }
+
+    localStorage.setItem("token", token);
     await fetchUserProfile();
   };
 
   const logout = async () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("tempToken");
     setUser(null);
   };
 

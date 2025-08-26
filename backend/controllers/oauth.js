@@ -87,6 +87,7 @@ const oauthCallback = async (req, res) => {
         name: req.user.name || "",
         username,
         profileComplete: false,
+        emailVerified: true, // OAuth users are automatically verified
       });
       await user.save();
     } else {
@@ -103,26 +104,14 @@ const oauthCallback = async (req, res) => {
       }
       if (updated) await user.save();
     }
+
     const token = generateToken(user);
 
-    // In production: set JWT as HTTP-only, secure cookie
-    if (isProd) {
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      });
-      // Add token to the redirect URL for frontend to complete login
-      return res.redirect(
-        `${FRONTEND_URL}/oauth/callback?token=${token}&profileComplete=${user.profileComplete}`
-      );
-    } else {
-      // In dev: pass token in query param for easier debugging
-      return res.redirect(
-        `${FRONTEND_URL || "http://localhost:5173"}/oauth/callback?token=${token}&profileComplete=${user.profileComplete}`
-      );
-    }
+    // Always redirect with JWT token in query params for serverless compatibility
+    // The frontend will store this token and use it for subsequent requests
+    return res.redirect(
+      `${FRONTEND_URL || "http://localhost:5173"}/oauth/callback?token=${token}&profileComplete=${user.profileComplete}&userId=${user._id}`
+    );
   } catch (err) {
     // Detailed error logging for OAuth failures
     const timestamp = new Date().toISOString();

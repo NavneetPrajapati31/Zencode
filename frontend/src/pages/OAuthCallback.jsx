@@ -20,7 +20,9 @@ const OAuthCallback = () => {
     const params = new URLSearchParams(window.location.search);
     const t = params.get("token");
     const pc = params.get("profileComplete");
+
     setToken(t || "");
+
     if (t && pc === "false") {
       // Decode token to get username suggestion
       try {
@@ -39,10 +41,19 @@ const OAuthCallback = () => {
         try {
           await login(t);
           // Navigation will happen in the next useEffect
-        } catch {
-          navigate("/signin");
+        } catch (error) {
+          console.error("OAuth login failed:", error);
+          navigate("/signin?error=oauth_failed");
         }
       })();
+    } else {
+      // No token, check for error
+      const error = params.get("error");
+      if (error) {
+        navigate(`/signin?error=${error}`);
+      } else {
+        navigate("/signin");
+      }
     }
   }, [login, navigate]);
 

@@ -9,7 +9,6 @@ const testcaseRoutes = require("../routes/testcase");
 const problemDetailsRoutes = require("../routes/problemDetails");
 const dotenv = require("dotenv");
 dotenv.config();
-const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
@@ -94,20 +93,10 @@ app.use("/api/testcases", testcaseRoutes);
 app.use("/api/problem-details", problemDetailsRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 
-// OAuth-specific middleware and routes
-app.use(
-  session({
-    secret:
-      process.env.JWT_SECRET ||
-      "935dacfee06f8c8bcf458d9fcab55704d0ceaa6a94e05d68796f9905855282f5a67d8322e305b2b970baebaa4507d4837157f2829c737547a779c4558e9de3c5",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+// Initialize passport (without sessions)
 app.use(passport.initialize());
-app.use(passport.session());
 
-// Passport serialize/deserialize
+// Passport serialize/deserialize (for OAuth only)
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -187,7 +176,7 @@ passport.use(
   )
 );
 
-// Auth routes (with session/passport middleware)
+// Auth routes (with passport middleware for OAuth)
 app.use("/api/auth", authRoutes);
 
 // Error handling middleware
