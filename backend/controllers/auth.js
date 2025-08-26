@@ -71,27 +71,50 @@ const createTransporter = async () => {
       }
     }
 
-    const oauth2Client = new OAuth2Client(
-      clientId,
-      clientSecret,
-      "https://developers.google.com/oauthplayground"
-    );
+    // Create OAuth2Client without hardcoded redirect URI
+    const oauth2Client = new OAuth2Client(clientId, clientSecret);
+
+    // Set credentials with refresh token
     oauth2Client.setCredentials({
       refresh_token: refreshToken,
     });
-    const accessToken = await oauth2Client.getAccessToken();
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: user,
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        accessToken: accessToken,
-      },
-    });
-    return transporter;
+
+    try {
+      // Get access token
+      const accessToken = await oauth2Client.getAccessToken();
+
+      // Create transporter
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: user,
+          clientId: clientId,
+          clientSecret: clientSecret,
+          refreshToken: refreshToken,
+          accessToken: accessToken.token, // Access the token property
+        },
+      });
+
+      // Verify transporter configuration
+      await transporter.verify();
+
+      return transporter;
+    } catch (oauthError) {
+      console.error("OAuth token refresh failed:", oauthError);
+
+      // Provide more specific error messages
+      if (
+        oauthError.code === 400 &&
+        oauthError.response?.data?.error === "invalid_grant"
+      ) {
+        throw new Error(
+          "OAuth refresh token is invalid or expired. Please regenerate your OAuth credentials and refresh token."
+        );
+      }
+
+      throw new Error(`OAuth authentication failed: ${oauthError.message}`);
+    }
   } catch (error) {
     console.error("Error creating transporter:", error);
     throw error;
@@ -205,14 +228,46 @@ const signUp = async (req, res) => {
 				`,
       };
 
-      const transporter = await createTransporter();
-      await transporter.sendMail(mailOptions);
+      try {
+        const transporter = await createTransporter();
+        await transporter.sendMail(mailOptions);
 
-      res.status(201).json({
-        message:
-          "Account created successfully. Please check your email for the verification code.",
-        email: email, // Return email for frontend to use in OTP verification
-      });
+        res.status(201).json({
+          message:
+            "Account created successfully. Please check your email for the verification code.",
+          email: email, // Return email for frontend to use in OTP verification
+        });
+      } catch (emailError) {
+        console.error("Email sending failed:", emailError);
+
+        // If email fails, still create the user but inform about email issue
+        if (
+          emailError.message.includes("OAuth refresh token is invalid") ||
+          emailError.message.includes("OAuth authentication failed")
+        ) {
+          // Delete the user since email verification is required
+          await User.findByIdAndDelete(user._id);
+
+          return res.status(500).json({
+            message:
+              "Account creation failed due to email service configuration issue. Please contact support.",
+            error: "Email service unavailable",
+          });
+        }
+
+        // For other email errors, still create user but warn about email
+        console.warn(
+          "User created but email verification failed:",
+          emailError.message
+        );
+
+        res.status(201).json({
+          message:
+            "Account created successfully, but email verification failed. Please contact support to verify your email.",
+          email: email,
+          warning: "Email verification service temporarily unavailable",
+        });
+      }
     } catch (err) {
       if (err.code === 11000 && err.keyPattern && err.keyPattern.username) {
         return res
